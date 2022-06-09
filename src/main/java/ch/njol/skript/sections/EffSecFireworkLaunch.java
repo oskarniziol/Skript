@@ -42,7 +42,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@Name("Launch firework")
+@Name("Launch Firework")
 @Description({"Launch firework effects at the given location(s).",
 	"This can be used as an effect and as a section.",
 	"If it is used as a section, the section is run before the entity is added to the world.",
