@@ -52,7 +52,7 @@ import java.util.List;
 	"",
 	"#Firework launch section example",
 	"on damage:",
-	"	if damage cause is entity explosion:",
+	"\tif damage cause is entity explosion:",
 	"		if metadata value \"cancelDamage\" of event-projectile is true:",
 	"			cancel event",
 	"",
