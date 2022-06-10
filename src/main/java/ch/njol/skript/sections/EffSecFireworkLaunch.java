@@ -25,7 +25,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.*;
+import ch.njol.skript.lang.EffectSection;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.Trigger;
+import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.variables.Variables;
@@ -83,15 +87,13 @@ public class EffSecFireworkLaunch extends EffectSection {
 
 	static {
 		Skript.registerSection(EffSecFireworkLaunch.class, "(launch|deploy) [[a] firework [with effect[s]]] %fireworkeffects% at %locations% [([with] (duration|power)|timed) %number%]");
-		EventValues.registerEventValue(EffSecFireworkLaunch.FireworkLaunchEvent.class, Firework.class, new Getter<Firework, EffSecFireworkLaunch.FireworkLaunchEvent>() {
+		EventValues.registerEventValue(FireworkLaunchEvent.class, Firework.class, new Getter<Firework, FireworkLaunchEvent>() {
 			@Override
-			public Firework get(EffSecFireworkLaunch.FireworkLaunchEvent fireworkLaunchEvent) {
+			public Firework get(FireworkLaunchEvent fireworkLaunchEvent) {
 				return fireworkLaunchEvent.getFirework();
 			}
 		}, 0);
 	}
-
-	private static final boolean BUKKIT_CONSUMER_EXISTS = Skript.classExists("org.bukkit.util.Consumer");
 
 	@SuppressWarnings("null")
 	private Expression<FireworkEffect> effects;
@@ -116,12 +118,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 		lifetime = (Expression<Number>) exprs[2];
 
 		if (sectionNode != null) {
-			if (!BUKKIT_CONSUMER_EXISTS) {
-				Skript.error("The firework launch section isn't available on your Minecraft version, use a firework launch effect instead");
-				return false;
-			}
-
-			trigger = loadCode(sectionNode, "fireworklaunch", EffSecFireworkLaunch.FireworkLaunchEvent.class);
+			trigger = loadCode(sectionNode, "fireworklaunch", FireworkLaunchEvent.class);
 		}
 
 		return true;
@@ -136,7 +133,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 		Consumer<? extends Firework> consumer;
 		if (trigger != null) {
 			consumer = o -> {
-				EffSecFireworkLaunch.FireworkLaunchEvent fireworkLaunchEvent = new EffSecFireworkLaunch.FireworkLaunchEvent(o);
+				FireworkLaunchEvent fireworkLaunchEvent = new FireworkLaunchEvent(o);
 				// Copy the local variables from the calling code to this section
 				Variables.setLocalVariables(fireworkLaunchEvent, localVars);
 				trigger.execute(fireworkLaunchEvent);
