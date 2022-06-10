@@ -165,4 +165,5 @@ public class EffSecFireworkLaunch extends EffectSection {
 			" at location(s) " + locations.toString(e, debug) +
 			" timed " + lifetime.toString(e, debug);
 	}
+
 }
