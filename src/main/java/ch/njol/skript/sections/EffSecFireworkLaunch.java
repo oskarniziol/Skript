@@ -53,13 +53,13 @@ import java.util.List;
 	"#Firework launch section example",
 	"on damage:",
 	"\tif damage cause is entity explosion:",
-	"		if metadata value \"cancelDamage\" of event-projectile is true:",
-	"			cancel event",
+	"\t\tif metadata value \"cancelDamage\" of event-projectile is true:",
+	"\t\t\tcancel event",
 	"",
 	"command /firework:",
-	"	trigger:",
-	"		launch a firework with effects ball large coloured red at player:",
-	"			set metadata value \"cancelDamage\" of event-firework to true"})
+	"\ttrigger:",
+	"\t\tlaunch a firework with effects ball large coloured red at player:",
+	"\t\t\tset metadata value \"cancelDamage\" of event-firework to true"})
 @Since("2.4, INSERT VERSION (with section)")
 public class EffSecFireworkLaunch extends EffectSection {
 
