@@ -79,8 +79,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 		}
 
 		@Override
-		public @NotNull
-		HandlerList getHandlers() {
+		public HandlerList getHandlers() {
 			throw new IllegalStateException();
 		}
 	}
