@@ -86,7 +86,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 	}
 
 	static {
-		Skript.registerSection(EffSecFireworkLaunch.class, "(launch|deploy) [[a] firework [with effect[s]]] %fireworkeffects% at %locations% [([with] (duration|power)|timed) %number%]");
+		Skript.registerSection(EffSecFireworkLaunch.class, "(launch|deploy) [[a] firework [with effect[s]]] %fireworkeffects% at %locations% [([with] (duration|power)|timed) %-number%]");
 		EventValues.registerEventValue(FireworkLaunchEvent.class, Firework.class, new Getter<Firework, FireworkLaunchEvent>() {
 			@Override
 			public Firework get(FireworkLaunchEvent fireworkLaunchEvent) {
