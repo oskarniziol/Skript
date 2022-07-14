@@ -99,6 +99,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 	private Expression<FireworkEffect> effects;
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<Location> locations;
+	@Nullable
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<Number> lifetime;
 
