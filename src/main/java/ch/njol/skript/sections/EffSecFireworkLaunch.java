@@ -91,7 +91,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 			public Firework get(FireworkLaunchEvent fireworkLaunchEvent) {
 				return fireworkLaunchEvent.getFirework();
 			}
-		}, 0);
+		}, EventValues.TIME_NOW);
 	}
 
 	@SuppressWarnings("NotNullFieldNotInitialized")
