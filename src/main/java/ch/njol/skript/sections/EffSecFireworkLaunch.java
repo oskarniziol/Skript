@@ -99,7 +99,6 @@ public class EffSecFireworkLaunch extends EffectSection {
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<Location> locations;
 	@Nullable
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<Number> lifetime;
 
 	@Nullable
@@ -143,7 +142,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 			consumer = null;
 		}
 
-		Number power = lifetime.getSingle(e);
+		Number power = lifetime != null ? lifetime.getSingle(e) : 1;
 		if (power == null)
 			power = 1;
 		for (Location location : locations.getArray(e)) {
@@ -161,7 +160,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "Launch firework(s) " + effects.toString(e, debug) +
 			" at location(s) " + locations.toString(e, debug) +
-			" timed " + lifetime.toString(e, debug);
+			" timed " + lifetime != null ? lifetime.toString(e, debug) : "1";
 	}
 
 }
