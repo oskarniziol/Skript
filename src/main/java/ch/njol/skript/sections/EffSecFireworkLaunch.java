@@ -79,6 +79,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 		}
 
 		@Override
+		@NotNull
 		public HandlerList getHandlers() {
 			throw new IllegalStateException();
 		}
@@ -125,11 +126,10 @@ public class EffSecFireworkLaunch extends EffectSection {
 
 	@Override
 	@Nullable
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	protected TriggerItem walk(Event e) {
 		Object localVars = Variables.copyLocalVariables(e);
 
-		Consumer<? extends Firework> consumer;
+		Consumer<Firework> consumer = null;
 		if (trigger != null) {
 			consumer = o -> {
 				FireworkLaunchEvent fireworkLaunchEvent = new FireworkLaunchEvent(o);
@@ -138,18 +138,18 @@ public class EffSecFireworkLaunch extends EffectSection {
 				trigger.execute(fireworkLaunchEvent);
 				Variables.setLocalVariables(e, localVars); // Carry over variable changes to the rest of the main trigger
 			};
-		} else {
-			consumer = null;
 		}
 
-		Number power = lifetime != null ? lifetime.getSingle(e) : 1;
-		if (power == null)
-			power = 1;
+		Number p = lifetime != null ? lifetime.getSingle(e) : 1;
+		int power = 1;
+		if(p != null) // Check if p is null since Expression#getSingle is nullable
+			power = p.intValue();
+
 		for (Location location : locations.getArray(e)) {
-			Firework firework = location.getWorld().spawn(location, Firework.class, (Consumer) consumer);
+			Firework firework = location.getWorld().spawn(location, Firework.class, consumer);
 			FireworkMeta meta = firework.getFireworkMeta();
 			meta.addEffects(effects.getArray(e));
-			meta.setPower(power.intValue());
+			meta.setPower(power);
 			firework.setFireworkMeta(meta);
 		}
 
@@ -160,7 +160,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 	public String toString(@Nullable Event e, boolean debug) {
 		return "Launch firework(s) " + effects.toString(e, debug) +
 			" at location(s) " + locations.toString(e, debug) +
-			" timed " + lifetime != null ? lifetime.toString(e, debug) : "1";
+			" timed " + (lifetime != null ? lifetime.toString(e, debug) : "1");
 	}
 
 }
