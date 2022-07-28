@@ -1,4 +1,4 @@
-test "firework launch section" when running minecraft "1.11":
+test "firework launch section":
 	set {_foo} to true
 	launch a firework with effects ball large coloured red at spawn of "world":
 		assert {_foo} is true with "variables from previous section wasn't carried over"

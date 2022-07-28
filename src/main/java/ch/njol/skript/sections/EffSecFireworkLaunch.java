@@ -47,14 +47,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @Name("Launch Firework")
-@Description({"Launch firework effects at the given location(s).",
+@Description({
+	"Launch firework effects at the given location(s).",
 	"This can be used as an effect and as a section.",
 	"If it is used as a section, the section is run before the entity is added to the world.",
-	"You can modify the firework in this section, using for example 'event-entity' or 'event-firework'.",
-	"Do note that other event values, such as 'player', won't work in this section."})
-@Examples({"launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1",
+	"You can modify the firework in this section, using for example <code>event-entity</code> or <code>event-firework</code>.",
+	"Do note that other event values, such as <code>player</code>, won't work in this section."
+})
+@Examples({
+	"launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1",
 	"",
-	"#Firework launch section example",
+	"# Firework launch section example",
 	"on damage:",
 	"\tif damage cause is entity explosion:",
 	"\t\tif metadata value \"cancelDamage\" of event-projectile is true:",
@@ -63,11 +66,13 @@ import java.util.List;
 	"command /firework:",
 	"\ttrigger:",
 	"\t\tlaunch a firework with effects ball large coloured red at player:",
-	"\t\t\tset metadata value \"cancelDamage\" of event-firework to true"})
+	"\t\t\tset metadata value \"cancelDamage\" of event-firework to true"
+})
 @Since("2.4, INSERT VERSION (with section)")
 public class EffSecFireworkLaunch extends EffectSection {
 
 	public static class FireworkLaunchEvent extends Event {
+
 		private final Firework firework;
 
 		public FireworkLaunchEvent(Firework firework) {
@@ -83,6 +88,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 		public HandlerList getHandlers() {
 			throw new IllegalStateException();
 		}
+
 	}
 
 	static {
@@ -117,9 +123,8 @@ public class EffSecFireworkLaunch extends EffectSection {
 		locations = (Expression<Location>) exprs[1];
 		lifetime = (Expression<Number>) exprs[2];
 
-		if (sectionNode != null) {
+		if (sectionNode != null)
 			trigger = loadCode(sectionNode, "fireworklaunch", FireworkLaunchEvent.class);
-		}
 
 		return true;
 	}
@@ -142,7 +147,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 
 		Number p = lifetime != null ? lifetime.getSingle(e) : 1;
 		int power = 1;
-		if(p != null) // Check if p is null since Expression#getSingle is nullable
+		if (p != null)
 			power = p.intValue();
 
 		for (Location location : locations.getArray(e)) {
