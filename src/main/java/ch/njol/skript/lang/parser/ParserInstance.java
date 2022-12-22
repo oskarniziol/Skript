@@ -390,6 +390,14 @@ public final class ParserInstance {
 		return indentation;
 	}
 
+	// Parsing stack
+
+	private final ParsingStack parsingStack = new ParsingStack();
+
+	public ParsingStack getParsingStack() {
+		return parsingStack;
+	}
+
 	// ParserInstance Data API
 
 	/**
