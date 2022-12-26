@@ -150,7 +150,7 @@ public class ExprPermissions extends SimpleExpression<String> {
 			if (attachment.getPlugin().equals(instance))
 				return attachment;
 		}
-		return  entity.addAttachment(instance);
+		return entity.addAttachment(instance);
 	}
 
 }
