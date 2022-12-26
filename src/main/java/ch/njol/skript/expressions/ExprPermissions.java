@@ -96,7 +96,7 @@ public class ExprPermissions extends SimpleExpression<String> {
 			}
 		}
 		if (mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE) {
-			for (Entity entity : entities.getAll(event)) {
+			for (Entity entity : entities.getArray(event)) {
 				for (PermissionAttachmentInfo info : entity.getEffectivePermissions()) {
 					PermissionAttachment attachment = info.getAttachment();
 					if (attachment == null)
@@ -104,7 +104,6 @@ public class ExprPermissions extends SimpleExpression<String> {
 					for (String permission : attachment.getPermissions().keySet()) {
 						if (mode == ChangeMode.DELETE) {
 							attachment.unsetPermission(permission);
-							continue;
 						} else if (permissions.contains(permission)) {
 							attachment.unsetPermission(permission);
 						}
