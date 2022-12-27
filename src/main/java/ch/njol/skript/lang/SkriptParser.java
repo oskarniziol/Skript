@@ -246,8 +246,7 @@ public class SkriptParser {
 							try {
 								JavaPlugin providingPlugin = JavaPlugin.getProvidingPlugin(info.c);
 								message += " (provided by " + providingPlugin.getName() + ")";
-							} catch (IllegalArgumentException | IllegalStateException ignored) {
-							}
+							} catch (IllegalArgumentException | IllegalStateException ignored) { }
 
 							throw new RuntimeException(message, e);
 						} catch (StackOverflowError e) {
