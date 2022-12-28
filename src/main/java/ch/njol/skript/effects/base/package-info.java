@@ -16,11 +16,6 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-/**
- * Contains the default effects of Skript.
- * 
- * @author Peter Güttinger
- */
 @NonNullByDefault({DefaultLocation.PARAMETER, DefaultLocation.RETURN_TYPE, DefaultLocation.FIELD})
 package ch.njol.skript.effects.base;
 
