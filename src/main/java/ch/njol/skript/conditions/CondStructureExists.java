@@ -46,7 +46,7 @@ public class CondStructureExists extends Condition {
 	static {
 		Skript.registerCondition(CondStructureExists.class,
 				"structure[s] [named] %strings% [do[es]] exist[s]",
-				"structure[s] [named] %strings% (doesn't|do[es] not) exist"
+				"structure[s] [named] %strings% (do[es]n't|do[es] not) exist"
 		);
 	}
 
