@@ -73,7 +73,7 @@ public class EffStructureSaveUnregister extends Effect {
 				try {
 					manager.deleteStructure(key);
 				} catch (IOException e) {
-					Skript.error("Failed to save structure " + name);
+					Skript.exception(e, "Failed to save structure " + name);
 					if (Skript.debug())
 						e.printStackTrace();
 				}
