@@ -76,7 +76,8 @@ public class ExprStructureSectionInfo extends SimpleExpression<Object> {
 	static {
 		if (Skript.classExists("org.bukkit.structure.Structure")) {
 			Skript.registerExpression(ExprStructureSectionInfo.class, Object.class, ExpressionType.SIMPLE,
-					"includes entities", "rotation", "integrity", "pallet [index]", "mirror");
+					"includes entities", "rotation", "integrity", "pallet [index]", "mirror"
+			);
 		}
 	}
 

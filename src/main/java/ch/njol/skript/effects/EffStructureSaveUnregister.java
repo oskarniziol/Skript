@@ -83,7 +83,7 @@ public class EffStructureSaveUnregister extends Effect {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return save ? "save " : "delete " + " structures " + names.toString(event, debug);
+		return (save ? "save" : "delete") + " structures " + names.toString(event, debug);
 	}
 
 }

@@ -117,8 +117,8 @@ public class ExprStructure extends SimpleExpression<Structure> {
 	public String toString(@Nullable Event event, boolean debug) {
 		if (location1 == null || location2 == null)
 			return "structures " + names.toString(event, debug);
-		return "structure " + names.toString(event, debug)
-			+ " from " + location1.toString(event, debug) + " to " + location2.toString(event, debug);
+		return "structure " + names.toString(event, debug) +
+			" from " + location1.toString(event, debug) + " to " + location2.toString(event, debug);
 	}
 
 }
