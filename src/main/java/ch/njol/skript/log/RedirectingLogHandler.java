@@ -57,4 +57,8 @@ public class RedirectingLogHandler extends LogHandler {
 		return numErrors;
 	}
 
+	public CommandSender getRecipient() {
+		return recipient;
+	}
+
 }
