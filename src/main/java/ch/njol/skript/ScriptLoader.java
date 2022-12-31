@@ -24,6 +24,8 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.config.SimpleNode;
 import ch.njol.skript.events.bukkit.PreScriptLoadEvent;
 import ch.njol.skript.log.SkriptLogger;
+import org.skriptlang.skript.parsewatchdog.WatchdogInterruptedException;
+import org.skriptlang.skript.parsewatchdog.ParseWatchdog;
 import org.skriptlang.skript.lang.script.Script;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser;
@@ -368,6 +370,9 @@ public class ScriptLoader {
 		
 		@Override
 		public void run() {
+			// Add the thread to the watchdog
+			ParseWatchdog.addThread(this, false, ParserInstance.get());
+
 			while (shouldRun) {
 				try {
 					Runnable runnable = loadQueue.poll(100, TimeUnit.MILLISECONDS);
@@ -500,7 +505,16 @@ public class ScriptLoader {
 			
 			CompletableFuture<Void> future = makeFuture(() -> {
 				Script script = new Script(config);
-				ScriptInfo info = loadScript(script);
+
+				// TODO TP try-catch here doesn't do much, structure loading stages below
+				ScriptInfo info;
+				try {
+					info = loadScript(script);
+				} catch (WatchdogInterruptedException e) {
+					unloadScript(script);
+					return null;
+				}
+
 				scripts.add(script);
 				scriptInfo.add(info);
 				return null;

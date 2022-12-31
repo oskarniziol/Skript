@@ -52,6 +52,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.google.common.primitives.Booleans;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.parsewatchdog.ParseWatchdog;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.script.ScriptWarning;
 
@@ -237,6 +238,9 @@ public class SkriptParser {
 						try {
 							// Push the element onto the parsing stack
 							parsingStack.push(new ParsingStack.Element(info, i));
+
+							// Check for watchdog interrupts
+							ParseWatchdog.checkInterrupt();
 
 							res = parse_i(pattern, 0, 0);
 						} catch (MalformedPatternException e) {

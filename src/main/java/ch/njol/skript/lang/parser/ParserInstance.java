@@ -37,6 +37,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
+import org.skriptlang.skript.parsewatchdog.ParseWatchdog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -401,6 +402,58 @@ public final class ParserInstance {
 	 */
 	public ParsingStack getParsingStack() {
 		return parsingStack;
+	}
+
+	// Watchdog interruption
+
+	/**
+	 * If this field is {@code null}, no scripts are interrupted from parsing.
+	 * Otherwise, the value of this field denotes which script
+	 * should be interrupted from parsing, and disabled.
+	 * <p>
+	 * This is used by the {@link ParseWatchdog}.
+	 */
+	@Nullable
+	private Script interrupt = null;
+
+	/**
+	 * Interrupt this ParserInstance from parsing the given Script.
+	 * This will cause Skript to stop loading the given script and disable it.
+	 *
+	 * @see #interrupted
+	 */
+	public synchronized void interrupt(Script script) {
+		interrupt = script;
+	}
+
+	/**
+	 * Returns whether this ParserInstance is interrupted from parsing
+	 * the {@link #getCurrentScript()}, and resets the interrupt state.
+	 */
+	public boolean interrupted() {
+		Script unloadScript = null;
+
+		synchronized (this) {
+			if (interrupt != null) {
+				if (!isActive() || interrupt != getCurrentScript()) {
+					// Current script changed since interrupt call
+
+					// Unload script outside synchronized block
+					unloadScript = interrupt;
+
+					interrupt = null;
+				} else {
+					interrupt = null;
+					return true;
+				}
+			}
+		}
+
+		if (unloadScript != null) {
+			ScriptLoader.unloadScript(unloadScript);
+		}
+
+		return false;
 	}
 
 	// ParserInstance Data API
