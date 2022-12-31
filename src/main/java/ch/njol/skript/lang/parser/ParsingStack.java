@@ -26,7 +26,7 @@ import ch.njol.util.Kleenean;
 
 import java.io.PrintStream;
 import java.util.Iterator;
-import java.util.Stack;
+import java.util.LinkedList;
 
 /**
  * A stack that keeps track of what Skript is currently parsing.
@@ -37,13 +37,13 @@ import java.util.Stack;
  */
 public class ParsingStack implements Iterable<ParsingStack.Element> {
 
-	private final Stack<Element> stack;
+	private final LinkedList<Element> stack;
 
 	/**
 	 * Creates an empty parsing stack.
 	 */
 	public ParsingStack() {
-		this.stack = new Stack<>();
+		this.stack = new LinkedList<>();
 	}
 
 	/**
@@ -51,10 +51,7 @@ public class ParsingStack implements Iterable<ParsingStack.Element> {
 	 * of another given parsing stack.
 	 */
 	public ParsingStack(ParsingStack parsingStack) {
-		Stack<Element> stack = new Stack<>();
-		stack.addAll(parsingStack.stack);
-
-		this.stack = stack;
+		this.stack = new LinkedList<>(parsingStack.stack);
 	}
 
 	/**
@@ -74,15 +71,15 @@ public class ParsingStack implements Iterable<ParsingStack.Element> {
 	 * Returns the element at the given index in the stack,
 	 * starting with the top element at index 0.
 	 *
-	 * @throws IndexOutOfBoundsException if the given index does not point to
-	 * 										an element in the stack.
+	 * @throws IndexOutOfBoundsException if the index is not appointed
+	 * 									  to an element in the stack.
 	 */
 	public Element peek(int index) throws IndexOutOfBoundsException {
 		if (index < 0 || index >= size()) {
 			throw new IndexOutOfBoundsException("Index: " + index);
 		}
 
-		return stack.get(size() - index);
+		return stack.get(index);
 	}
 
 	/**
@@ -96,14 +93,14 @@ public class ParsingStack implements Iterable<ParsingStack.Element> {
 			throw new IllegalStateException("Stack is empty");
 		}
 
-		return peek(0);
+		return stack.peek();
 	}
 
 	/**
 	 * Adds the given element to the top of the stack.
 	 */
-	public void push(Element e) {
-		stack.push(e);
+	public void push(Element element) {
+		stack.push(element);
 	}
 
 	/**
@@ -135,13 +132,16 @@ public class ParsingStack implements Iterable<ParsingStack.Element> {
 				printStream.println("<empty>");
 			} else {
 				for (Element element : stack) {
-					printStream.println("\t" + element.getSyntaxElementClass().getName()
-						+ " @ " + element.getPatternIndex());
+					printStream.println("\t" + element.getSyntaxElementClass().getName() +
+						" @ " + element.getPatternIndex());
 				}
 			}
 		}
 	}
 
+	/**
+	 * Iterate over the stack, starting at the top.
+	 */
 	@Override
 	public Iterator<Element> iterator() {
 		Iterator<Element> iterator = stack.iterator();
@@ -210,7 +210,7 @@ public class ParsingStack implements Iterable<ParsingStack.Element> {
 		}
 
 		/**
-		 * Gets all patterns registered with syntax element
+		 * Gets all patterns registered with the syntax element
 		 * of this stack element.
 		 */
 		public String[] getPatterns() {
