@@ -98,7 +98,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 					return new Entity[] {((EntityMountEvent) event).getEntity()};
 				if (getTime() != EventValues.TIME_PAST && event instanceof EntityDismountEvent && entity.equals(((EntityDismountEvent) event).getEntity()))
 					return new Entity[] {((EntityDismountEvent) event).getEntity()};
-				return entity.getPassengers().toArray(Entity[]::new);
+				return entity.getPassengers().toArray(new Entity[0]);
 			}};
 		List<Entity> entities = new ArrayList<>();
 		for (Entity entity : source) {
@@ -108,7 +108,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 			if (array != null && array.length > 0)
 				entities.addAll(Arrays.asList(array));
 		}
-		return entities.toArray(Entity[]::new);
+		return entities.toArray(new Entity[0]);
 	}
 
 	@Override
