@@ -33,111 +33,108 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.effects.Delay;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.expressions.base.PropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.EventValues;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Vehicle")
-@Description({"The vehicle an entity is in, if any. This can actually be any entity, e.g. spider jockeys are skeletons that ride on a spider, so the spider is the 'vehicle' of the skeleton.",
-		"See also: <a href='#ExprPassenger'>passenger</a>"})
+@Description({
+	"The vehicle an entity is in, if any. This can actually be any entity, e.g. spider jockeys are skeletons that ride on a spider, so the spider is the 'vehicle' of the skeleton.",
+	"See also: <a href='#ExprPassenger'>passenger</a>"
+})
 @Examples({"vehicle of the player is a minecart"})
 @Since("2.0")
-public class ExprVehicle extends SimplePropertyExpression<Entity, Entity> {
-	
-	static final boolean hasMountEvents = Skript.classExists("org.spigotmc.event.entity.EntityMountEvent");
-	
+public class ExprVehicle extends PropertyExpression<Entity, Entity> {
+
 	static {
-		register(ExprVehicle.class, Entity.class, "vehicle[s]", "entities");
+		Skript.registerExpression(ExprPassengers.class, Entity.class, ExpressionType.PROPERTY,
+				"[the] vehicle[:s] [of %entities%]", // Vehicles can be plural due to there being multiple entities.
+				"%entities%'[s] vehicle[s]"
+		);
 	}
-	
+
 	@Override
-	protected Entity[] get(final Event e, final Entity[] source) {
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		setExpr((Expression<? extends Entity>) exprs[0]);
+		if (parseResult.hasTag("s") && getExpr().isDefault())
+			Skript.error("An event cannot contain multiple vehicles. Use 'vehicle' in vehicle events.");
+		return true;
+	}
+
+	@Override
+	protected Entity[] get(Event event, Entity[] source) {
 		return get(source, new Converter<Entity, Entity>() {
 			@Override
 			@Nullable
-			public Entity convert(final Entity p) {
-				if (getTime() >= 0 && e instanceof VehicleEnterEvent && p.equals(((VehicleEnterEvent) e).getEntered()) && !Delay.isDelayed(e)) {
-					return ((VehicleEnterEvent) e).getVehicle();
-				}
-				if (getTime() >= 0 && e instanceof VehicleExitEvent && p.equals(((VehicleExitEvent) e).getExited()) && !Delay.isDelayed(e)) {
-					return ((VehicleExitEvent) e).getVehicle();
-				}
-				if (hasMountEvents) {
-					if (getTime() >= 0 && e instanceof EntityMountEvent && p.equals(((EntityMountEvent) e).getEntity()) && !Delay.isDelayed(e)) {
-						return ((EntityMountEvent) e).getMount();
-					}
-					if (getTime() >= 0 && e instanceof EntityDismountEvent && p.equals(((EntityDismountEvent) e).getEntity()) && !Delay.isDelayed(e)) {
-						return ((EntityDismountEvent) e).getDismounted();
-					}
-				}
-				return p.getVehicle();
+			public Entity convert(Entity entity) {
+				if (getTime() != EventValues.TIME_PAST && event instanceof VehicleEnterEvent && entity.equals(((VehicleEnterEvent) event).getEntered()))
+					return ((VehicleEnterEvent) event).getVehicle();
+				if (getTime() != EventValues.TIME_PAST && event instanceof VehicleExitEvent && entity.equals(((VehicleExitEvent) event).getExited()))
+					return ((VehicleExitEvent) event).getVehicle();
+				if (getTime() != EventValues.TIME_PAST && event instanceof EntityMountEvent && entity.equals(((EntityMountEvent) event).getEntity()))
+					return ((EntityMountEvent) event).getMount();
+				if (getTime() != EventValues.TIME_PAST && event instanceof EntityDismountEvent && entity.equals(((EntityDismountEvent) event).getEntity()))
+					return ((EntityDismountEvent) event).getDismounted();
+				return entity.getVehicle();
 			}
 		});
 	}
-	
+
 	@Override
 	@Nullable
-	public Entity convert(final Entity e) {
-		assert false;
-		return e.getVehicle();
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (mode == ChangeMode.SET) {
+			if (isSingle())
+				return CollectionUtils.array(Entity.class, EntityData.class);
+			Skript.error("You may only set the vehicle of one entity at a time." + 
+					"The same vehicle cannot be applied to multiple entities." +
+					"Use the 'passengers of' expression if you wish to update multiple riders.");
+		}
+		return super.acceptChange(mode);
 	}
-	
+
+	@Override
+	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+		if (mode == ChangeMode.SET) {
+			assert delta != null;
+			Entity passenger = getExpr().getSingle(event);
+			if (passenger == null)
+				return;
+			Object object = delta[0];
+			if (object instanceof Entity) {
+				((Entity) object).eject();
+				passenger.leaveVehicle();
+				((Entity) object).addPassenger(passenger);
+			} else if (object instanceof EntityData) {
+				Entity vehicle = ((EntityData<?>) object).spawn(passenger.getLocation());
+				if (vehicle == null)
+					return;
+				vehicle.addPassenger(vehicle);
+			}
+			return;
+		}
+		super.change(event, delta, mode);
+	}
+
+	@Override
+	public boolean setTime(int time) {
+		return super.setTime(time, getExpr(), VehicleEnterEvent.class, VehicleExitEvent.class);
+	}
+
 	@Override
 	public Class<? extends Entity> getReturnType() {
 		return Entity.class;
 	}
-	
+
 	@Override
-	protected String getPropertyName() {
-		return "vehicle";
+	public String toString(@Nullable Event event, boolean debug) {
+		return "vehicle of " + getExpr().toString(event, debug);
 	}
-	
-	@Override
-	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
-		if (mode == ChangeMode.SET) {
-			return new Class[] {Entity.class, EntityData.class};
-		}
-		return super.acceptChange(mode);
-	}
-	
-	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) {
-		if (mode == ChangeMode.SET) {
-			assert delta != null;
-			final Entity[] ps = getExpr().getArray(e);
-			if (ps.length == 0)
-				return;
-			final Object o = delta[0];
-			if (o instanceof Entity) {
-				((Entity) o).eject();
-				final Entity p = CollectionUtils.getRandom(ps);
-				assert p != null;
-				p.leaveVehicle();
-				((Entity) o).setPassenger(p);
-			} else if (o instanceof EntityData) {
-				for (final Entity p : ps) {
-					final Entity v = ((EntityData<?>) o).spawn(p.getLocation());
-					if (v == null)
-						continue;
-					v.setPassenger(p);
-				}
-			} else {
-				assert false;
-			}
-		} else {
-			super.change(e, delta, mode);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	public boolean setTime(final int time) {
-		return super.setTime(time, getExpr(), VehicleEnterEvent.class, VehicleExitEvent.class);
-	}
-	
+
 }
