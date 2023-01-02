@@ -48,8 +48,8 @@ public class ExprDamageDelay extends SimplePropertyExpression<LivingEntity, Time
 	
 	static {
 		Skript.registerExpression(ExprDamageDelay.class, Timespan.class, ExpressionType.PROPERTY,
-				"[the] [max:max[imum]] [no] damage delay [of %livingentities%]",
-				"%livingentities%'[s] [max:max[imum]] [no] damage delay"
+				"[the] [max:max[imum]] (invulnerability|no damage) (tick[s]|delay) [of %livingentities%]",
+				"%livingentities%'[s] [max:max[imum]] (invulnerability|no damage) (tick[s]|delay)"
 		);
 	}
 
