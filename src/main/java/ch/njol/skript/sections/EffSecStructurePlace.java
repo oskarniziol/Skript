@@ -165,7 +165,7 @@ public class EffSecStructurePlace extends EffectSection {
 		Structure structure = this.structure.getSingle(event);
 		if (structure == null) {
 			debug(event, false);
-			return getNext();
+			return super.walk(event, false);
 		}
 		StructurePlaceEvent details = new StructurePlaceEvent(structure, entities);
 		if (trigger != null) {

@@ -1520,12 +1520,12 @@ public class BukkitClasses {
 
 						@Override
 						public String toString(Structure structure, int flags) {
-							return "Structure " + structure.toString();
+							return "structure " + structure.toString();
 						}
 
 						@Override
 						public String toVariableNameString(Structure structure) {
-							return "Structure " + structure.toString();
+							return toString(structure, 0);
 						}
 					}));
 

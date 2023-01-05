@@ -42,7 +42,7 @@ import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.util.Kleenean;
 
 @Name("Structure Info")
-@Description("Collect information about a structures' entities, size or blocks.")
+@Description("An expression to obtain information about a structure's entities, size, and blocks.")
 @Examples({
 	"loop all entities of structure {_structure}:",
 		"\tif loop-entity is a diamond:",
