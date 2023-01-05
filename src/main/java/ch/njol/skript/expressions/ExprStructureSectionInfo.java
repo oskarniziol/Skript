@@ -19,8 +19,8 @@
 package ch.njol.skript.expressions;
 
 import java.util.Locale;
+import java.util.function.BiConsumer;
 
-import org.bukkit.Rotation;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.event.Event;
@@ -81,21 +81,37 @@ public class ExprStructureSectionInfo extends SimpleExpression<Object> {
 	}
 
 	private enum Setting {
-		INCLUDES_ENTITIES(Boolean.class),
-		ROTATION(Rotation.class),
-		INTEGRITY(Float.class),
-		PALLET(Integer.class),
-		MIRROR(Mirror.class);
 
+		INCLUDES_ENTITIES(Boolean.class, StructurePlaceEvent::setIncludesEntities),
+		ROTATION(StructureRotation.class, StructurePlaceEvent::setRotation),
+		INTEGRITY(Float.class, (details, number) -> {
+			float integrity = ((Number) number).floatValue();
+			details.setIntegrity(Math.min(1, Math.max(0, integrity)));
+		}),
+		PALLET(Integer.class, (details, number) -> {
+			int pallet = ((Number) number).intValue();
+			int max = details.getStructure().getPaletteCount();
+			details.setPallet(Math.min(max, Math.max(-1, pallet)));
+		}),
+		MIRROR(Mirror.class, StructurePlaceEvent::setMirror);
+
+		private final BiConsumer<StructurePlaceEvent, Object> consumer;
 		private final Class<? extends Object> returnType;
 
-		Setting(Class<? extends Object> returnType) {
+		@SuppressWarnings("unchecked")
+		<T> Setting(Class<T> returnType, BiConsumer<StructurePlaceEvent, T> consumer) {
 			this.returnType = returnType;
+			this.consumer = (BiConsumer<StructurePlaceEvent, Object>) consumer;
+		}
+
+		public void accept(StructurePlaceEvent event, Object object) {
+			consumer.accept(event, object);
 		}
 
 		public Class<? extends Object> getReturnType() {
 			return returnType;
 		}
+
 	}
 
 	private Setting setting;
@@ -143,27 +159,7 @@ public class ExprStructureSectionInfo extends SimpleExpression<Object> {
 			return;
 		if (!(event instanceof StructurePlaceEvent))
 			return;
-		StructurePlaceEvent details = (StructurePlaceEvent) event;
-		switch (setting) {
-			case INCLUDES_ENTITIES:
-				details.setIncludesEntities((boolean) delta[0]);
-				break;
-			case INTEGRITY:
-				float integrity = ((Number) delta[0]).floatValue();
-				details.setIntegrity(Math.min(1, Math.max(0, integrity)));
-				break;
-			case PALLET:
-				int pallet = ((Number) delta[0]).intValue();
-				int max = details.getStructure().getPaletteCount();
-				details.setPallet(Math.min(max, Math.max(-1, pallet)));
-				break;
-			case MIRROR:
-				details.setMirror((Mirror) delta[0]);
-				break;
-			case ROTATION:
-				details.setRotation((StructureRotation) delta[0]);
-				break;
-		}
+		setting.accept((StructurePlaceEvent) event, delta[0]);
 	}
 
 	@Override
