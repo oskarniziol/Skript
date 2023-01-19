@@ -47,19 +47,23 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Passenger")
-@Description({"The passenger of a vehicle, or the rider of a mob.",
-		"For 1.11.2 and above, it returns a list of passengers and you can use all changers in it.",
-		"See also: <a href='#ExprVehicle'>vehicle</a>"})
-@Examples({"#for 1.11 and lower",
-		"passenger of the minecart is a creeper or a cow",
-		"the saddled pig's passenger is a player",
-		"#for 1.11.2+",
-		"passengers of the minecart contains a creeper or a cow",
-		"the boat's passenger contains a pig",
-		"add a cow and a zombie to passengers of last spawned boat",
-		"set passengers of player's vehicle to a pig and a horse",
-		"remove all pigs from player's vehicle",
-		"clear passengers of boat"})
+@Description({
+	"The passenger of a vehicle, or the rider of a mob.",
+	"For 1.11.2 and above, it returns a list of passengers and you can use all changers in it.",
+	"See also: <a href='#ExprVehicle'>vehicle</a>"
+})
+@Examples({
+	"#for 1.11 and lower",
+	"passenger of the minecart is a creeper or a cow",
+	"the saddled pig's passenger is a player",
+	"#for 1.11.2+",
+	"passengers of the minecart contains a creeper or a cow",
+	"the boat's passenger contains a pig",
+	"add a cow and a zombie to passengers of last spawned boat",
+	"set passengers of player's vehicle to a pig and a horse",
+	"remove all pigs from player's vehicle",
+	"clear passengers of boat"
+})
 @Since("2.0, 2.2-dev26 (Multiple passengers for 1.11.2+)")
 public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpression due to isSingle
 
@@ -85,7 +89,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 	@Override
 	@Nullable
 	protected Entity[] get(Event event) {
-		Entity[] source = vehicles.getAll(event);
+		Entity[] source = vehicles.getArray(event);
 		Converter<Entity, Entity[]> converter = new Converter<Entity, Entity[]>() {
 			@Override
 			@Nullable
@@ -102,8 +106,6 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 			}};
 		List<Entity> entities = new ArrayList<>();
 		for (Entity entity : source) {
-			if (entity == null)
-				continue;
 			Entity[] array = converter.convert(entity);
 			if (array != null && array.length > 0)
 				entities.addAll(Arrays.asList(array));
@@ -122,11 +124,8 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 		Entity[] vehicles = this.vehicles.getArray(event);
 		switch (mode) {
 			case SET:
-				for (Entity vehicle: vehicles) {
-					if (vehicle == null)
-						continue;
+				for (Entity vehicle : vehicles)
 					vehicle.eject();
-				}
 				//$FALL-THROUGH$
 			case ADD:
 				if (delta == null || delta.length == 0)

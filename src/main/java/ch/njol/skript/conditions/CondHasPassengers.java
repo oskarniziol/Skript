@@ -20,6 +20,7 @@ package ch.njol.skript.conditions;
 
 import org.bukkit.entity.Entity;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -36,7 +37,10 @@ import ch.njol.util.Kleenean;
 public class CondHasPassengers extends PropertyCondition<Entity> {
 
 	static {
-		register(CondHasPassengers.class, PropertyType.HAVE, "[a|:no] passenger[s]", "entities");
+		Skript.registerCondition(CondHasPassengers.class,
+				"%entities% (has|have) [a[ny]|:no] passenger[s]",
+				"%entities% (doesn't|does not|do not|don't) have [a[ny]] passenger[s]"
+		);
 	}
 
 	@Override

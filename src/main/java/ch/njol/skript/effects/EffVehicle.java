@@ -28,7 +28,6 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.expressions.ExprLastSpawnedEntity;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -71,20 +70,14 @@ public class EffVehicle extends Effect {
 	protected void execute(Event event) {
 		if (vehicles == null) {
 			assert passengers != null;
-			for (Entity passenger : passengers.getArray(event)) {
-				if (passenger == null)
-					continue;
+			for (Entity passenger : passengers.getArray(event))
 				passenger.leaveVehicle();
-			}
 			return;
 		}
 		if (passengers == null) {
 			assert vehicles != null;
-			for (Object vehicle : vehicles.getArray(event)) {
-				if (vehicle == null)
-					continue;
+			for (Object vehicle : vehicles.getArray(event))
 				((Entity) vehicle).eject();
-			}
 			return;
 		}
 		Object[] vehicles = this.vehicles.getArray(event);
@@ -98,15 +91,11 @@ public class EffVehicle extends Effect {
 				Entity vehicle = (Entity) object;
 				vehicle.eject();
 				for (Entity passenger : passengers) {
-					if (passenger == null)
-						continue;
 					passenger.leaveVehicle();
 					vehicle.addPassenger(passenger);
 				}
 			} else {
 				for (Entity passenger : passengers) {
-					if (passenger == null)
-						continue;
 					Entity entity = ((EntityData<?>) object).spawn(passenger.getLocation());
 					if (entity == null)
 						continue;

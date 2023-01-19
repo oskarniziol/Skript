@@ -18,11 +18,11 @@
  */
 package ch.njol.skript.conditions;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import ch.njol.skript.bukkitutil.ItemUtils;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -49,7 +49,7 @@ public class CondIsEmpty extends PropertyCondition<Object> {
 			return ((String) object).isEmpty();
 		if (object instanceof Inventory) {
 			for (ItemStack item : ((Inventory) object).getContents()) {
-				if (item != null && item.getType() != Material.AIR)
+				if (item != null && !ItemUtils.isAir(item.getType()))
 					return false; // There is an item here!
 			}
 			return true;
@@ -57,7 +57,7 @@ public class CondIsEmpty extends PropertyCondition<Object> {
 		if (object instanceof Slot) {
 			Slot slot = (Slot) object;
 			ItemStack item = slot.getItem();
-			return item == null || item.getType() == Material.AIR;
+			return item == null || !ItemUtils.isAir(item.getType());
 		}
 		if (object instanceof Entity) {
 			Entity entity = (Entity) object;
