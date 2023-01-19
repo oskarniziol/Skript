@@ -35,7 +35,7 @@ import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.util.Kleenean;
 
 @Name("Vehicle")
-@Description({"Makes an entity ride another entity, e.g. a minecart, a saddled pig, an arrow, etc."})
+@Description("Makes an entity ride another entity, e.g. a minecart, a saddled pig, an arrow, etc.")
 @Examples({
 	"make the player ride a saddled pig",
 	"make the attacker ride the victim"
