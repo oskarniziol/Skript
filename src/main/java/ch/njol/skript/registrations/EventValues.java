@@ -182,7 +182,7 @@ public class EventValues {
 
 	/**
 	 * Register an event value with events that should be excluded for this event value.
-	 * Some event values you may want to not opperate in specific events.
+	 * Some event values you may want to not operate in specific events.
 	 * <p>
 	 * An example would be Skript's player event value not being allowed in a damage event.
 	 * This is because there can be multiple players in a damage event and Skript would be defaulting to
@@ -193,7 +193,7 @@ public class EventValues {
 	 * @param converter The converter that will extract the value from the event.
 	 * @param time The time state of this event value. Use {@link EventValues#TIME_PAST} if this value was before the event.
 	 * 		or use {@link EventValues#TIME_FUTURE} if this value is after the event. {@link EventValues#TIME_NOW} is the default neutral state.
-	 * 		If the provided time was not {@link EventValues#TIME_NOW} and it's time wasn't found, Skript will default to {@link EventValues#TIME_NOW}.
+	 * 		If the provided time was not {@link EventValues#TIME_NOW} and its time wasn't found, Skript will default to {@link EventValues#TIME_NOW}.
 	 * 		Use {@link EventValues#TIME_NOW} if this event value has no distinct states, and always register a default state {@link EventValues#TIME_NOW} for each return type of the event.
 	 * @param excludeErrorMessage The error message to print when an excluded event is used with this event value.
 	 * @param excludes Subclasses of the event for which this event value should not be registered for.
@@ -222,7 +222,7 @@ public class EventValues {
 	 * @param c The return type of the converter.
 	 * @param time The time state of this event value. Use {@link EventValues#TIME_PAST} if this value was before the event.
 	 * 		or use {@link EventValues#TIME_FUTURE} if this value is after the event. {@link EventValues#TIME_NOW} is the default neutral state.
-	 * 		If the provided time was not {@link EventValues#TIME_NOW} and it's time wasn't found, Skript will default to {@link EventValues#TIME_NOW}.
+	 * 		If the provided time was not {@link EventValues#TIME_NOW} and its time wasn't found, Skript will default to {@link EventValues#TIME_NOW}.
 	 * @return The value found from possible event values.
 	 * @see #registerEventValue(Class, Class, Getter, int)
 	 */
@@ -254,7 +254,7 @@ public class EventValues {
 	 * @param event The event class the converter will be getting from.
 	 * @param c The return type of the converter.
 	 * @param time The event-value's time state.
-	 * 		If the provided time was not {@link EventValues#TIME_NOW} and it's time wasn't found, Skript will default to {@link EventValues#TIME_NOW}.
+	 * 		If the provided time was not {@link EventValues#TIME_NOW} and its time wasn't found, Skript will default to {@link EventValues#TIME_NOW}.
 	 * @return A converter that is used to extract values from the given event class.
 	 * @see #registerEventValue(Class, Class, Getter, int)
 	 * @see EventValueExpression#EventValueExpression(Class)
