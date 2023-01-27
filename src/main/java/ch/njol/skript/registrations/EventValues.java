@@ -173,7 +173,7 @@ public class EventValues {
 	 * @param converter The converter that will extract the value from the event.
 	 * @param time The time state of this event value. Use {@link EventValues#TIME_PAST} if this value was before the event.
 	 * 		or use {@link EventValues#TIME_FUTURE} if this value is after the event. {@link EventValues#TIME_NOW} is the default neutral state.
-	 * 		If the provided time was not {@link EventValues#TIME_NOW} and it's time wasn't found, Skript will default to {@link EventValues#TIME_NOW}.
+	 * 		If the provided time was not {@link EventValues#TIME_NOW} and its time wasn't found, Skript will default to {@link EventValues#TIME_NOW}.
 	 * 		Use {@link EventValues#TIME_NOW} if this event value has no distinct states, and always register a default state {@link EventValues#TIME_NOW} for each return type of the event.
 	 */
 	public static <T, E extends Event> void registerEventValue(Class<E> event, Class<T> c, Converter<E, T> converter, int time) {
