@@ -135,7 +135,7 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 			return one;
 		}
 		T[] dataArray = (T[]) value;
-		T[] array = (T[]) Array.newInstance(c.getComponentType(), ((T[]) value).length);
+		T[] array = (T[]) Array.newInstance(c.getComponentType(), dataArray.length);
 		System.arraycopy(dataArray, 0, array, 0, array.length);
 		return array;
 	}
