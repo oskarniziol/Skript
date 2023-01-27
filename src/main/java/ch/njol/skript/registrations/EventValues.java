@@ -63,7 +63,7 @@ public class EventValues {
 
 		/**
 		 * Get the classes that are excluded for this event value.
-		 * If the event values is used in any of these events, Skript will error.
+		 * If the event values are used in any of these events, Skript will error.
 		 * Example being command sender or a player in a damage event, they should be using attacker/victim.
 		 * 
 		 * @return The classes of the excluded events for this event value.
