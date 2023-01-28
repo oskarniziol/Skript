@@ -64,7 +64,7 @@ public class EventValues {
 		/**
 		 * Get the classes that are excluded for this event value.
 		 * If the event values are used in any of these events, Skript will error.
-		 * Example being command sender or a player in a damage event, they should be using attacker/victim.
+		 * Example: command sender or a player in a damage event will error, they should be using attacker/victim.
 		 * 
 		 * @return The classes of the excluded events for this event value.
 		 */
@@ -151,7 +151,7 @@ public class EventValues {
 			return defaultEventValues;
 		if (time == TIME_FUTURE)
 			return futureEventValues;
-		throw new IllegalArgumentException("time must be -1, 0, or 1");
+		throw new IllegalArgumentException("time must be TIME_PAST, TIME_NOW, or TIME_FUTURE");
 	}
 
 	/**
@@ -199,17 +199,17 @@ public class EventValues {
 	 * @param excludes Subclasses of the event for which this event value should not be registered for.
 	 */
 	@SafeVarargs
-	public static <T, E extends Event> void registerEventValue(Class<E> e, Class<T> c, Converter<E, T> g, int time, @Nullable String excludeErrorMessage, @Nullable Class<? extends E>... excludes) {
+	public static <T, E extends Event> void registerEventValue(Class<E> event, Class<T> c, Converter<E, T> converter, int time, @Nullable String excludeErrorMessage, @Nullable Class<? extends E>... excludes) {
 		Skript.checkAcceptRegistrations();
 		List<EventValueInfo<?, ?>> eventValues = getEventValuesList(time);
 		for (int i = 0; i < eventValues.size(); i++) {
 			EventValueInfo<?, ?> info = eventValues.get(i);
-			if (info.getEventClass() != e ? info.getEventClass().isAssignableFrom(e) : info.getValueClass().isAssignableFrom(c)) {
-				eventValues.add(i, new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
+			if (info.getEventClass() != event ? info.getEventClass().isAssignableFrom(event) : info.getValueClass().isAssignableFrom(c)) {
+				eventValues.add(i, new EventValueInfo<>(event, c, converter, excludeErrorMessage, excludes));
 				return;
 			}
 		}
-		eventValues.add(new EventValueInfo<>(e, c, g, excludeErrorMessage, excludes));
+		eventValues.add(new EventValueInfo<>(event, c, converter, excludeErrorMessage, excludes));
 	}
 
 	/**
@@ -391,10 +391,10 @@ public class EventValues {
 		return new Converter<E, T>() {
 			@Override
 			@Nullable
-			public T convert(E e) {
-				if (checkInstanceOf && !info.getEventClass().isInstance(e))
+			public T convert(E event) {
+				if (checkInstanceOf && !info.getEventClass().isInstance(event))
 					return null;
-				F value = info.getConverter().convert(e);
+				F value = info.getConverter().convert(event);
 				if (value == null)
 					return null;
 				return converter.convert(value);
