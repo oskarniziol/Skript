@@ -151,7 +151,7 @@ public class EventValues {
 			return defaultEventValues;
 		if (time == TIME_FUTURE)
 			return futureEventValues;
-		throw new IllegalArgumentException("time must be TIME_PAST, TIME_NOW, or TIME_FUTURE");
+		throw new IllegalArgumentException("time must be " + TIME_PAST + ", " + TIME_NOW + ", or " + TIME_FUTURE);
 	}
 
 	/**
