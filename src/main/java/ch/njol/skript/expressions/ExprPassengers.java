@@ -46,7 +46,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Passenger")
+@Name("Passengers")
 @Description({
 	"The passenger of a vehicle, or the rider of a mob.",
 	"For 1.11.2 and above, it returns a list of passengers and you can use all changers in it.",
@@ -133,7 +133,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 				for (Object object : delta) {
 					if (object == null)
 						continue;
-					for (Entity vehicle: vehicles) {
+					for (Entity vehicle : vehicles) {
 						Entity passenger = object instanceof Entity ? (Entity) object : ((EntityData<?>) object).spawn(vehicle.getLocation());
 						vehicle.addPassenger(passenger);
 					}
@@ -146,7 +146,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 				for (Object object : delta) {
 					if (object == null)
 						continue;
-					for (Entity vehicle: vehicles) {
+					for (Entity vehicle : vehicles) {
 						if (object instanceof Entity) {
 							vehicle.removePassenger((Entity) object);
 						} else {
@@ -160,11 +160,8 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 				break;
 			case DELETE:
 			case RESET:
-				for (Entity vehicle: vehicles) {
-					if (vehicle == null)
-						continue;
+				for (Entity vehicle : vehicles)
 					vehicle.eject();
-				}
 				break;
 			default:
 				break;
@@ -187,10 +184,10 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 	public Class<? extends Entity> getReturnType() {
 		return Entity.class;
 	}
-	
+
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "the passengers of " + vehicles.toString(event, debug);
+		return "passengers of " + vehicles.toString(event, debug);
 	}
 
 }
