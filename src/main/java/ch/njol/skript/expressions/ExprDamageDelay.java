@@ -22,7 +22,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -30,14 +29,13 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Damage Delay")
-@Description("The delay before an entity can take damage again.")
+@Description("The time delay before living entities can take damage again.")
 @Examples({
 	"on damage of player:",
 		"\tplayer is holding a diamond named \"Damage saviour\"",
@@ -45,12 +43,9 @@ import ch.njol.util.coll.CollectionUtils;
 })
 @Since("INSERT VERSION")
 public class ExprDamageDelay extends SimplePropertyExpression<LivingEntity, Timespan> {
-	
+
 	static {
-		Skript.registerExpression(ExprDamageDelay.class, Timespan.class, ExpressionType.PROPERTY,
-				"[the] [max:max[imum]] (invulnerability|no damage) (tick[s]|delay) [of %livingentities%]",
-				"%livingentities%'[s] [max:max[imum]] (invulnerability|no damage) (tick[s]|delay)"
-		);
+		registerDefault(ExprDamageDelay.class, Timespan.class, "[max:max[imum]] (invulnerability|no damage) (tick[s]|delay)", "livingentities");
 	}
 
 	private boolean max;
@@ -72,9 +67,17 @@ public class ExprDamageDelay extends SimplePropertyExpression<LivingEntity, Time
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.REMOVE_ALL)
-			return null;
-		return CollectionUtils.array(Timespan.class);
+		switch (mode) {
+			case ADD:
+			case DELETE:
+			case REMOVE:
+			case RESET:
+			case SET:
+				return CollectionUtils.array(Timespan.class);
+			case REMOVE_ALL:
+			default:
+				return null;
+		}
 	}
 
 	@Override
@@ -82,7 +85,7 @@ public class ExprDamageDelay extends SimplePropertyExpression<LivingEntity, Time
 		if (mode != ChangeMode.RESET && mode != ChangeMode.DELETE && delta == null)
 			return;
 
-		int ticks = delta != null ? (int) ((Timespan) delta[0]).getTicks_i() : 0;
+		int ticks = delta != null ? (int) ((Timespan) delta[0]).getTicks_i() : 60; //60 ticks is Minecraft default.
 		LivingEntity[] entities = getExpr().getArray(event);
 		switch (mode) {
 			case RESET:
