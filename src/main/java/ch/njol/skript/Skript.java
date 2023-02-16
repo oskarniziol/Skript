@@ -1445,17 +1445,29 @@ public final class Skript extends JavaPlugin implements Listener {
 		return r;
 	}
 
-	public static <E extends Structure> void registerStructure(Class<E> c, String... patterns) {
+	/**
+	 * Registers a structure.
+	 * 
+	 * @param structure The class that extends a Structure.
+	 * @param patterns Skript patterns to match this structure.
+	 */
+	public static <E extends Structure> void registerStructure(Class<E> structure, String... patterns) {
 		checkAcceptRegistrations();
+		Pair<Boolean, String[]> pair = FeatureConfig.contains(structure.getSimpleName(), patterns);
+		if (pair.getFirst())
+			return;
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
-		StructureInfo<E> structureInfo = new StructureInfo<>(patterns, c, originClassPath);
+		StructureInfo<E> structureInfo = new StructureInfo<>(patterns, structure, originClassPath);
 		structures.add(structureInfo);
 	}
 
-	public static <E extends Structure> void registerStructure(Class<E> c, EntryValidator entryValidator, String... patterns) {
+	public static <E extends Structure> void registerStructure(Class<E> structure, EntryValidator entryValidator, String... patterns) {
 		checkAcceptRegistrations();
+		Pair<Boolean, String[]> pair = FeatureConfig.contains(structure.getSimpleName(), patterns);
+		if (pair.getFirst())
+			return;
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
-		StructureInfo<E> structureInfo = new StructureInfo<>(patterns, c, originClassPath, entryValidator);
+		StructureInfo<E> structureInfo = new StructureInfo<>(patterns, structure, originClassPath, entryValidator);
 		structures.add(structureInfo);
 	}
 

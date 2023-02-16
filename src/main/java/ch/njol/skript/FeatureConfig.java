@@ -34,7 +34,6 @@ import ch.njol.skript.config.OptionSection;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.util.FileUtils;
 import ch.njol.util.Pair;
-import ch.njol.util.coll.iterator.IteratorIterable;
 
 public class FeatureConfig {
 
@@ -79,9 +78,7 @@ public class FeatureConfig {
 				e.printStackTrace();
 			}
 		} else {
-			ZipFile zip = null;
-			try {
-				zip = new ZipFile(file);
+			try (ZipFile zip = new ZipFile(file)) {
 				File saveTo = null;
 				ZipEntry entry = zip.getEntry("features.sk");
 				if (entry != null) {
@@ -89,23 +86,14 @@ public class FeatureConfig {
 					if (!af.exists())
 						saveTo = af;
 				} if (saveTo != null) {
-					InputStream in = zip.getInputStream(entry);
-					try {
-						assert in != null;
+					try (InputStream in = zip.getInputStream(entry)) {
 						FileUtils.save(in, saveTo);
-					} finally {
-						in.close();
 					}
 				}
 			} catch (IOException e) {
 				if (Skript.debug())
 					Skript.exception(e);
 			} finally {
-				if (zip != null) {
-					try {
-						zip.close();
-					} catch (IOException e) {}
-				}
 				featureFile = new File(Skript.getInstance().getDataFolder(), "features.sk");
 				try {
 					mc = new Config(featureFile, false, false, ":");
@@ -125,7 +113,7 @@ public class FeatureConfig {
 			}
 			SectionNode section = (SectionNode) mc.getMainNode().get("features");
 			if (section != null && !section.isEmpty()) {
-				for (Node node : new IteratorIterable<Node>(section.iterator())) {		
+				for (Node node : section) {		
 					if (node.getKey().startsWith("Feature")) {
 						disabledPatterns.add(mc.get("features", node.getKey()));
 					} else {
@@ -138,7 +126,7 @@ public class FeatureConfig {
 			}
 			SectionNode alter = (SectionNode) mc.getMainNode().get("alterSyntax");
 			if (alter != null && !alter.isEmpty()) {
-				for (Node node : new IteratorIterable<Node>(alter.iterator())) {	
+				for (Node node : alter) {	
 					alteredPatterns.put(node.getKey(), mc.get("alterSyntax", node.getKey()));
 				}
 			}
@@ -147,6 +135,7 @@ public class FeatureConfig {
 
 	public static void discard() {
 		if (loaded) {
+			alteredPatterns.clear();
 			disabledPatterns.clear();
 			disabledClassNames.clear();
 		}
