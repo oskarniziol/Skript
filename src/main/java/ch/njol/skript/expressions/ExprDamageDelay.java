@@ -59,9 +59,7 @@ public class ExprDamageDelay extends SimplePropertyExpression<LivingEntity, Time
 	@Override
 	@Nullable
 	public Timespan convert(LivingEntity entity) {
-		if (max)
-			return Timespan.fromTicks_i(entity.getMaximumNoDamageTicks());
-		return Timespan.fromTicks_i(entity.getNoDamageTicks());
+		return Timespan.fromTicks_i(max ? entity.getMaximumNoDamageTicks() : entity.getNoDamageTicks());
 	}
 
 	@Override
