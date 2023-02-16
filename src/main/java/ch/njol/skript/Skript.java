@@ -21,8 +21,6 @@ package ch.njol.skript;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.bukkitutil.BurgerHelper;
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.Comparator;
-import ch.njol.skript.classes.Converter;
 import ch.njol.skript.classes.data.BukkitClasses;
 import ch.njol.skript.classes.data.BukkitEventValues;
 import ch.njol.skript.classes.data.DefaultComparators;
@@ -59,8 +57,6 @@ import ch.njol.skript.log.LogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.log.Verbosity;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.Comparators;
-import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.tests.runner.SkriptTestEvent;
 import ch.njol.skript.tests.runner.TestMode;
@@ -110,6 +106,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.converter.Converters;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
@@ -382,8 +379,6 @@ public final class Skript extends JavaPlugin implements Listener {
 		
 		version = new Version("" + getDescription().getVersion()); // Skript version
 		
-		getAddonInstance();
-		
 		// Start the updater
 		// Note: if config prohibits update checks, it will NOT do network connections
 		try {
@@ -395,7 +390,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		if (!getDataFolder().isDirectory())
 			getDataFolder().mkdirs();
 
-		scriptsFolder = new File(getDataFolder(), SCRIPTSFOLDER + File.separator);
+		scriptsFolder = new File(getDataFolder(), SCRIPTSFOLDER);
 		File config = new File(getDataFolder(), "config.sk");
 		File features = new File(getDataFolder(), "features.sk");
 		File lang = new File(getDataFolder(), "lang");
@@ -421,16 +416,16 @@ public final class Skript extends JavaPlugin implements Listener {
 					if (e.isDirectory())
 						continue;
 					File saveTo = null;
-					if (populateExamples && e.getName().startsWith(SCRIPTSFOLDER + File.separator)) {
-						String fileName = e.getName().substring(e.getName().lastIndexOf(File.separatorChar) + 1);
-						if (fileName.startsWith(ScriptLoader.DISABLED_SCRIPT_PREFIX))
+					if (populateExamples && e.getName().startsWith(SCRIPTSFOLDER + "/")) {
+						String fileName = e.getName().substring(e.getName().indexOf("/") + 1);
+						// All example scripts must be disabled for jar security.
+						if (!fileName.startsWith(ScriptLoader.DISABLED_SCRIPT_PREFIX))
 							fileName = ScriptLoader.DISABLED_SCRIPT_PREFIX + fileName;
 						saveTo = new File(scriptsFolder, fileName);
 					} else if (populateLanguageFiles
-							&& e.getName().startsWith("lang" + File.separator)
-							&& e.getName().endsWith(".lang")
-							&& !e.getName().endsWith(File.separator + "default.lang")) {
-						String fileName = e.getName().substring(e.getName().lastIndexOf(File.separatorChar) + 1);
+							&& e.getName().startsWith("lang/")
+							&& !e.getName().endsWith("default.lang")) {
+						String fileName = e.getName().substring(e.getName().lastIndexOf("/") + 1);
 						saveTo = new File(lang, fileName);
 					} else if (e.getName().equals("config.sk")) {
 						if (!config.exists())
@@ -466,6 +461,9 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 
 		FeatureConfig.load(getFile());
+
+		// initialize the Skript addon instance
+		getAddonInstance();
 		
 		// Load classes which are always safe to use
 		new JavaClasses(); // These may be needed in configuration
@@ -481,7 +479,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		// Config must be loaded after Java and Skript classes are parseable
 		// ... but also before platform check, because there is a config option to ignore some errors
 		SkriptConfig.load();
-		
+
 		// Check server software, Minecraft version, etc.
 		if (!checkServerPlatform()) {
 			disabled = true; // Nothing was loaded, nothing needs to be unloaded
@@ -765,7 +763,7 @@ public final class Skript extends JavaPlugin implements Listener {
 
 				File scriptsFolder = getScriptsFolder();
 				ScriptLoader.updateDisabledScripts(scriptsFolder.toPath());
-				ScriptLoader.loadScripts(scriptsFolder, OpenCloseable.EMPTY)
+				ScriptLoader.loadScripts(scriptsFolder, logHandler)
 					.thenAccept(scriptInfo -> {
 						try {
 							if (logHandler.getCount() == 0)
@@ -1224,7 +1222,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	private static void stopAcceptingRegistrations() {
 		acceptRegistrations = false;
 		
-		Converters.createMissingConverters();
+		Converters.createChainedConverters();
 		
 		Classes.onRegistrationsStop();
 	}
@@ -1400,11 +1398,11 @@ public final class Skript extends JavaPlugin implements Listener {
 			}
 		});
 	}
-	
+
 	// ================ EVENTS ================
 
 	private static final List<StructureInfo<? extends Structure>> structures = new ArrayList<>(10);
-	
+
 	/**
 	 * Registers an event.
 	 * 
@@ -1419,7 +1417,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	public static <E extends SkriptEvent> SkriptEventInfo<E> registerEvent(String name, Class<E> c, Class<? extends Event> event, String... patterns) {
 		return registerEvent(name, c, new Class[] {event}, patterns);
 	}
-	
+
 	/**
 	 * Registers an event.
 	 * 
