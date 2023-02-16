@@ -44,7 +44,7 @@ public abstract class WrapperExpression<T> extends SimpleExpression<T> {
 
 	protected WrapperExpression() {}
 
-	public WrapperExpression(final SimpleExpression<? extends T> expr) {
+	public WrapperExpression(SimpleExpression<? extends T> expr) {
 		this.expr = expr;
 	}
 
