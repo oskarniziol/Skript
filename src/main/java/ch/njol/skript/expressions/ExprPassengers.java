@@ -31,15 +31,14 @@ import org.skriptlang.skript.lang.converter.Converter;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.EventValues;
@@ -68,10 +67,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpression due to isSingle
 
 	static {
-		Skript.registerExpression(ExprPassengers.class, Entity.class, ExpressionType.PROPERTY,
-				"[the] passenger[:s] [of %entities%]", // Passenger can be non plural due to event default expression 'passenger'
-				"%entities%'[s] passenger[s]"
-		);
+		PropertyExpression.registerDefault(ExprPassengers.class, Entity.class, "passenger[:s]", "entities");
 	}
 
 	@Nullable
