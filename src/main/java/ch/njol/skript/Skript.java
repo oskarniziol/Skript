@@ -1512,9 +1512,9 @@ public final class Skript extends JavaPlugin implements Listener {
 			return false;
 		}
 	}
-	
+
 	// ================ LOGGING ================
-	
+
 	public static boolean logNormal() {
 		return SkriptLogger.log(Verbosity.NORMAL);
 	}
