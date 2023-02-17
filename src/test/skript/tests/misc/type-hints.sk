@@ -1,7 +1,3 @@
-# TODO Remove and properly catch warnings.
-#on script load:
-	#suppress local variable type warnings
-
 test "type hints":
 	set {_string} to "empty"
 	set helmet of last spawned zombie to 1 of {_string}
