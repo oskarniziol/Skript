@@ -240,8 +240,7 @@ public class Variable<T> implements Expression<T> {
 					infos[i] = Classes.getExactClassInfo(types[i]);
 				}
 				if (parser.isActive() && !parser.getCurrentScript().suppressesWarning(ScriptWarning.LOCAL_VARIABLE_TYPE)) {
-					Skript.warning("Variable '{" + name + "}' is of type '" + Classes.toString(Classes.getExactClassInfo(hint)) +
-							"', not a '" + Classes.toString(infos, false) + "'");
+					Skript.warning("Variable '{" + name + "}' is of type " + Classes.toString(Classes.getExactClassInfo(hint)) + ", and is " + SkriptParser.notOfType(infos));
 				}
 				// Fall back to not having any type hints
 			}
