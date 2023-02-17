@@ -220,7 +220,7 @@ public class FunctionReference<T> {
 				// Check type hints
 				if (parameters[i] instanceof Variable) {
 					Variable<?> variable = (Variable<?>) parameters[i];
-					Class<?> hint = TypeHints.get(variable.getName().toString());
+					Class<?> hint = TypeHints.get(variable);
 					if (hint != null && !p.type.getC().isAssignableFrom(hint)) {
 						ParserInstance parser = ParserInstance.get();
 						if (parser.isActive() && !parser.getCurrentScript().suppressesWarning(ScriptWarning.LOCAL_VARIABLE_TYPE)) {
