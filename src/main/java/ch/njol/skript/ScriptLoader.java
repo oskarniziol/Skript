@@ -900,12 +900,12 @@ public class ScriptLoader {
 	 */
 	public static ArrayList<TriggerItem> loadItems(SectionNode node) {
 		ParserInstance parser = getParser();
-
 		if (Skript.debug())
 			parser.setIndentation(parser.getIndentation() + "    ");
-		
+
 		ArrayList<TriggerItem> items = new ArrayList<>();
 
+		TypeHints.enterScope();
 		for (Node subNode : node) {
 			parser.setNode(subNode);
 
@@ -926,8 +926,8 @@ public class ScriptLoader {
 					long timeTaken = System.currentTimeMillis() - start;
 					if (timeTaken > requiredTime)
 						Skript.warning(
-							"The current line took a long time to parse (" + new Timespan(timeTaken) + ")."
-								+ " Avoid using long lines and use parentheses to create clearer instructions."
+							"The current line took a long time to parse (" + new Timespan(timeTaken) + "). " +
+								"Avoid using long lines and use parentheses to create clearer instructions."
 						);
 				}
 
@@ -936,8 +936,6 @@ public class ScriptLoader {
 
 				items.add(stmt);
 			} else if (subNode instanceof SectionNode) {
-				TypeHints.enterScope(); // Begin conditional type hints
-
 				Section section = Section.parse(expr, "Can't understand this section: " + expr, (SectionNode) subNode, items);
 				if (section == null)
 					continue;
@@ -946,20 +944,18 @@ public class ScriptLoader {
 					Skript.debug(SkriptColor.replaceColorChar(parser.getIndentation() + section.toString(null, true)));
 
 				items.add(section);
-
-				// Destroy these conditional type hints
-				TypeHints.exitScope();
 			}
 		}
-		
+
 		for (int i = 0; i < items.size() - 1; i++)
 			items.get(i).setNext(items.get(i + 1));
 
 		parser.setNode(node);
-		
+
 		if (Skript.debug())
 			parser.setIndentation(parser.getIndentation().substring(0, parser.getIndentation().length() - 4));
-		
+
+		TypeHints.exitScope();
 		return items;
 	}
 

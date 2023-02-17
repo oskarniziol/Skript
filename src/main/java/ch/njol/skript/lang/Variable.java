@@ -239,8 +239,8 @@ public class Variable<T> implements Expression<T> {
 				for (int i = 0; i < types.length; i++) {
 					infos[i] = Classes.getExactClassInfo(types[i]);
 				}
-				Skript.warning("Variable '{_" + name + "}' is " + Classes.toString(Classes.getExactClassInfo(hint))
-					+ ", not " + Classes.toString(infos, false));
+				Skript.warning("Variable '{" + name + "}' is of type '" + Classes.toString(Classes.getExactClassInfo(hint)) +
+						"', not a '" + Classes.toString(infos, false) + "'");
 				// Fall back to not having any type hints
 			}
 		}

@@ -1,0 +1,11 @@
+test "type hints":
+	set {_string} to "empty"
+	set helmet of last spawned zombie to 1 of {_string}
+	# {_string} still a string
+	add stone to {_string} # Fails and does nothing
+	# {_string} still a string
+	set helmet of last spawned zombie to 1 of {_string}
+	# {_string} still a string
+
+	set {_timespan} to a second
+	set helmet of last spawned zombie to 1 of {_timespan}
