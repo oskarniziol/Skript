@@ -25,6 +25,9 @@ import java.util.Map;
 
 import org.eclipse.jdt.annotation.Nullable;
 
+import ch.njol.skript.SkriptAPIException;
+import ch.njol.skript.lang.Variable;
+
 /**
  * This is used to manage local variable type hints.
  * 
@@ -36,13 +39,13 @@ import org.eclipse.jdt.annotation.Nullable;
  * </ul>
  */
 public class TypeHints {
-	
+
 	private static final Deque<Map<String, Class<?>>> typeHints = new ArrayDeque<>();
-	
+
 	static {
 		clear(); // Initialize type hints
 	}
-	
+
 	public static void add(String variable, Class<?> hint) {
 		if (hint.equals(Object.class)) // Ignore useless type hint
 			return;
@@ -51,7 +54,20 @@ public class TypeHints {
 		Map<String, Class<?>> hints = typeHints.getFirst();
 		hints.put(variable, hint);
 	}
-	
+
+	/**
+	 * Return any known type hints of a local variable.
+	 * 
+	 * @param variable The local variable expression to check against.
+	 * @return The return type that the local variable has been set to otherwise null if unset.
+	 */
+	@Nullable
+	public static Class<?> get(Variable<?> variable) {
+		if (!variable.isLocal())
+			throw new SkriptAPIException("Must only get TypeHints of local variables.");
+		return get(variable.getName().toString());
+	}
+
 	@Nullable
 	public static Class<?> get(String variable) {
 		// Go through stack of hints for different scopes
@@ -63,17 +79,18 @@ public class TypeHints {
 		
 		return null; // No type hint available
 	}
-	
+
 	public static void enterScope() {
 		typeHints.push(new HashMap<>());
 	}
-	
+
 	public static void exitScope() {
 		typeHints.pop();
 	}
-	
+
 	public static void clear() {
 		typeHints.clear();
 		typeHints.push(new HashMap<>());
 	}
+
 }
