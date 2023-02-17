@@ -9,3 +9,13 @@ test "type hints":
 
 	set {_timespan} to a second
 	set helmet of last spawned zombie to 1 of {_timespan}
+
+# TODO LimeGlass - Move to regression test #3753 when adding warning test runner checking.
+command /test:
+	trigger:
+		set {_test} to a chicken
+		if {_test} is an entity:
+			message "%{_test}% is an entity"
+		else:
+			message "%{_test}% is not an entity"
+		spawn {_test} at player's location
