@@ -80,9 +80,6 @@ public class ExprDamageDelay extends SimplePropertyExpression<LivingEntity, Time
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (mode != ChangeMode.RESET && mode != ChangeMode.DELETE && delta == null)
-			return;
-
 		int ticks = delta != null ? (int) ((Timespan) delta[0]).getTicks_i() : 60; //60 ticks is Minecraft default.
 		LivingEntity[] entities = getExpr().getArray(event);
 		switch (mode) {
