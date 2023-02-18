@@ -18,10 +18,10 @@
  */
 package ch.njol.skript.variables;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -40,7 +40,7 @@ import ch.njol.skript.lang.Variable;
  */
 public class TypeHints {
 
-	private static final Deque<Map<String, Class<?>>> typeHints = new ArrayDeque<>();
+	private static final Queue<Map<String, Class<?>>> TYPE_HINTS = new LinkedBlockingQueue<>();
 
 	static {
 		clear(); // Initialize type hints
@@ -49,9 +49,7 @@ public class TypeHints {
 	public static void add(String variable, Class<?> hint) {
 		if (hint.equals(Object.class)) // Ignore useless type hint
 			return;
-		
-		// Take top of stack, without removing it
-		Map<String, Class<?>> hints = typeHints.getFirst();
+		Map<String, Class<?>> hints = TYPE_HINTS.peek();
 		hints.put(variable, hint);
 	}
 
@@ -71,7 +69,7 @@ public class TypeHints {
 	@Nullable
 	public static Class<?> get(String variable) {
 		// Go through stack of hints for different scopes
-		for (Map<String, Class<?>> hints : typeHints) {
+		for (Map<String, Class<?>> hints : TYPE_HINTS) {
 			Class<?> hint = hints.get(variable);
 			if (hint != null) // Found in this scope
 				return hint;
@@ -81,16 +79,16 @@ public class TypeHints {
 	}
 
 	public static void enterScope() {
-		typeHints.push(new HashMap<>());
+		TYPE_HINTS.add(new HashMap<>());
 	}
 
 	public static void exitScope() {
-		typeHints.pop();
+		TYPE_HINTS.poll();
 	}
 
 	public static void clear() {
-		typeHints.clear();
-		typeHints.push(new HashMap<>());
+		TYPE_HINTS.clear();
+		TYPE_HINTS.add(new HashMap<>());
 	}
 
 }
