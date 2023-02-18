@@ -124,11 +124,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 					vehicle.eject();
 				//$FALL-THROUGH$
 			case ADD:
-				if (delta == null || delta.length == 0)
-					return;
 				for (Object object : delta) {
-					if (object == null)
-						continue;
 					for (Entity vehicle : vehicles) {
 						Entity passenger = object instanceof Entity ? (Entity) object : ((EntityData<?>) object).spawn(vehicle.getLocation());
 						vehicle.addPassenger(passenger);
@@ -137,11 +133,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 				break;
 			case REMOVE_ALL:
 			case REMOVE:
-				if (delta == null || delta.length == 0)
-					return;
 				for (Object object : delta) {
-					if (object == null)
-						continue;
 					for (Entity vehicle : vehicles) {
 						if (object instanceof Entity) {
 							vehicle.removePassenger((Entity) object);

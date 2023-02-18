@@ -59,6 +59,11 @@ public class CondHasPassengers extends PropertyCondition<Entity> {
 	}
 
 	@Override
+	protected PropertyType getPropertyType() {
+		return PropertyType.HAVE;
+	}
+
+	@Override
 	protected String getPropertyName() {
 		return "passengers";
 	}
