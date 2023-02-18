@@ -295,20 +295,18 @@ public abstract class Variables {
 		copy.treeMap.putAll(from.treeMap);
 		return copy;
 	}
-	
+
 	/**
 	 * Remember to lock with {@link #getReadLock()}!
 	 */
-	@SuppressWarnings("null")
 	static Map<String, Object> getVariablesHashMap() {
 		return Collections.unmodifiableMap(variables.hashMap);
 	}
-	
-	@SuppressWarnings("null")
+
 	static Lock getReadLock() {
 		return variablesLock.readLock();
 	}
-	
+
 	/**
 	 * Returns the internal value of the requested variable.
 	 * <p>

@@ -50,6 +50,9 @@ public class TypeHints {
 		if (hint.equals(Object.class)) // Ignore useless type hint
 			return;
 		Map<String, Class<?>> hints = TYPE_HINTS.peek();
+		Class<?> existing = hints.get(variable);
+		if (existing != null && existing.equals(hint))
+			return;
 		hints.put(variable, hint);
 	}
 

@@ -10,6 +10,10 @@ test "type hints":
 	set {_timespan} to a second
 	set helmet of last spawned zombie to 1 of {_timespan}
 
+	spawn a cow at spawn of world "world":
+		set {_entity} to event-entity
+	set helmet of last spawned zombie to {_entity}
+
 # TODO LimeGlass - Move to regression test #3753 when adding warning test runner checking.
 command /test:
 	trigger:
