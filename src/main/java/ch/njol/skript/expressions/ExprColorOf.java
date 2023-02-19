@@ -26,6 +26,8 @@ import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.Event;
@@ -49,7 +51,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Colour of")
-@Description("The <a href='../classes.html#color'>colour</a> of an item, can also be used to colour chat messages with \"&lt;%colour of ...%&gt;this text is coloured!\".")
+@Description("The <a href='../classes.html#color'>colour</a> of something (e.g. an item, entity or bossbar), can also be used to colour chat messages with \"&lt;%colour of ...%&gt;this text is coloured!\".")
 @Examples({"on click on wool:",
 		"	message \"This wool block is <%colour of block%>%colour of block%<reset>!\"",
 		"	set the colour of the block to black"})
@@ -57,7 +59,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprColorOf extends PropertyExpression<Object, Color> {
 
 	static {
-		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "blocks/itemtypes/entities/fireworkeffects");
+		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "blocks/itemtypes/entities/fireworkeffects/bossbars");
 	}
 	
 	@SuppressWarnings("null")
@@ -69,7 +71,7 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 	
 	@SuppressWarnings("null")
 	@Override
-	protected Color[] get(Event e, Object[] source) {
+	protected Color[] get(Event event, Object[] source) {
 		if (source instanceof FireworkEffect[]) {
 			List<Color> colors = new ArrayList<>();
 			
@@ -79,6 +81,16 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 					.forEach(colors::add);
 			}
 			
+			if (colors.size() == 0)
+				return null;
+			return colors.toArray(new Color[0]);
+		} else if (source instanceof BossBar[]) {
+			List<Color> colors = new ArrayList<>();
+
+			for (BossBar bar : (BossBar[]) source) {
+				colors.add(SkriptColor.fromBossBarColor(bar.getColor()));
+			}
+
 			if (colors.size() == 0)
 				return null;
 			return colors.toArray(new Color[0]);
@@ -101,8 +113,8 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "colour of " + getExpr().toString(e, debug);
+	public String toString(@Nullable Event event, boolean debug) {
+		return "colour of " + getExpr().toString(event, debug);
 	}
 
 	@Override
@@ -113,6 +125,9 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 		if (FireworkEffect.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color[].class);
 
+		if (mode == ChangeMode.SET && BossBar.class.isAssignableFrom(returnType))
+			return CollectionUtils.array(Color.class);
+
 		if (mode != ChangeMode.SET && !getExpr().isSingle())
 			return null;
 
@@ -120,19 +135,20 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 			return CollectionUtils.array(Color.class);
 		else if (Block.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color.class);
-		if (ItemType.class.isAssignableFrom(returnType))
+		else if (ItemType.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color.class);
 		return null;
 	}
 
 	@SuppressWarnings("deprecated")
 	@Override
-	public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		if (delta == null)
 			return;
-		DyeColor color = ((Color) delta[0]).asDyeColor();
+		DyeColor dyeColor = ((Color) delta[0]).asDyeColor();
+		BarColor barColor = ((Color) delta[0]).asBossBarColor();
 
-		for (Object o : getExpr().getArray(e)) {
+		for (Object o : getExpr().getArray(event)) {
 			if (o instanceof Item || o instanceof ItemType) {
 				ItemStack stack = o instanceof Item ? ((Item) o).getItemStack() : ((ItemType) o).getRandom();
 
@@ -144,7 +160,7 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 				if (!(data instanceof Colorable))
 					continue;
 
-				((Colorable) data).setColor(color);
+				((Colorable) data).setColor(dyeColor);
 				stack.setData(data);
 
 				if (o instanceof Item)
@@ -154,7 +170,7 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 
 				if (colorable != null) {
 					try {
-						colorable.setColor(color);
+						colorable.setColor(dyeColor);
 					} catch (UnsupportedOperationException ex) {
 						// https://github.com/SkriptLang/Skript/issues/2931
 						Skript.error("Tried setting the colour of a bed, but this isn't possible in your Minecraft version, " +
@@ -187,6 +203,9 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 					default:
 						break;
 				}
+			} else if (o instanceof BossBar) {
+				if (barColor != null)
+					((BossBar) o).setColor(barColor);
 			}
 		}
 	}

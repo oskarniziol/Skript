@@ -120,6 +120,21 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+		// create any new bossbars first so that each player shares the same bossbar when changing multiple players
+		// at once
+		BossBar[] newBars = null;
+		if (delta.length > 0) {
+			newBars = new BossBar[delta.length];
+			for (int i = 0; i < delta.length; i++) {
+				BossBar newBar;
+				if (delta[i] instanceof BossBar)
+					newBar = (BossBar) delta[i];
+				else
+					newBar = Bukkit.createBossBar((String) delta[i], BarColor.WHITE, BarStyle.SOLID);
+				newBars[i] = newBar;
+				lastBossBar = newBar;
+			}
+		}
 		for (Player player : players.getArray(event)) {
 			switch (mode) {
 				case DELETE:
@@ -137,15 +152,10 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
 						bossBars = new LinkedHashSet<>();
 						playerBossBarMap.put(player, bossBars);
 					}
-					for (Object objToAdd : delta) {
-						BossBar newBar;
-						if (objToAdd instanceof BossBar)
-							newBar = (BossBar) objToAdd;
-						else
-							newBar = Bukkit.createBossBar((String) objToAdd, BarColor.WHITE, BarStyle.SOLID);
-						newBar.addPlayer(player);
-						bossBars.add(newBar);
-						lastBossBar = newBar;
+					assert newBars != null;
+					for (BossBar bar : newBars) {
+						bar.addPlayer(player);
+						bossBars.add(bar);
 					}
 					break;
 				case SET:
