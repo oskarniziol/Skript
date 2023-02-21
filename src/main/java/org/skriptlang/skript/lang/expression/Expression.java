@@ -137,6 +137,21 @@ public interface Expression<Type> extends SyntaxElement {
 	@Nullable
 	Iterator<? extends Type> iterator(TriggerContext context);
 
-	Expression<?> getSource();
+	@Nullable
+	default <NewType extends Expression<?>> NewType getAs(Class<NewType> newType) {
+		Expression<?> current = this;
+		while (current != null) {
+			if (newType.isInstance(current))
+				//noinspection unchecked
+				return (NewType) current;
+
+			if (current instanceof WrappableExpression) {
+				current = ((WrappableExpression<?>) current).getSource();
+			} else {
+				current = null;
+			}
+		}
+		return null;
+	}
 
 }

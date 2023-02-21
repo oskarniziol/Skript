@@ -260,7 +260,7 @@ public class ExpressionList<T> extends org.skriptlang.skript.lang.expression.bas
 	}
 
 	@Override
-	public Expression<?> getSource() {
+	public ExpressionList<?> getSource() {
 		ExpressionList<?> s = source;
 		return s == null ? this : s;
 	}

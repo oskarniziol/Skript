@@ -27,11 +27,13 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.ParseLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.NonNullPair;
 import org.jetbrains.annotations.Nullable;
-import org.skriptlang.skript.base.event.eventvalues.TimeSensitiveExpression;
+import org.skriptlang.skript.base.event.contextvalues.TimeSensitiveExpression;
+import org.skriptlang.skript.base.event.contextvalues.TimeState;
 import org.skriptlang.skript.lang.expression.Expression;
 import org.skriptlang.skript.lang.expression.Literal;
 
@@ -136,20 +138,28 @@ public class TypePatternElement extends PatternElement {
 										Skript.error("Cannot use time states after the event has already passed", ErrorQuality.SEMANTIC_ERROR);
 										return null;
 									}
-									((TimeSensitiveExpression<?>) expression).setTime(time);
+									TimeState timeState;
+									if (time == EventValues.TIME_PAST) {
+										timeState = TimeState.PAST;
+									} else if (time == EventValues.TIME_FUTURE) {
+										timeState = TimeState.FUTURE;
+									} else {
+										throw new IllegalArgumentException("Time must be -1 or 1");
+									}
+									((TimeSensitiveExpression<?>) expression).setTime(timeState);
 								} else {
-									Skript.error(expression + " does not have a " + (time == -1 ? "past" : "future") + " state", ErrorQuality.SEMANTIC_ERROR);
+									Skript.error(expression + " does not have a " + (time == EventValues.TIME_PAST ? "past" : "future") + " state");
 									return null;
 								}
 
 								// Legacy expression check
 								if (expression instanceof ch.njol.skript.lang.Expression) {
 									if (ParserInstance.get().getHasDelayBefore() == Kleenean.TRUE) {
-										Skript.error("Cannot use time states after the event has already passed", ErrorQuality.SEMANTIC_ERROR);
+										Skript.error("Cannot use time states after the event has already passed");
 										return null;
 									}
 									if (!((ch.njol.skript.lang.Expression<?>) expression).setTime(time)) {
-										Skript.error(expression + " does not have a " + (time == -1 ? "past" : "future") + " state", ErrorQuality.SEMANTIC_ERROR);
+										Skript.error(expression + " does not have a " + (time == EventValues.TIME_PAST ? "past" : "future") + " state");
 										return null;
 									}
 								}

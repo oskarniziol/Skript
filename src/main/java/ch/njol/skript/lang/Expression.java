@@ -33,14 +33,15 @@ import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.base.event.contextvalues.TimeState;
 import org.skriptlang.skript.bukkit.event.BukkitTriggerContext;
 import org.skriptlang.skript.lang.changer.ChangeableExpression;
 import org.skriptlang.skript.lang.context.TriggerContext;
 import org.skriptlang.skript.lang.converter.ConvertableExpression;
-import org.skriptlang.skript.lang.expression.DefaultExpression;
 import org.skriptlang.skript.lang.expression.ListExpression;
 import org.skriptlang.skript.lang.expression.SimplifiableExpression;
-import org.skriptlang.skript.base.event.eventvalues.TimeSensitiveExpression;
+import org.skriptlang.skript.base.event.contextvalues.TimeSensitiveExpression;
+import org.skriptlang.skript.lang.expression.WrappableExpression;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;
@@ -59,7 +60,7 @@ import java.util.stream.StreamSupport;
  */
 public interface Expression<T> extends SyntaxElement, Debuggable,
 	org.skriptlang.skript.lang.expression.Expression<T>, ChangeableExpression<T>,
-	SimplifiableExpression<T>, ListExpression<T> {
+	SimplifiableExpression<T>, ListExpression<T>, WrappableExpression<T> {
 	
 	/**
 	 * Get the single value of this expression.
@@ -256,6 +257,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable,
 	 * 
 	 * @return The unconverted source expression of this expression or this expression itself if it was never converted.
 	 */
+	@Override
 	public Expression<?> getSource();
 	
 	/**
@@ -430,6 +432,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable,
 				@Override
 				@Nullable
 				public <R> Literal<? extends R> getConvertedExpression(Class<R>... to) {
+					// don't unwrap convertable expressions
 					if (newType instanceof ConvertableExpression)
 						//noinspection ConstantConditions
 						return (Literal<? extends R>) fromNew(((ConvertableExpression<T>) newType).getConvertedExpression(to));
@@ -479,15 +482,25 @@ public interface Expression<T> extends SyntaxElement, Debuggable,
 
 				@Override
 				public boolean getAnd() {
-					if (newType instanceof ListExpression)
-						return ((ListExpression<T>) newType).getAnd();
-					return true; // Default state I suppose
+					ListExpression<?> listExpression = newType.getAs(ListExpression.class);
+					return listExpression == null || listExpression.getAnd();
 				}
 
 				@Override
 				public boolean setTime(int time) {
-					if (newType instanceof TimeSensitiveExpression) {
-						((TimeSensitiveExpression<T>) newType).setTime(time);
+					TimeSensitiveExpression<?> timeSensitiveExpression = newType.getAs(TimeSensitiveExpression.class);
+					if (timeSensitiveExpression != null) {
+						TimeState timeState;
+						if (time == EventValues.TIME_PAST) {
+							timeState = TimeState.PAST;
+						} else if (time == EventValues.TIME_NOW) {
+							timeState = TimeState.PRESENT;
+						} else if (time == EventValues.TIME_FUTURE) {
+							timeState = TimeState.FUTURE;
+						} else {
+							throw new IllegalArgumentException("Time must be -1, 0, or 1.");
+						}
+						timeSensitiveExpression.setTime(timeState);
 						return true;
 					}
 					return false;
@@ -495,14 +508,23 @@ public interface Expression<T> extends SyntaxElement, Debuggable,
 
 				@Override
 				public int getTime() {
-					if (newType instanceof TimeSensitiveExpression)
-						return ((TimeSensitiveExpression<T>) newType).getTime();
+					TimeSensitiveExpression<?> timeSensitiveExpression = newType.getAs(TimeSensitiveExpression.class);
+					if (timeSensitiveExpression != null) {
+						switch (timeSensitiveExpression.getTime()) {
+							case PAST:
+								return EventValues.TIME_PAST;
+							case PRESENT:
+								return EventValues.TIME_NOW;
+							case FUTURE:
+								return EventValues.TIME_FUTURE;
+						}
+					}
 					return EventValues.TIME_NOW;
 				}
 
 				@Override
 				public boolean isDefault() {
-					return newType instanceof DefaultExpression;
+					return newType.getAs(DefaultExpression.class) != null;
 				}
 
 				@Override
@@ -518,11 +540,18 @@ public interface Expression<T> extends SyntaxElement, Debuggable,
 
 				@Override
 				public Expression<?> getSource() {
-					return fromNew(newType.getSource());
+					if (newType instanceof WrappableExpression) {
+						org.skriptlang.skript.lang.expression.Expression<?> source = ((WrappableExpression<?>) newType).getSource();
+						if (source == null)
+							return fromNew(this);
+						return fromNew(source);
+					}
+					return fromNew(newType);
 				}
 
 				@Override
 				public Expression<? extends T> simplify() {
+					// don't unwrap for simplifiable expressions
 					if (newType instanceof SimplifiableExpression)
 						return fromNew(((SimplifiableExpression<T>) newType).simplify());
 					return this;
@@ -531,16 +560,18 @@ public interface Expression<T> extends SyntaxElement, Debuggable,
 				@Override
 				@Nullable
 				public Class<?>[] acceptChange(ChangeMode mode) {
-					if (newType instanceof ChangeableExpression)
+					ChangeableExpression<?> changeableExpression = newType.getAs(ChangeableExpression.class);
+					if (changeableExpression != null)
 						//noinspection ConstantConditions
-						return ((ChangeableExpression<T>) newType).acceptChange(mode);
+						return changeableExpression.acceptChange(mode);
 					return new Class[0];
 				}
 
 				@Override
 				public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
-					if (newType instanceof ChangeableExpression)
-						((ChangeableExpression<T>) newType).change(new BukkitTriggerContext(e, e.getEventName()), delta, mode);
+					ChangeableExpression<?> changeableExpression = newType.getAs(ChangeableExpression.class);
+					if (changeableExpression != null)
+						changeableExpression.change(new BukkitTriggerContext(e, e.getEventName()), delta, mode);
 				}
 
 				@Override
@@ -556,6 +587,7 @@ public interface Expression<T> extends SyntaxElement, Debuggable,
 
 		}
 
+		// TODO default conversion case
 		throw new IllegalArgumentException("Unable to handle new expression of type: " + expression.getClass());
 	}
 	

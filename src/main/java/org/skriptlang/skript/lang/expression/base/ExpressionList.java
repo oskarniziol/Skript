@@ -34,6 +34,7 @@ import org.skriptlang.skript.lang.converter.ConvertableExpression;
 import org.skriptlang.skript.lang.expression.Expression;
 import org.skriptlang.skript.lang.expression.ListExpression;
 import org.skriptlang.skript.lang.expression.SimplifiableExpression;
+import org.skriptlang.skript.lang.expression.WrappableExpression;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ import java.util.NoSuchElementException;
 
 public class ExpressionList<Type> implements
 	Expression<Type>, ListExpression<Type>, ConvertableExpression<Type>,
-	ChangeableExpression<Type>, SimplifiableExpression<Type> {
+	ChangeableExpression<Type>, SimplifiableExpression<Type>, WrappableExpression<Type> {
 
 	@Nullable
 	private final ExpressionList<?> source;
@@ -214,18 +215,21 @@ public class ExpressionList<Type> implements
 
 	@Override
 	public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-		for (Expression<?> expression : expressions) {
-			if (!(expression instanceof ChangeableExpression))
+		ChangeableExpression<?>[] changeables = new ChangeableExpression[expressions.length];
+		for (int i = 0; i < expressions.length; i++) {
+			ChangeableExpression<?> expression = expressions[i].getAs(ChangeableExpression.class);
+			if (expression == null)
 				return null;
+			changeables[i] = expression;
 		}
 
-		Class<?>[] exprClasses = ((ChangeableExpression<?>) expressions[0]).acceptChange(mode);
+		Class<?>[] exprClasses = changeables[0].acceptChange(mode);
 		if (exprClasses == null) // No changes can be made
 			return null;
 
 		ArrayList<Class<?>> acceptedClasses = new ArrayList<>(Arrays.asList(exprClasses));
-		for (int i = 1; i < expressions.length; i++) {
-			exprClasses = ((ChangeableExpression<?>) expressions[i]).acceptChange(mode);
+		for (int i = 1; i < changeables.length; i++) {
+			exprClasses = changeables[i].acceptChange(mode);
 			if (exprClasses == null)
 				return null;
 
@@ -244,8 +248,9 @@ public class ExpressionList<Type> implements
 	}
 
 	@Override
-	public Expression<?> getSource() {
-		return source != null ? source : this;
+	@Nullable
+	public ExpressionList<?> getSource() {
+		return source;
 	}
 
 	@Override
