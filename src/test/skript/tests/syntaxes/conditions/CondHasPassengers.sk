@@ -21,4 +21,3 @@ test "has passengers":
 	eject any passengers from the last spawned sheep
 	assert passengers of the last spawned sheep is not set with "The last spawned sheep had passengers"
 	clear all entities
-	clear {_cow}
