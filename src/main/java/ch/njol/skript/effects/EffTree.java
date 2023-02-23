@@ -50,7 +50,8 @@ public class EffTree extends Effect {
 	static {
 		Skript.registerEffect(EffTree.class,
 				"(grow|create|generate) tree [of type %treetype%] %directions% %locations%",
-				"(grow|create|generate) %treetype% %directions% %locations%");
+				"(grow|create|generate) %treetype% %directions% %locations%"
+		);
 	}
 
 	private Expression<Location> blocks;
