@@ -44,8 +44,8 @@ public class EffTree extends Effect {
 
 	static {
 		Skript.registerEffect(EffTree.class,
-				"(grow|create|generate) tree [of type %structuretype%] %directions% %locations%",
-				"(grow|create|generate) %structuretype% %directions% %locations%");
+				"(grow|create|generate) tree [of type %treetype%] %directions% %locations%",
+				"(grow|create|generate) %treetype% %directions% %locations%");
 	}
 
 	private Expression<Location> blocks;
@@ -71,8 +71,8 @@ public class EffTree extends Effect {
 	}
 
 	@Override
-	public String toString(final @Nullable Event e, final boolean debug) {
-		return "grow tree of type " + type.toString(e, debug) + " " + blocks.toString(e, debug);
+	public String toString(@Nullable Event event, boolean debug) {
+		return "grow tree of type " + type.toString(event, debug) + " " + blocks.toString(event, debug);
 	}
 
 }
