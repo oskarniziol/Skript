@@ -1501,7 +1501,6 @@ public class BukkitClasses {
 				.user("tree ?types?", "trees?", /*structuretype is a deprecated name*/ "structure ?types?")
 				.name("Tree Type")
 				.description("A tree type represents a tree species or a huge mushroom species. These can be generated in a world with the <a href='./effects.html#EffTree'>generate tree</a> effect.")
-				.usage("[any] &lt;general tree/mushroom type&gt;, e.g. tree/any jungle tree/etc.", "&lt;specific tree/mushroom species&gt;, e.g. red mushroom/small jungle tree/big regular tree/etc.")
 				.examples("grow any regular tree at the block", "grow a huge red mushroom above the block")
 				.since("1.0")
 				.supplier(TreeType.values()));
