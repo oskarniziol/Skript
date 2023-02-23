@@ -28,6 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import ch.njol.util.coll.iterator.ArrayIterator;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.ConfigurationSerializer;
 import ch.njol.skript.classes.EnumClassInfo;
@@ -889,8 +890,8 @@ public class BukkitClasses {
 				.since("1.0"));
 		
 		Classes.registerClass(new ClassInfo<>(ItemStack.class, "itemstack")
-				.user("item", "material")
-				.name("Item / Material")
+				.user("items?")
+				.name("Item")
 				.description("An item, e.g. a stack of torches, a furnace, or a wooden sword of sharpness 2. " +
 								"Unlike <a href='#itemtype'>item type</a> an item can only represent exactly one item (e.g. an upside-down cobblestone stair facing west), " +
 								"while an item type can represent a whole range of items (e.g. any cobble stone stairs regardless of direction).",
@@ -902,6 +903,9 @@ public class BukkitClasses {
 						"{_item} is a torch")
 				.since("1.0")
 				.after("number")
+				.supplier(() -> Arrays.stream(Material.values())
+					.map(ItemStack::new)
+					.iterator())
 				.parser(new Parser<ItemStack>() {
 					@Override
 					@Nullable
@@ -1030,6 +1034,7 @@ public class BukkitClasses {
 						"apply potion of speed 2 to the player for 60 seconds",
 						"remove invisibility from the victim")
 				.since("")
+				.supplier(PotionEffectType.values())
 				.parser(new Parser<PotionEffectType>() {
 					@Override
 					@Nullable
@@ -1191,6 +1196,7 @@ public class BukkitClasses {
 				.examples("")
 				.since("1.4.6")
 				.before("enchantmenttype")
+				.supplier(Enchantment.values())
 				.parser(new Parser<Enchantment>() {
 					@Override
 					@Nullable
@@ -1349,8 +1355,8 @@ public class BukkitClasses {
 					"See the <a href='expressions.html#ExprFireworkEffect'>firework effect</a> expression for detailed patterns.")
 				.defaultExpression(new EventValueExpression<>(FireworkEffect.class))
 				.examples("launch flickering trailing burst firework colored blue and green at player",
-					"launch trailing flickering star coloured purple, yellow, blue, green and red fading to pink at target entity",
-					"launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1")
+					"launch trailing flickering star colored purple, yellow, blue, green and red fading to pink at target entity",
+					"launch ball large colored red, purple and white fading to light green and black at player's location with duration 1")
 				.since("2.4")
 				.parser(new Parser<FireworkEffect>() {
 					@Override
@@ -1392,8 +1398,7 @@ public class BukkitClasses {
 				.name("Sound Category")
 				.description("The category of a sound, they are used for sound options of Minecraft. " +
 						"See the <a href='effects.html#EffPlaySound'>play sound</a> and <a href='effects.html#EffStopSound'>stop sound</a> effects.")
-				.since("2.4")
-				.requiredPlugins("Minecraft 1.11 or newer"));
+				.since("2.4"));
 
 		if (Skript.classExists("org.bukkit.entity.Panda$Gene")) {
 			Classes.registerClass(new EnumClassInfo<>(Gene.class, "gene", "genes")
@@ -1427,6 +1432,7 @@ public class BukkitClasses {
 			.usage(Arrays.stream(GameRule.values()).map(GameRule::getName).collect(Collectors.joining(", ")))
 			.since("2.5")
 			.requiredPlugins("Minecraft 1.13 or newer")
+			.supplier(GameRule.values())
 			.parser(new Parser<GameRule>() {
 				@Override
 				@Nullable
