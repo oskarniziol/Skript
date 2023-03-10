@@ -20,6 +20,10 @@ package org.skriptlang.skript.lang.converter;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.registrations.Classes;
+
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.lang.reflect.Array;
@@ -352,8 +356,28 @@ public final class Converters {
 		Class<From> fromType = (Class<From>) from.getClass();
 		for (Class<? extends To> toType : toTypes) {
 			Converter<From, ? extends To> converter = getConverter(fromType, toType);
-			if (converter != null)
+			if (converter != null) {
 				return converter.convert(from);
+			} else {
+				/**
+				 * Attempts to convert most likely a literal.
+				 * Example of this can be setting a variable to a snowball. Skript assumes it's an itemtype.
+				 * Now when using that variable in an entitydata event, Skript attempts to convert but can't
+				 * as no converters exist for ItemType -> EntityData. That's where this chunk of code steps in.
+				 * 
+				 * This section of code has proven to convert that said issue to the EntityData and allow for proper usage.
+				 * This will only happen when the names of the literals are the same of two classinfos and mainly for Variables.
+				 * 
+				 * See https://github.com/SkriptLang/Skript/issues/5493
+				 */
+				String attempt = Classes.toString(from);
+				Parser<To> parser = (Parser<To>) Classes.getSuperClassInfo(toType).getParser();
+				if (parser == null || !parser.canParse(ParseContext.DEFAULT))
+					continue;
+				To to = parser.parse(attempt, ParseContext.DEFAULT);
+				if (to != null)
+					return to;
+			}
 		}
 
 		return null;
