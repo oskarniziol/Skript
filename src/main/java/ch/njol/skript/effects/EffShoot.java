@@ -23,25 +23,21 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Projectile;
-import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.event.Event;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.util.Direction;
-import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 
 @Name("Shoot")
@@ -62,7 +58,7 @@ public class EffShoot extends Effect {
 
 	private final static double DEFAULT_SPEED = 5.;
 
-	private Expression<?> types;
+	private Expression<EntityData<?>> types;
 	private Expression<?> shooters;
 
 	@Nullable
@@ -76,11 +72,8 @@ public class EffShoot extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-//		Expression<?> expression = exprs[matchedPattern];
-//		if (expression instanceof Variable)
-//			types = expression.getConvertedExpression(Object.class);
-		types = exprs[matchedPattern];
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		types = (Expression<EntityData<?>>) exprs[matchedPattern];
 		shooters = exprs[1 - matchedPattern];
 		velocity = (Expression<Number>) exprs[2];
 		direction = (Expression<Direction>) exprs[3];
@@ -97,17 +90,7 @@ public class EffShoot extends Effect {
 		if (this.direction != null)
 			direction = this.direction.getOptionalSingle(event).orElse(Direction.IDENTITY);
 		for (Object shooter : shooters.getArray(event)) {
-			for (Object object : types.getArray(event)) {
-				System.out.println(object.getClass().getName());
-				if (!(object instanceof EntityData)) {
-					if (object instanceof ItemType)
-						System.out.println("Item Type");
-					if (object instanceof EntityType)
-						System.out.println("Entity Type");
-					if (object instanceof org.bukkit.entity.EntityType)
-						System.out.println("Entity Type Spigot");
-				}
-				EntityData<?> entity = (EntityData<?>) object;
+			for (EntityData<?> entity : types.getArray(event)) {
 				if (shooter instanceof LivingEntity) {
 					Vector vector = direction.getDirection(((LivingEntity) shooter).getLocation()).multiply(velocity);
 					Class<? extends Entity> type = entity.getType();
