@@ -62,6 +62,7 @@ import java.util.stream.Collectors;
  */
 public class VariableString implements ch.njol.skript.lang.Expression<String> {
 
+	@Nullable
 	private final Script script;
 	private final String orig;
 
@@ -100,10 +101,7 @@ public class VariableString implements ch.njol.skript.lang.Expression<String> {
 		this.mode = StringMode.MESSAGE;
 		
 		ParserInstance parser = getParser();
-		if (!parser.isActive())
-			throw new IllegalStateException("VariableString attempted to use constructor without a ParserInstance present at execution.");
-
-		this.script = parser.getCurrentScript();
+		this.script = parser.isActive() ? parser.getCurrentScript() : null;
 		
 		this.components = new MessageComponent[] {ChatMessages.plainText(simpleUnformatted)};
 	}
@@ -119,12 +117,9 @@ public class VariableString implements ch.njol.skript.lang.Expression<String> {
 		this.orig = orig;
 		this.string = new Object[string.length];
 		this.stringUnformatted = new Object[string.length];
-	
-		ParserInstance parser = getParser();
-		if (!parser.isActive())
-			throw new IllegalStateException("VariableString attempted to use constructor without a ParserInstance present at execution.");
 
-		this.script = parser.getCurrentScript();
+		ParserInstance parser = getParser();
+		this.script = parser.isActive() ? parser.getCurrentScript() : null;
 	
 		// Construct unformatted string and components
 		List<MessageComponent> components = new ArrayList<>(string.length);
@@ -554,7 +549,7 @@ public class VariableString implements ch.njol.skript.lang.Expression<String> {
 			}
 		}
 		String complete = builder.toString();
-		if (mode == StringMode.VARIABLE_NAME && !types.isEmpty()) {
+		if (script != null && mode == StringMode.VARIABLE_NAME && !types.isEmpty()) {
 			DefaultVariables data = script.getData(DefaultVariables.class);
 			if (data != null)
 				data.add(complete, types.toArray(new Class<?>[0]));
@@ -589,18 +584,22 @@ public class VariableString implements ch.njol.skript.lang.Expression<String> {
 	 * @return List<String> of all possible super class code names.
 	 */
 	public List<String> getDefaultVariableNames(String variableName, Event event) {
+		if (script == null || mode != StringMode.VARIABLE_NAME) {
+			return Lists.newArrayList();
+		}
+
 		if (isSimple) {
 			assert simple != null;
 			return Lists.newArrayList(simple, "object");
 		}
-		Object[] string = this.string;
-		assert string != null;
+
 		List<StringBuilder> typeHints = Lists.newArrayList(new StringBuilder());
 		DefaultVariables data = script.getData(DefaultVariables.class);
 		assert data != null : "default variables not present in current script";
 
 		// Represents the index of which expression in a variable string, example name::%entity%::%object% the index of 0 will be entity.
 		int hintIndex = 0;
+		assert string != null;
 		for (Object object : string) {
 			if (!(object instanceof Expression)) {
 				typeHints.forEach(builder -> builder.append(object));
@@ -616,7 +615,7 @@ public class VariableString implements ch.njol.skript.lang.Expression<String> {
 			}
 			hintIndex++;
 		}
-		return typeHints.stream().map(builder -> builder.toString()).collect(Collectors.toList());
+		return typeHints.stream().map(StringBuilder::toString).collect(Collectors.toList());
 	}
 
 	public boolean isSimple() {
