@@ -38,14 +38,15 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Version;
 import ch.njol.util.Kleenean;
 
 @Name("Open/Close Inventory")
 @Description({
 	"Opens an inventory to a player. The player can then access and modify the inventory as if it was a chest that they just opened.",
-	"Note that 'show' and 'open' have different effects, 'show' will show an unmodifiable view of the inventory.",
-	"Whereas 'open' will attempt to make an inventory interactable."
+	"Note that 'show' and 'open' have different effects, 'show' will show just a view of the inventory.",
+	"Whereas 'open' will attempt to make an inventory real and usable. Like a workbench allowing recipes to work."
 })
 @Examples({
 	"show crafting table to player #unmodifiable, use open instead to allow for recipes to work",
@@ -119,7 +120,7 @@ public class EffOpenInventory extends Effect {
 				if (i + 1 < values.length)
 					builder.append("|");
 			}
-			return builder.append(")").toString();
+			return builder.append("|%-inventory%)").toString();
 		}
 	}
 
@@ -143,25 +144,26 @@ public class EffOpenInventory extends Effect {
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		inventory = exprs.length > 1 ? exprs[0] : null;
 		if (matchedPattern == 1) {
 			open = true;
-			assert !parseResult.tags.isEmpty() : "Syntax incorrectly handled parse result tags.";
-			syntax = OpenableInventorySyntax.valueOf(parseResult.tags.get(0).toUpperCase(Locale.ENGLISH));
-			if (!Skript.isRunningMinecraft(syntax.getVersion())) {
-				Skript.error("Opening an inventory of type '" + syntax.toString().toLowerCase(Locale.ENGLISH) + "' is only present on Minecraft version " + syntax.getVersion());
-				return false;
-			}
-			if (!syntax.doesMethodExist()) {
-				Skript.error(syntax.getMethodError());
-				return false;
+			if (!parseResult.tags.isEmpty()) { // %-inventory% was not used
+				syntax = OpenableInventorySyntax.valueOf(parseResult.tags.get(0).toUpperCase(Locale.ENGLISH));
+				if (syntax.getVersion() != null && !Skript.isRunningMinecraft(syntax.getVersion())) {
+					Skript.error("Opening an inventory of type '" + syntax.toString().toLowerCase(Locale.ENGLISH) + "' is only present on Minecraft version " + syntax.getVersion());
+					return false;
+				}
+				if (!syntax.doesMethodExist()) {
+					Skript.error(syntax.getMethodError());
+					return false;
+				}
 			}
 		}
-		inventory = matchedPattern == 0 ? exprs[0] : null;
 		players = (Expression<Player>) exprs[exprs.length - 1];
-		if (inventory instanceof Literal) {
+		if (inventory instanceof Literal && inventory != null) {
 			Literal<?> literal = (Literal<?>) inventory;
 			Object object = literal.getSingle();
-			if (object instanceof InventoryType && !((InventoryType)object).isCreatable()) {
+			if (object instanceof InventoryType && !((InventoryType) object).isCreatable()) {
 				Skript.error("You can't open a '" + literal.toString() + "' inventory to players. It's not creatable.");
 				return false;
 			}
@@ -176,18 +178,24 @@ public class EffOpenInventory extends Effect {
 			Object object = this.inventory.getSingle(event);
 			if (object == null)
 				return;
-			for (Player player : players.getArray(event)) {
-				if (object instanceof Inventory) {
-					inventory = (Inventory) object;
-				} else if (object instanceof InventoryType) {
-					inventory = Bukkit.createInventory(player, (InventoryType) object);
-				} else {
-					assert false;
+			if (object instanceof Inventory) {
+				inventory = (Inventory) object;
+			} else if (object instanceof InventoryType) {
+				try {
+					inventory = Bukkit.createInventory(null, (InventoryType) object);
+				} catch (Exception e) {
+					// Spigot forgot to label some InventoryType's as non creatable in some versions < 1.19.4
+					// So this throws NullPointerException aswell ontop of the IllegalArgumentException.
+					// See https://hub.spigotmc.org/jira/browse/SPIGOT-7301
+					Skript.error("You can't open a '" + Classes.toString((InventoryType) object) + "' inventory to players. It's not creatable.");
 				}
-				if (inventory == null)
-					continue;
-				player.openInventory(inventory);
+			} else {
+				assert false;
 			}
+			if (inventory == null)
+				return;
+			for (Player player : players.getArray(event))
+				player.openInventory(inventory);
 		} else {
 			for (Player player : players.getArray(event)) {
 				if (!open) {
