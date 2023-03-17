@@ -58,7 +58,7 @@ public abstract class SetEffect<T> extends Effect {
 		Skript.registerEffect(effect, "set " + property + " of %" + type + "% to %boolean%",
 				"set %" + type + "%'[s] " + property + " to %boolean%");
 	}
-
+	
 	/**
 	 * Registers an effect with patterns "set property of %type% to %boolean%", "set %types%'[s] property to %boolean%"
 	 * and "make %types% makeProperty" with "force %types% to makeProperty"

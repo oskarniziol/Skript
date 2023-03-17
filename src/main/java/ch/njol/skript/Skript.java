@@ -662,9 +662,8 @@ public final class Skript extends JavaPlugin implements Listener {
 								// Loads custom syntaxes for the test runner.
 								try {
 									Utils.getClasses(Skript.getInstance(), "org.skriptlang.skript.test", "registration");
-								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+								} catch (IOException e) {
+									Skript.exception(e, "loading the org.skriptlang.skript.test.registration classes");
 								}
 							info("Loading all tests from " + TestMode.TEST_DIR);
 
