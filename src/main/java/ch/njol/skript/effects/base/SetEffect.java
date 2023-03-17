@@ -115,6 +115,9 @@ public abstract class SetEffect<T> extends Effect {
 		return expression;
 	}
 
+	/**
+	 * Return a BiComsumer that will be used to apply the boolean value to the type.
+	 */
 	protected abstract BiConsumer<T, Boolean> apply();
 
 	/**
@@ -126,18 +129,8 @@ public abstract class SetEffect<T> extends Effect {
 
 	@Override
 	protected void execute(Event event) {
-		apply(event, apply());
-	}
-
-	/**
-	 * The method that will execute the effect.
-	 * 
-	 * @param event The event that is calling this syntax.
-	 * @param biconsumer The BiConsumer that will execute the boolean on the type value. Loops through all values.
-	 */
-	private void apply(Event event, BiConsumer<T, Boolean> biconsumer) {
 		boolean value = make ? !negated : negated ? !getBoolean(event) : getBoolean(event);
-		getExpression().stream(event).forEach(expression -> biconsumer.accept(expression, value));
+		getExpression().stream(event).forEach(expression -> apply().accept(expression, value));
 	}
 
 	@Override
