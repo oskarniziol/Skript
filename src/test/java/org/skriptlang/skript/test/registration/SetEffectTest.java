@@ -20,14 +20,11 @@ package org.skriptlang.skript.test.registration;
 
 import java.util.function.BiConsumer;
 
-import org.junit.Ignore;
-
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.effects.base.SetEffect;
 
 @NoDoc
-@Ignore("Represents an actual syntax class")
 public class SetEffectTest extends SetEffect<ItemType> {
 
 	static {

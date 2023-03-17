@@ -18,14 +18,11 @@
  */
 package org.skriptlang.skript.test.registration;
 
-import org.junit.Ignore;
-
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.NoDoc;
 
 @NoDoc
-@Ignore("Represents an actual syntax class")
 public class SetEffectConditionTest extends PropertyCondition<ItemType> {
 
 	static {

@@ -74,7 +74,6 @@ public class EffObjectives extends Effect  {
 		if (setup) {
 			requirements.putAll(junit, Lists.newArrayList(objectives));
 		} else {
-			System.out.println("completed " + junit + " with objectives " + Arrays.toString(objectives));
 			completeness.putAll(junit, Lists.newArrayList(objectives));
 		}
 	}
