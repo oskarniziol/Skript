@@ -44,12 +44,12 @@ import ch.njol.util.Kleenean;
 @Name("Open/Close Inventory")
 @Description({
 	"Opens an inventory to a player. The player can then access and modify the inventory as if it was a chest that they just opened.",
-	"Please note that currently 'show' and 'open' have different effects, 'show' will show an unmodifiable view of the inventory.",
+	"Note that 'show' and 'open' have different effects, 'show' will show an unmodifiable view of the inventory.",
 	"Whereas 'open' will attempt to make an inventory interactable."
 })
 @Examples({
-	"show anvil to player #unmodifiable, use open instead",
-	"open an anvil to the player",
+	"show crafting table to player #unmodifiable, use open instead to allow for recipes to work",
+	"open a crafting table to the player",
 	"open a loom to the player",
 	"open the player's inventory for the player"
 })
