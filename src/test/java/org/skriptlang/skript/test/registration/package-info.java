@@ -16,27 +16,9 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.test.tests.lang;
+@NonNullByDefault({DefaultLocation.PARAMETER, DefaultLocation.RETURN_TYPE, DefaultLocation.FIELD})
+package org.skriptlang.skript.test.registration;
 
-import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.conditions.base.PropertyCondition;
-import ch.njol.skript.doc.NoDoc;
+import org.eclipse.jdt.annotation.DefaultLocation;
+import org.eclipse.jdt.annotation.NonNullByDefault;
 
-@NoDoc
-public class SetEffectConditionTest extends PropertyCondition<ItemType> {
-
-	static {
-		register(SetEffectConditionTest.class, PropertyType.HAVE, "all", "itemtypes");
-	}
-
-	@Override
-	public boolean check(ItemType type) {
-		return type.isAll();
-	}
-
-	@Override
-	protected String getPropertyName() {
-		return "all items";
-	}
-
-}

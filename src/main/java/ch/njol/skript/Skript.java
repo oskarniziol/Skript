@@ -658,6 +658,36 @@ public final class Skript extends JavaPlugin implements Listener {
 							info("Test development mode enabled. Test scripts are at " + TestMode.TEST_DIR);
 							return;
 						} else {
+							if (TestMode.JUNIT)
+								// Loads custom syntaxes for the test runner.
+								try {
+									Utils.getClasses(Skript.getInstance(), "org.skriptlang.skript.test", "registration");
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							info("Loading all tests from " + TestMode.TEST_DIR);
+
+							// Treat parse errors as fatal testing failure
+							CountingLogHandler errorCounter = new CountingLogHandler(Level.SEVERE);
+							try {
+								errorCounter.start();
+								File testDir = TestMode.TEST_DIR.toFile();
+								assert testDir != null;
+								ScriptLoader.loadScripts(testDir, errorCounter);
+							} finally {
+								errorCounter.stop();
+							}
+
+							Bukkit.getPluginManager().callEvent(new SkriptTestEvent());
+							if (errorCounter.getCount() > 0) {
+								TestTracker.testStarted("parse scripts");
+								TestTracker.testFailed(errorCounter.getCount() + " error(s) found");
+							}
+							if (errored) { // Check for exceptions thrown while script was executing
+								TestTracker.testStarted("run scripts");
+								TestTracker.testFailed("exception was thrown during execution");
+							}
 							if (TestMode.JUNIT) {
 								info("Running all JUnit tests...");
 								long milliseconds = 0, tests = 0, fails = 0, ignored = 0, size = 0;
@@ -686,7 +716,7 @@ public final class Skript extends JavaPlugin implements Listener {
 										// If JUnit failures are present, add them to the TestTracker.
 										junit.getFailures().forEach(failure -> {
 											String message = failure.getMessage() == null ? "" : " " + failure.getMessage();
-											TestTracker.testFailed("'" + test + "': " + message);
+											TestTracker.JUnitTestFailed(test, message);
 											Skript.exception(failure.getException(), "JUnit test '" + failure.getTestHeader() + " failed.");
 										});
 										SkriptJUnitTest.clearJUnitTest();
@@ -702,35 +732,13 @@ public final class Skript extends JavaPlugin implements Listener {
 								
 								info("Completed " + tests + " JUnit tests in " + size + " classes with " + fails + " failures in " + milliseconds + " milliseconds.");
 							}
-							info("Loading all tests from " + TestMode.TEST_DIR);
-
-							// Treat parse errors as fatal testing failure
-							CountingLogHandler errorCounter = new CountingLogHandler(Level.SEVERE);
-							try {
-								errorCounter.start();
-								File testDir = TestMode.TEST_DIR.toFile();
-								assert testDir != null;
-								ScriptLoader.loadScripts(testDir, errorCounter);
-							} finally {
-								errorCounter.stop();
-							}
-
-							Bukkit.getPluginManager().callEvent(new SkriptTestEvent());
-							if (errorCounter.getCount() > 0) {
-								TestTracker.testStarted("parse scripts");
-								TestTracker.testFailed(errorCounter.getCount() + " error(s) found");
-							}
-							if (errored) { // Check for exceptions thrown while script was executing
-								TestTracker.testStarted("run scripts");
-								TestTracker.testFailed("exception was thrown during execution");
-							}
 						}
 						double display = shutdownDelay / 20;
 						info("Testing done, shutting down the server in " + display + " second" + (display <= 1D ? "" : "s") + "...");
 						// Delay server shutdown to stop the server from crashing because the current tick takes a long time due to all the tests
 						Bukkit.getScheduler().runTaskLater(Skript.this, () -> {
 							if (TestMode.JUNIT && !EffObjectives.isJUnitComplete())
-								TestTracker.testFailed(EffObjectives.getFailedObjectivesString());
+								EffObjectives.fail();
 
 							info("Collecting results to " + TestMode.RESULTS_FILE);
 							String results = new Gson().toJson(TestTracker.collectResults());
@@ -1261,7 +1269,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	public static void checkAcceptRegistrations() {
-		if (!isAcceptRegistrations())
+		if (!isAcceptRegistrations() && !Skript.testing())
 			throw new SkriptAPIException("Registration can only be done during plugin initialization");
 	}
 	

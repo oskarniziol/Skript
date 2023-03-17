@@ -16,24 +16,25 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.test.tests.lang;
+package org.skriptlang.skript.test.registration;
 
-import java.util.function.BiConsumer;
+import org.junit.Ignore;
 
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.NoDoc;
-import ch.njol.skript.effects.base.SetEffect;
 
 @NoDoc
-public class SetEffectTest extends SetEffect<ItemType> {
+@Ignore("Represents an actual syntax class")
+public class SetEffectConditionTest extends PropertyCondition<ItemType> {
 
 	static {
-		registerMake(SetEffectTest.class, "itemtypes", "all", "(return all|(have|be) all)");
+		register(SetEffectConditionTest.class, PropertyType.HAVE, "all", "itemtypes");
 	}
 
 	@Override
-	protected BiConsumer<ItemType, Boolean> apply() {
-		return (item, boo) -> item.setAll(boo);
+	public boolean check(ItemType type) {
+		return type.isAll();
 	}
 
 	@Override
