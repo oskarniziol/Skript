@@ -161,7 +161,7 @@ public class EffOpenInventory extends Effect {
 		if (inventory instanceof Literal) {
 			Literal<?> literal = (Literal<?>) inventory;
 			Object object = literal.getSingle();
-			if (object instanceof InventoryType && !((InventoryType)object).isCreatable()) {
+			if (object instanceof InventoryType && !((InventoryType) object).isCreatable()) {
 				Skript.error("You can't open a '" + literal.toString() + "' inventory to players. It's not creatable.");
 				return false;
 			}
