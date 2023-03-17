@@ -106,6 +106,10 @@ public abstract class SetEffect<T> extends Effect {
 		return value.getSingle(event);
 	}
 
+	protected final boolean isNegated() {
+		return negated;
+	}
+
 	/**
 	 * Returns the expression that was registered as the type for this SetEffect.
 	 * 
