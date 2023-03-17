@@ -658,30 +658,7 @@ public final class Skript extends JavaPlugin implements Listener {
 							info("Test development mode enabled. Test scripts are at " + TestMode.TEST_DIR);
 							return;
 						} else {
-							info("Loading all tests from " + TestMode.TEST_DIR);
-
-							// Treat parse errors as fatal testing failure
-							CountingLogHandler errorCounter = new CountingLogHandler(Level.SEVERE);
-							try {
-								errorCounter.start();
-								File testDir = TestMode.TEST_DIR.toFile();
-								assert testDir != null;
-								ScriptLoader.loadScripts(testDir, errorCounter);
-							} finally {
-								errorCounter.stop();
-							}
-
-							Bukkit.getPluginManager().callEvent(new SkriptTestEvent());
-							if (errorCounter.getCount() > 0) {
-								TestTracker.testStarted("parse scripts");
-								TestTracker.testFailed(errorCounter.getCount() + " error(s) found");
-							}
-							if (errored) { // Check for exceptions thrown while script was executing
-								TestTracker.testStarted("run scripts");
-								TestTracker.testFailed("exception was thrown during execution");
-							}
 							if (TestMode.JUNIT) {
-								SkriptLogger.setVerbosity(Verbosity.DEBUG);
 								info("Running all JUnit tests...");
 								long milliseconds = 0, tests = 0, fails = 0, ignored = 0, size = 0;
 								try {
@@ -724,6 +701,28 @@ public final class Skript extends JavaPlugin implements Listener {
 									Skript.warning("There were " + ignored + " ignored test cases! This can mean they are not properly setup in order in that class!");
 								
 								info("Completed " + tests + " JUnit tests in " + size + " classes with " + fails + " failures in " + milliseconds + " milliseconds.");
+							}
+							info("Loading all tests from " + TestMode.TEST_DIR);
+
+							// Treat parse errors as fatal testing failure
+							CountingLogHandler errorCounter = new CountingLogHandler(Level.SEVERE);
+							try {
+								errorCounter.start();
+								File testDir = TestMode.TEST_DIR.toFile();
+								assert testDir != null;
+								ScriptLoader.loadScripts(testDir, errorCounter);
+							} finally {
+								errorCounter.stop();
+							}
+
+							Bukkit.getPluginManager().callEvent(new SkriptTestEvent());
+							if (errorCounter.getCount() > 0) {
+								TestTracker.testStarted("parse scripts");
+								TestTracker.testFailed(errorCounter.getCount() + " error(s) found");
+							}
+							if (errored) { // Check for exceptions thrown while script was executing
+								TestTracker.testStarted("run scripts");
+								TestTracker.testFailed("exception was thrown during execution");
 							}
 						}
 						double display = shutdownDelay / 20;
