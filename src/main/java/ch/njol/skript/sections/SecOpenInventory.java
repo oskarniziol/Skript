@@ -51,10 +51,9 @@ import ch.njol.util.Kleenean;
 	"The section then allows to modify the event-inventory."
 })
 @Examples({
-	"show crafting table to player #unmodifiable, use open instead to allow for recipes to work",
-	"open a crafting table to the player",
-	"open a loom to the player",
-	"open the player's inventory for the player"
+	"new chest inventory:",
+		"\tset slot 1 of event-inventory to stone named \"example\"",
+		"open event-inventory to all players"
 })
 @Since("INSERT VERSION")
 public class SecOpenInventory extends Section {
@@ -78,7 +77,7 @@ public class SecOpenInventory extends Section {
 	}
 
 	static {
-		Skript.registerSection(SecOpenInventory.class, "(show|open|create) %inventory/inventorytype%");
+		Skript.registerSection(SecOpenInventory.class, "[(show|open|create)] %inventory/inventorytype%");
 	}
 
 	@Nullable
