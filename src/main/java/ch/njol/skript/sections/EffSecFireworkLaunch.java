@@ -19,6 +19,18 @@
 
 package ch.njol.skript.sections;
 
+import java.util.List;
+
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
+import org.bukkit.entity.Firework;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.util.Consumer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
@@ -27,31 +39,20 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.EffectSection;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Location;
-import org.bukkit.entity.Firework;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.util.Consumer;
-import org.eclipse.jdt.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 @Name("Launch Firework")
 @Description({
 	"Launch firework effects at the given location(s).",
 	"This can be used as an effect and as a section.",
 	"If it is used as a section, the section is run before the entity is added to the world.",
-	"You can modify the firework in this section, using for example <code>event-entity</code> or <code>event-firework</code>.",
+	"You can modify the firework in this section, using for example <code>event-entity</code>.",
 	"Do note that other event values, such as <code>player</code>, won't work in this section."
 })
 @Examples({
@@ -59,23 +60,23 @@ import java.util.List;
 	"",
 	"# Firework launch section example",
 	"on damage:",
-	"\tif damage cause is entity explosion:",
-	"\t\tif metadata value \"cancelDamage\" of event-projectile is true:",
-	"\t\t\tcancel event",
+		"\tdamage cause is entity explosion",
+		"\tmetadata value \"cancelDamage\" of event-projectile is true",
+		"\tcancel event",
 	"",
 	"command /firework:",
-	"\ttrigger:",
-	"\t\tlaunch a firework with effects ball large coloured red at player:",
-	"\t\t\tset metadata value \"cancelDamage\" of event-firework to true"
+		"\ttrigger:",
+			"\t\tlaunch a firework with effects ball large coloured red at player:",
+				"\t\t\tset metadata value \"cancelDamage\" of event-firework to true"
 })
-@Since("2.4, INSERT VERSION (with section)")
+@Since("2.4, INSERT VERSION (section)")
 public class EffSecFireworkLaunch extends EffectSection {
 
-	public static class FireworkLaunchEvent extends Event {
+	public static class FireworkSectionLaunchEvent extends Event {
 
 		private final Firework firework;
 
-		public FireworkLaunchEvent(Firework firework) {
+		public FireworkSectionLaunchEvent(Firework firework) {
 			this.firework = firework;
 		}
 
@@ -93,79 +94,70 @@ public class EffSecFireworkLaunch extends EffectSection {
 
 	static {
 		Skript.registerSection(EffSecFireworkLaunch.class, "(launch|deploy) [[a] firework [with effect[s]]] %fireworkeffects% at %locations% [([with] (duration|power)|timed) %-number%]");
-		EventValues.registerEventValue(FireworkLaunchEvent.class, Firework.class, new Getter<Firework, FireworkLaunchEvent>() {
+		EventValues.registerEventValue(FireworkSectionLaunchEvent.class, Firework.class, new Getter<Firework, FireworkSectionLaunchEvent>() {
 			@Override
-			public Firework get(FireworkLaunchEvent fireworkLaunchEvent) {
+			public Firework get(FireworkSectionLaunchEvent fireworkLaunchEvent) {
 				return fireworkLaunchEvent.getFirework();
 			}
 		}, EventValues.TIME_NOW);
 	}
 
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<FireworkEffect> effects;
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<Location> locations;
+
 	@Nullable
-	private Expression<Number> lifetime;
+	private Expression<Number> power;
 
 	@Nullable
 	private Trigger trigger;
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs,
-						int matchedPattern,
-						Kleenean isDelayed,
-						SkriptParser.ParseResult parseResult,
-						@Nullable SectionNode sectionNode,
-						@Nullable List<TriggerItem> triggerItems) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
+			@Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+
 		effects = (Expression<FireworkEffect>) exprs[0];
 		locations = (Expression<Location>) exprs[1];
-		lifetime = (Expression<Number>) exprs[2];
+		power = (Expression<Number>) exprs[2];
 
 		if (sectionNode != null)
-			trigger = loadCode(sectionNode, "fireworklaunch", FireworkLaunchEvent.class);
+			trigger = loadCode(sectionNode, "firework launch", FireworkSectionLaunchEvent.class);
 
 		return true;
 	}
 
 	@Override
 	@Nullable
-	protected TriggerItem walk(Event e) {
-		Object localVars = Variables.copyLocalVariables(e);
-
+	protected TriggerItem walk(Event event) {
+		Object localVars = Variables.copyLocalVariables(event);
 		Consumer<Firework> consumer = null;
 		if (trigger != null) {
-			consumer = o -> {
-				FireworkLaunchEvent fireworkLaunchEvent = new FireworkLaunchEvent(o);
-				// Copy the local variables from the calling code to this section
+			consumer = firework -> {
+				FireworkSectionLaunchEvent fireworkLaunchEvent = new FireworkSectionLaunchEvent(firework);
 				Variables.setLocalVariables(fireworkLaunchEvent, localVars);
 				trigger.execute(fireworkLaunchEvent);
-				Variables.setLocalVariables(e, localVars); // Carry over variable changes to the rest of the main trigger
+				Variables.setLocalVariables(event, localVars);
 			};
 		}
 
-		Number p = lifetime != null ? lifetime.getSingle(e) : 1;
-		int power = 1;
-		if (p != null)
-			power = p.intValue();
+		int power = this.power != null ? this.power.getOptionalSingle(event).orElse(1).intValue() : 1;
 
-		for (Location location : locations.getArray(e)) {
+		for (Location location : locations.getArray(event)) {
 			Firework firework = location.getWorld().spawn(location, Firework.class, consumer);
 			FireworkMeta meta = firework.getFireworkMeta();
-			meta.addEffects(effects.getArray(e));
+			meta.addEffects(effects.getArray(event));
 			meta.setPower(power);
 			firework.setFireworkMeta(meta);
 		}
 
-		return super.walk(e, false);
+		return super.walk(event, false);
 	}
 
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "Launch firework(s) " + effects.toString(e, debug) +
-			" at location(s) " + locations.toString(e, debug) +
-			" timed " + (lifetime != null ? lifetime.toString(e, debug) : "1");
+	public String toString(@Nullable Event event, boolean debug) {
+		return "launch fireworks " + effects.toString(event, debug) +
+				" at " + locations.toString(event, debug) +
+				" timed " + (power != null ? power.toString(event, debug) : "1");
 	}
 
 }
