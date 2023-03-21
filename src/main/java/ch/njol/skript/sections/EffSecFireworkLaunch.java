@@ -104,11 +104,11 @@ public class EffSecFireworkLaunch extends EffectSection {
 		}, EventValues.TIME_NOW);
 	}
 
-	@Nullable
-	public static Entity lastSpawned;
-
 	private Expression<FireworkEffect> effects;
 	private Expression<Location> locations;
+
+	@Nullable
+	public static Entity lastSpawned;
 
 	@Nullable
 	private Expression<Number> power;
