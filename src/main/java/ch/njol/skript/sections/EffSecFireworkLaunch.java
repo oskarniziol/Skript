@@ -60,16 +60,16 @@ import ch.njol.util.Kleenean;
 @Examples({
 	"launch ball large coloured red, purple and white fading to light green and black at player's location with duration 1",
 	"",
+	"command /firework:",
+	"\ttrigger:",
+		"\t\tlaunch a firework with effects ball large coloured red at player:",
+			"\t\t\tset metadata value \"cancel damage\" of event-entity to true",
+	"",
 	"# Firework launch section example",
 	"on damage:",
 		"\tdamage cause is entity explosion",
-		"\tmetadata value \"cancelDamage\" of event-projectile is true",
+		"\tmetadata value \"cancel damage\" of event-projectile is true",
 		"\tcancel event",
-	"",
-	"command /firework:",
-		"\ttrigger:",
-			"\t\tlaunch a firework with effects ball large coloured red at player:",
-				"\t\t\tset metadata value \"cancelDamage\" of event-firework to true"
 })
 @Since("2.4, INSERT VERSION (section)")
 public class EffSecFireworkLaunch extends EffectSection {
