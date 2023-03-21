@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -102,6 +104,9 @@ public class EffSecFireworkLaunch extends EffectSection {
 		}, EventValues.TIME_NOW);
 	}
 
+	@Nullable
+	public static Entity lastSpawned;
+
 	private Expression<FireworkEffect> effects;
 	private Expression<Location> locations;
 
@@ -129,6 +134,7 @@ public class EffSecFireworkLaunch extends EffectSection {
 	@Override
 	@Nullable
 	protected TriggerItem walk(Event event) {
+		FireworkEffect[] effects = this.effects.getArray(event);
 		Object localVars = Variables.copyLocalVariables(event);
 		Consumer<Firework> consumer = null;
 		if (trigger != null) {
@@ -143,11 +149,15 @@ public class EffSecFireworkLaunch extends EffectSection {
 		int power = this.power != null ? this.power.getOptionalSingle(event).orElse(1).intValue() : 1;
 
 		for (Location location : locations.getArray(event)) {
-			Firework firework = location.getWorld().spawn(location, Firework.class, consumer);
+			World world = location.getWorld();
+			if (world == null)
+				continue;
+			Firework firework = world.spawn(location, Firework.class, consumer);
 			FireworkMeta meta = firework.getFireworkMeta();
-			meta.addEffects(effects.getArray(event));
+			meta.addEffects(effects);
 			meta.setPower(power);
 			firework.setFireworkMeta(meta);
+			lastSpawned = firework;
 		}
 
 		return super.walk(event, false);
