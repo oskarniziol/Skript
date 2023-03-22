@@ -77,7 +77,7 @@ public class SecOpenInventory extends Section {
 	}
 
 	static {
-		Skript.registerSection(SecOpenInventory.class, "[(show|open|create)] %inventory/inventorytype%");
+		Skript.registerSection(SecOpenInventory.class, "[show|open|create] %inventory/inventorytype%");
 	}
 
 	@Nullable
@@ -144,7 +144,7 @@ public class SecOpenInventory extends Section {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "section open " + inventory.toString(event, debug) + " to " + players.toString(event, debug);
+		return "open " + inventory.toString(event, debug) + " to " + players.toString(event, debug);
 	}
 
 }

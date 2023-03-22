@@ -127,7 +127,7 @@ public class EffOpenInventory extends Effect {
 	static {
 		Skript.registerEffect(EffOpenInventory.class,
 				"show %inventory/inventorytype% (to|for) %players%",
-				"open [a[n]] " + OpenableInventorySyntax.construct() + "[view|window|inventory] (to|for) %players%",
+				"open [a[n]] " + OpenableInventorySyntax.construct() + " [view|window|inventory] (to|for) %players%",
 				"close [the] inventory [view] (of|for) %players%",
 				"close %players%'[s] inventory [view]");
 	}
