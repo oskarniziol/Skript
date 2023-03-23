@@ -36,6 +36,7 @@ import ch.njol.skript.util.Getter;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
+import org.bukkit.entity.Display;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -48,7 +49,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Name("Spawn")
 @Description({
-	"Spawn a creature. This can be used as an effect and as a section.",
+	"Spawns entities. This can be used as an effect and as a section.",
 	"If it is used as a section, the section is run before the entity is added to the world.",
 	"You can modify the entity in this section, using for example 'event-entity' or 'cow'. ",
 	"Do note that other event values, such as 'player', won't work in this section."
@@ -57,12 +58,36 @@ import java.util.concurrent.atomic.AtomicBoolean;
 	"spawn 3 creepers at the targeted block",
 	"spawn a ghast 5 meters above the player",
 	"spawn a zombie at the player:",
-	"\tset name of the zombie to \"\""
+		"\tset name of the zombie to \"\"",
+	"",
+	"spawn a text display at location above player:",
+		"\tset billboard of event-display to center # allows the display to rotate around the center axis"
 })
 @Since("1.0, 2.6.1 (with section)")
 public class EffSecSpawn extends EffectSection {
 
+	public static class DisplaySpawnEvent extends SpawnEvent {
+
+		private final Display display;
+
+		public DisplaySpawnEvent(Display display) {
+			super(display);
+			this.display = display;
+		}
+
+		public Display getDisplay() {
+			return display;
+		}
+
+		@Override
+		@NotNull
+		public HandlerList getHandlers() {
+			throw new IllegalStateException();
+		}
+	}
+
 	public static class SpawnEvent extends Event {
+
 		private final Entity entity;
 
 		public SpawnEvent(Entity entity) {
@@ -82,24 +107,29 @@ public class EffSecSpawn extends EffectSection {
 
 	static {
 		Skript.registerSection(EffSecSpawn.class,
-			"(spawn|summon) %entitytypes% [%directions% %locations%]",
-			"(spawn|summon) %number% of %entitytypes% [%directions% %locations%]"
+				"(spawn|summon) %entitytypes% [%directions% %locations%]",
+				"(spawn|summon) %number% of %entitytypes% [%directions% %locations%]"
 		);
 		EventValues.registerEventValue(SpawnEvent.class, Entity.class, new Getter<Entity, SpawnEvent>() {
 			@Override
-			public Entity get(SpawnEvent spawnEvent) {
-				return spawnEvent.getEntity();
+			public Entity get(SpawnEvent event) {
+				return event.getEntity();
+			}
+		}, EventValues.TIME_NOW);
+		EventValues.registerEventValue(DisplaySpawnEvent.class, Display.class, new Getter<Display, DisplaySpawnEvent>() {
+			@Override
+			public Display get(DisplaySpawnEvent event) {
+				return event.getDisplay();
 			}
 		}, EventValues.TIME_NOW);
 	}
 
 	@Nullable
-	public static Entity lastSpawned = null;
+	public static Entity lastSpawned;
 
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<Location> locations;
-	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<EntityType> types;
+
 	@Nullable
 	private Expression<Number> amount;
 
@@ -108,12 +138,9 @@ public class EffSecSpawn extends EffectSection {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs,
-						int matchedPattern,
-						Kleenean isDelayed,
-						ParseResult parseResult,
-						@Nullable SectionNode sectionNode,
-						@Nullable List<TriggerItem> triggerItems) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
+			@Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+
 		amount = matchedPattern == 0 ? null : (Expression<Number>) (exprs[0]);
 		types = (Expression<EntityType>) exprs[matchedPattern];
 		locations = Direction.combine((Expression<? extends Direction>) exprs[1 + matchedPattern], (Expression<? extends Location>) exprs[2 + matchedPattern]);
@@ -141,9 +168,9 @@ public class EffSecSpawn extends EffectSection {
 
 		Consumer<? extends Entity> consumer;
 		if (trigger != null) {
-			consumer = o -> {
-				lastSpawned = o;
-				SpawnEvent spawnEvent = new SpawnEvent(o);
+			consumer = entity -> {
+				lastSpawned = entity;
+				SpawnEvent spawnEvent = entity instanceof Display ? new DisplaySpawnEvent((Display) entity) : new SpawnEvent(entity);
 				// Copy the local variables from the calling code to this section
 				Variables.setLocalVariables(spawnEvent, localVars);
 				TriggerItem.walk(trigger, spawnEvent);

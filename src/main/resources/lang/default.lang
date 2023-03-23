@@ -1221,6 +1221,19 @@ entities:
 	camel:
 		name: camel¦s
 		pattern: camel(|1¦s)
+	# 1.19.4 Entities
+	display:
+		name: display¦s
+		pattern: display(|1¦s)
+	block display:
+		name: block display¦s
+		pattern: block display(|1¦s) [[with block[s]] %-itemtypes%]
+	item display:
+		name: item display¦s
+		pattern: item display(|1¦s) [[with item[s]] %-itemtypes%]
+	text display:
+		name: text display¦s
+		pattern: text display(|1¦s) #Skript cannot do literal String currently [[with (string[s]|text)] %-strings%]
 
 # -- Heal Reasons --
 heal reasons:
@@ -1911,6 +1924,13 @@ moon phases:
 	waxing_crescent: waxing crescent
 	waxing_gibbous: waxing gibbous
 
+# -- Display Billboards --
+billboards:
+	center: center, middle
+	fixed: fixed
+	horizontal: horizontal
+	vertical: vertical
+
 # -- Boolean --
 boolean:
 	true:
@@ -1979,6 +1999,7 @@ types:
 	resourcepackstate: resource pack state¦s @a
 	gene: panda gene¦s @a
 	gamerulevalue: gamerule value¦s @a
+	billboard: billboard¦s @a
 
 	# Skript
 	weathertype: weather type¦s @a

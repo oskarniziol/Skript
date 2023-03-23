@@ -28,18 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import ch.njol.util.coll.iterator.ArrayIterator;
-import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.ConfigurationSerializer;
-import ch.njol.skript.classes.EnumClassInfo;
-import ch.njol.skript.classes.Parser;
-import ch.njol.skript.classes.Serializer;
-import ch.njol.skript.lang.util.SimpleLiteral;
-import ch.njol.skript.util.BlockUtils;
-import ch.njol.skript.util.EnchantmentType;
-import ch.njol.skript.util.PotionEffectUtils;
-import ch.njol.skript.util.StringMode;
-import io.papermc.paper.world.MoonPhase;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
@@ -62,6 +50,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Cat;
+import org.bukkit.entity.Display;
+import org.bukkit.entity.Display.Billboard;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -92,18 +82,26 @@ import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EnchantmentUtils;
 import ch.njol.skript.bukkitutil.ItemUtils;
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.ConfigurationSerializer;
+import ch.njol.skript.classes.EnumClassInfo;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.ExprDamageCause;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.BlockUtils;
+import ch.njol.skript.util.EnchantmentType;
+import ch.njol.skript.util.PotionEffectUtils;
+import ch.njol.skript.util.StringMode;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
+import io.papermc.paper.world.MoonPhase;
 
-/**
- * @author Peter Güttinger
- */
 public class BukkitClasses {
 
 	public BukkitClasses() {}
@@ -1489,11 +1487,26 @@ public class BukkitClasses {
 
 		if (Skript.classExists("io.papermc.paper.world.MoonPhase")) {
 			Classes.registerClass(new EnumClassInfo<>(MoonPhase.class, "moonphase", "moon phases")
-				.user("(lunar|moon) ?phases?")
-				.name("Moon Phase")
-				.description("Represents the phase of a moon.")
-				.since("2.7")
-				.requiredPlugins("Paper 1.16+"));
+					.user("(lunar|moon) ?phases?")
+					.name("Moon Phase")
+					.description("Represents the phase of a moon.")
+					.since("2.7")
+					.requiredPlugins("Paper 1.16+"));
+		}
+
+		if (Skript.classExists("org.bukkit.entity.Display")) {
+			Classes.registerClass(new ClassInfo<>(Display.class, "display")
+					.user("displays?")
+					.name("Display")
+					.description("A text display, block display or item display.")
+					.since("INSERT VERSION")
+					.defaultExpression(new EventValueExpression<>(Display.class))
+					.changer(DefaultChangers.nonLivingEntityChanger));
+			Classes.registerClass(new EnumClassInfo<>(Billboard.class, "billboard", "billboards")
+					.user("billboards?")
+					.name("Billboard")
+					.description("Represents the billboard setting of a display.")
+					.since("INSERT VERSION"));
 		}
 	}
 }
