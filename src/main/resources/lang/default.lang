@@ -1999,6 +1999,7 @@ types:
 	resourcepackstate: resource pack state¦s @a
 	gene: panda gene¦s @a
 	gamerulevalue: gamerule value¦s @a
+	display: display¦s @a
 	billboard: billboard¦s @a
 
 	# Skript

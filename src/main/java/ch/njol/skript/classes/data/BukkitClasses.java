@@ -1502,6 +1502,7 @@ public class BukkitClasses {
 					.since("INSERT VERSION")
 					.defaultExpression(new EventValueExpression<>(Display.class))
 					.changer(DefaultChangers.nonLivingEntityChanger));
+
 			Classes.registerClass(new EnumClassInfo<>(Billboard.class, "billboard", "billboards")
 					.user("billboards?")
 					.name("Billboard")

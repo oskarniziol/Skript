@@ -1,0 +1,7 @@
+
+test "spawn displays":
+	spawn a text display at spawn of world "world":
+		assert billboard of event-display is fixed with "default billboard was not fixed"
+		set billboard of event-display to center
+		assert billboard of event-display is center with "failed to set billboard to center"
+		clear event-display
