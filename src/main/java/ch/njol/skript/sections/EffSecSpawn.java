@@ -18,6 +18,17 @@
  */
 package ch.njol.skript.sections;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.bukkit.util.Consumer;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
@@ -35,17 +46,6 @@ import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import org.bukkit.Location;
-import org.bukkit.entity.Display;
-import org.bukkit.entity.Entity;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.bukkit.util.Consumer;
-import org.eclipse.jdt.annotation.Nullable;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Name("Spawn")
 @Description({
@@ -65,26 +65,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 })
 @Since("1.0, 2.6.1 (with section)")
 public class EffSecSpawn extends EffectSection {
-
-	public static class DisplaySpawnEvent extends SpawnEvent {
-
-		private final Display display;
-
-		public DisplaySpawnEvent(Display display) {
-			super(display);
-			this.display = display;
-		}
-
-		public Display getDisplay() {
-			return display;
-		}
-
-		@Override
-		@NotNull
-		public HandlerList getHandlers() {
-			throw new IllegalStateException();
-		}
-	}
 
 	public static class SpawnEvent extends Event {
 
@@ -114,12 +94,6 @@ public class EffSecSpawn extends EffectSection {
 			@Override
 			public Entity get(SpawnEvent event) {
 				return event.getEntity();
-			}
-		}, EventValues.TIME_NOW);
-		EventValues.registerEventValue(DisplaySpawnEvent.class, Display.class, new Getter<Display, DisplaySpawnEvent>() {
-			@Override
-			public Display get(DisplaySpawnEvent event) {
-				return event.getDisplay();
 			}
 		}, EventValues.TIME_NOW);
 	}
@@ -170,7 +144,7 @@ public class EffSecSpawn extends EffectSection {
 		if (trigger != null) {
 			consumer = entity -> {
 				lastSpawned = entity;
-				SpawnEvent spawnEvent = entity instanceof Display ? new DisplaySpawnEvent((Display) entity) : new SpawnEvent(entity);
+				SpawnEvent spawnEvent = new SpawnEvent(entity);
 				// Copy the local variables from the calling code to this section
 				Variables.setLocalVariables(spawnEvent, localVars);
 				TriggerItem.walk(trigger, spawnEvent);
@@ -206,7 +180,7 @@ public class EffSecSpawn extends EffectSection {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return "spawn " + (amount != null ? amount.toString(event, debug) + " of " : "") +
-			types.toString(event, debug) + " " + locations.toString(event, debug);
+				types.toString(event, debug) + " " + locations.toString(event, debug);
 	}
 
 }

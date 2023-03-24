@@ -1222,6 +1222,12 @@ entities:
 		name: camel¦s
 		pattern: camel(|1¦s)
 	# 1.19.4 Entities
+	sniffer:
+		name: sniffer¦s
+		pattern: sniffer(|1¦s)
+	interaction:
+		name: interaction¦s
+		pattern: interaction(|1¦s)
 	display:
 		name: display¦s
 		pattern: display(|1¦s)
