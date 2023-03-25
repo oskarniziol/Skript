@@ -702,7 +702,7 @@ public abstract class Utils {
 	public static NamespacedKey getNamespacedKey(String key) {
 		String encodedKey = BaseEncoding.base32().encode(key.getBytes(StandardCharsets.UTF_8));
 		encodedKey = encodedKey.toLowerCase().replace("=", "");
-		return new NamespacedKey(Skript.getInstance(), encodedKey.toLowerCase());
+		return new NamespacedKey(Skript.getInstance(), encodedKey);
 	}
 
 	/**

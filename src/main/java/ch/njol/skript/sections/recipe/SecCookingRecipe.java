@@ -23,7 +23,8 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.EntryNode;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.config.validate.SectionValidator;
+import org.skriptlang.skript.lang.entry.EntryContainer;
+import org.skriptlang.skript.lang.entry.EntryValidator;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -31,13 +32,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
-import ch.njol.skript.patterns.PatternCompiler;
-import ch.njol.skript.patterns.SkriptPattern;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
-import com.destroystokyo.paper.Namespaced;
-import com.google.common.collect.Iterables;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -48,22 +45,19 @@ import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.SmokingRecipe;
+import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Stream;
 
 @Name("Cooking Recipe")
 @Description("Creates a cooking recipe")
 @Examples({
-	"create a crafting recipe for diamond named \"Dirty Diamond\" with the key \"dirty-diamond\":",
-	"\tshape:",
+	"create a furnace recipe:",
+	"\tingredient: ",
 	"\t\tdirt, dirt and dirt",
 	"\t\tdirt, diamond and dirt",
 	"\t\tdirt, dirt and dirt"
@@ -72,48 +66,50 @@ import java.util.stream.Stream;
 public class SecCookingRecipe extends Section {
 
 	static {
-			Skript.registerSection(SecCookingRecipe.class, "(create|add|register) [a] (0:blast furnace|1:campfire|2:furnace|3:smoker) recipe for %itemtype% with [the] key %string%");
+			Skript.registerSection(SecCookingRecipe.class, "(create|add|register) [a] (0:blast furnace|1:campfire|2:furnace|3:smoker) recipe");
 	}
 
-	private static SectionValidator validator = new SectionValidator()
-		.addEntry("ingredient", false)
-		.addEntry("cook time", false)
-		.addEntry("group", true)
-		.addEntry("xp", false);
-
+	private static EntryValidator validator = EntryValidator.builder()
+		.addEntryData(new ExpressionEntryData<>("ingredient", null, false, ItemType.class))
+		.addEntryData(new ExpressionEntryData<>("result", null, false, ItemType.class))
+		.addEntryData(new ExpressionEntryData<>("key", null, false, String.class))
+		.addEntryData(new ExpressionEntryData<>("cook time", null, false, Timespan.class))
+		.addEntryData(new ExpressionEntryData<>("group", null, true, String.class))
+		.addEntryData(new ExpressionEntryData<>("xp", null, false, Number.class))
+		.build();
 
 	enum CookingRecipeType {
 		BLAST_FURNACE, CAMPFIRE, FURNACE, SMOKER
 	}
 
-	private Expression<String> key;
 	private CookingRecipeType type;
+	private Expression<? extends String> key;
 	private Expression<? extends ItemType> ingredient;
 	private Expression<? extends Timespan> cookTime;
 	private Expression<? extends Number> xp;
-	private Expression<ItemType> result;
+	private Expression<? extends String> group;
+	private Expression<? extends ItemType> result;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-		if (!validator.validate(sectionNode))
+		EntryContainer entryContainer = validator.validate(sectionNode);
+		if (entryContainer == null)
 			return false;
-		try {
-			ingredient = parse((EntryNode) sectionNode.get("ingredient"), ItemType.class);
-			cookTime = parse((EntryNode) sectionNode.get("cook time"), Timespan.class);
-			xp = parse((EntryNode) sectionNode.get("xp"), Number.class);
-		} catch (IllegalStateException ignored) {
-			return false;
-		}
 		type = CookingRecipeType.values()[parseResult.mark];
-		result = (Expression<ItemType>) exprs[0];
-		key = (Expression<String>) exprs[1];
+		ingredient = (Expression<? extends ItemType>) entryContainer.get("ingredient", false);
+		cookTime = (Expression<? extends Timespan>) entryContainer.get("cook time", false);
+		xp = (Expression<? extends Number>) entryContainer.get("xp", false);
+		group = (Expression<? extends String>) entryContainer.getOptional("group", false);
+		result = (Expression<? extends ItemType>) entryContainer.get("result", false);
+		key = (Expression<? extends String>) entryContainer.get("key", false);
 		return true;
 	}
 
 	@Override
 	public String toString(Event event, boolean debug) {
-		return "create crafting recipe for " + result.toString(event, debug) + " with key " + key.toString(event, debug);
+		String friendlyName = type.name().replace("_", " ").toLowerCase();
+		return "create a " + friendlyName + " recipe";
 	}
 
 	@Override
@@ -148,7 +144,7 @@ public class SecCookingRecipe extends Section {
 		int cookTimeTicks = (int) cookTime.getTicks_i();
 		NamespacedKey namespacedKey = Utils.getNamespacedKey(key);
 		RecipeChoice choice = new RecipeChoice.MaterialChoice(ingredientMaterials.toArray(new Material[0]));
-		CookingRecipe recipe;
+		CookingRecipe<?> recipe;
 		switch (type) {
 			case SMOKER:
 				recipe = new SmokingRecipe(namespacedKey, result.getRandom(), choice, xp.floatValue(), cookTimeTicks);
@@ -166,27 +162,17 @@ public class SecCookingRecipe extends Section {
 				throw new IllegalStateException();
 		}
 
+		if (this.group != null) {
+			String group = this.group.getSingle(event);
+			if (group != null)
+				recipe.setGroup(group);
+		}
+
 		try {
 			Bukkit.getServer().addRecipe(recipe);
 		} catch (IllegalStateException ignored) {
 			// Bukkit throws a IllegalStateException if a duplicate recipe is registered
 		}
-	}
-
-	private <T> Expression<? extends T> parse(EntryNode node, Class<T> parseAsClass) {
-		Node originalNode = getParser().getNode();
-		SkriptParser parser = new SkriptParser(node.getValue(), SkriptParser.ALL_FLAGS, ParseContext.DEFAULT);
-		RetainingLogHandler logHandler = SkriptLogger.startRetainingLog();
-		getParser().setNode(node);
-		Expression<? extends T> expr = parser.parseExpression(parseAsClass);
-		if (expr == null) {
-			logHandler.printErrors("Can't understand this expression: " + key);
-			throw new IllegalArgumentException();
-		} else {
-			logHandler.printLog();
-		}
-		getParser().setNode(originalNode);
-		return expr;
 	}
 
 }

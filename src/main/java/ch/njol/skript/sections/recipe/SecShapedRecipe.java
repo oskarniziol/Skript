@@ -40,6 +40,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.skriptlang.skript.lang.entry.EntryContainer;
+import org.skriptlang.skript.lang.entry.EntryValidator;
+import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,8 +52,10 @@ import java.util.stream.Stream;
 @Name("Crafting Recipe")
 @Description("Creates a shaped crafting recipe")
 @Examples({
-	"create a crafting recipe for diamond named \"Dirty Diamond\" with the key \"dirty-diamond\":",
-	"\tshape:",
+	"create a crafting recipe:",
+	"\tkey: \"dirty-diamond\"",
+	"\tresult: diamond named \"Dirty Diamond\"",
+	"\tingredients:",
 	"\t\tdirt, dirt and dirt",
 	"\t\tdirt, diamond and dirt",
 	"\t\tdirt, dirt and dirt"
@@ -59,27 +64,35 @@ import java.util.stream.Stream;
 public class SecShapedRecipe extends Section {
 
 	static {
-		Skript.registerSection(SecShapedRecipe.class, "(create|add|register) [a] crafting recipe for %itemtype% with [the] key %string%");
+		Skript.registerSection(SecShapedRecipe.class, "(create|add|register) [a] crafting recipe");
 	}
 
-	private Expression<String> key;
+	private static EntryValidator validator = EntryValidator.builder()
+		.addEntryData(new ExpressionEntryData<>("result", null, false, ItemType.class))
+		.addEntryData(new ExpressionEntryData<>("key", null, false, String.class))
+		.addSection("ingredients", false)
+		.build();
+
+	private Expression<? extends String> key;
 	private Expression<ItemType> ingredients;
-	private Expression<ItemType> result;
+	private Expression<? extends ItemType> result;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-		Node shapeNode = sectionNode.get("shape");
-		if (!(shapeNode instanceof SectionNode) || Iterables.size((SectionNode) shapeNode) != 3) {
-			Skript.error("A crafting recipe section must have a 'shape' section with three ingredient lines");
+		EntryContainer entryContainer = validator.validate(sectionNode);
+		if (entryContainer == null)
+			return false;
+		SectionNode shapeNode = (SectionNode) entryContainer.get("ingredients", false);
+		if (Iterables.size(shapeNode) != 3) {
+			Skript.error("A crafting recipe section must have a 'ingredients' section with three ingredient lines");
 			return false;
 		}
-		ingredients = parseIngredients((SectionNode) shapeNode);
-		if (ingredients == null) {
+		ingredients = parseIngredients(shapeNode);
+		if (ingredients == null)
 			return false;
-		}
-		result = (Expression<ItemType>) exprs[0];
-		key = (Expression<String>) exprs[1];
+		result = (Expression<? extends ItemType>) entryContainer.get("result", false);
+		key = (Expression<? extends String>) entryContainer.get("key", false);
 		return true;
 	}
 
@@ -119,6 +132,7 @@ public class SecShapedRecipe extends Section {
 	}
 
 	private Expression<ItemType> parseIngredients(SectionNode section) {
+		// TODO: move this to an entryvalidator probably
 		Node originalNode = getParser().getNode();
 		List<Expression<? extends ItemType>> ingredients = new ArrayList<>();
 		for (Node node : section) {
