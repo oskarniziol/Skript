@@ -18,6 +18,8 @@
  */
 package ch.njol.skript.util;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -29,10 +31,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import com.google.common.io.BaseEncoding;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.collect.Iterables;
@@ -685,6 +690,31 @@ public abstract class Utils {
 				lastIndex = i;
 		}
 		return lastIndex;
+	}
+
+	/**
+	 * Gets a namespaced key encoded to avoid the character limitations of a normal key.
+	 * This key will be created in Skript's namespace.
+	 *
+	 * @param key The key to use
+	 * @return a NamespacedKey with the encoded key in Skript's namespace
+	 */
+	public static NamespacedKey getNamespacedKey(String key) {
+		String encodedKey = BaseEncoding.base32().encode(key.getBytes(StandardCharsets.UTF_8));
+		encodedKey = encodedKey.toLowerCase().replace("=", "");
+		return new NamespacedKey(Skript.getInstance(), encodedKey.toLowerCase());
+	}
+
+	/**
+	 * Decodes a NamespacedKey encoded by Utils#getNamespacedKey
+	 *
+	 * @param namespacedKey the namespaced key to decode
+	 * @return a Pair with the first element as the namespace and the second as the decoded key
+	 */
+	public static Pair<String, String> decodeNamespacedKey(NamespacedKey namespacedKey) {
+		byte[] keyBytes = BaseEncoding.base32().decode(namespacedKey.getKey().toUpperCase());
+		String decodedKey = new String(keyBytes, StandardCharsets.UTF_8);
+		return new Pair<>(namespacedKey.getNamespace(), decodedKey);
 	}
 	
 }

@@ -1,0 +1,148 @@
+/**
+ *   This file is part of Skript.
+ *
+ *  Skript is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Skript is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Skript.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright Peter Güttinger, SkriptLang team and contributors
+ */
+package ch.njol.skript.sections.recipe;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.config.Node;
+import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.*;
+import ch.njol.skript.log.RetainingLogHandler;
+import ch.njol.skript.log.SkriptLogger;
+import ch.njol.skript.util.Utils;
+import ch.njol.util.Kleenean;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+@Name("Crafting Recipe")
+@Description("Creates a shaped crafting recipe")
+@Examples({
+	"create a crafting recipe for diamond named \"Dirty Diamond\" with the key \"dirty-diamond\":",
+	"\tshape:",
+	"\t\tdirt, dirt and dirt",
+	"\t\tdirt, diamond and dirt",
+	"\t\tdirt, dirt and dirt"
+})
+@Since("INSERT VERSION")
+public class SecShapedRecipe extends Section {
+
+	static {
+		Skript.registerSection(SecShapedRecipe.class, "(create|add|register) [a] crafting recipe for %itemtype% with [the] key %string%");
+	}
+
+	private Expression<String> key;
+	private Expression<ItemType> ingredients;
+	private Expression<ItemType> result;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+		Node shapeNode = sectionNode.get("shape");
+		if (!(shapeNode instanceof SectionNode) || Iterables.size((SectionNode) shapeNode) != 3) {
+			Skript.error("A crafting recipe section must have a 'shape' section with three ingredient lines");
+			return false;
+		}
+		ingredients = parseIngredients((SectionNode) shapeNode);
+		if (ingredients == null) {
+			return false;
+		}
+		result = (Expression<ItemType>) exprs[0];
+		key = (Expression<String>) exprs[1];
+		return true;
+	}
+
+	@Override
+	public String toString(Event event, boolean debug) {
+		return "create crafting recipe for " + result.toString(event, debug) + " with key " + key.toString(event, debug);
+	}
+
+	@Override
+	protected TriggerItem walk(Event event) {
+		execute(event);
+		return walk(event, false);
+	}
+
+	private void execute(Event event) {
+		String key = this.key.getSingle(event);
+		if (key == null)
+			return;
+		ItemType result = this.result.getSingle(event);
+		if (result == null)
+			return;
+		ItemType[] ingredients = this.ingredients.getArray(event);
+		if (ingredients.length != 9)
+			return;
+		ShapedRecipe recipe = new ShapedRecipe(Utils.getNamespacedKey(key), result.getRandom());
+		recipe.shape("abc", "def", "ghi");
+		for (char c = 'a'; c < 'j'; c++) {
+			ItemStack[] allChoices = Iterables.toArray(ingredients[c - 'a'].getAll(), ItemStack.class);
+			RecipeChoice choice = new RecipeChoice.ExactChoice(allChoices);
+			recipe.setIngredient(c, choice);
+		}
+		try {
+			Bukkit.getServer().addRecipe(recipe);
+		} catch (IllegalStateException ignored) {
+			// Bukkit throws a IllegalStateException if a duplicate recipe is registered
+		}
+	}
+
+	private Expression<ItemType> parseIngredients(SectionNode section) {
+		Node originalNode = getParser().getNode();
+		List<Expression<? extends ItemType>> ingredients = new ArrayList<>();
+		for (Node node : section) {
+			getParser().setNode(node);
+			String key = node.getKey();
+			if (key == null) {
+				getParser().setNode(originalNode);
+				return null;
+			}
+
+			SkriptParser parser = new SkriptParser(key, SkriptParser.ALL_FLAGS, ParseContext.DEFAULT);
+			RetainingLogHandler logHandler = SkriptLogger.startRetainingLog();
+			Expression<? extends ItemType> expr = parser.parseExpression(ItemType.class);
+			if (!(expr instanceof ExpressionList) || ((ExpressionList<?>) expr).getExpressions().length != 3) {
+				logHandler.printErrors("Can't understand this expression: " + key);
+				getParser().setNode(originalNode);
+				return null;
+			}
+			logHandler.printLog();
+			ingredients.add(expr);
+
+		}
+		getParser().setNode(originalNode);
+		return new ExpressionList<>(ingredients.toArray(new Expression[0]), ItemType.class, true);
+	}
+
+}
