@@ -145,7 +145,6 @@ public class SecCookingRecipe extends Section {
 		// the recipe APIs require an int :(
 		int cookTimeTicks = (int) cookTime.getTicks_i();
 		NamespacedKey namespacedKey = Utils.getNamespacedKey(key);
-		Pair<String, String> decodedKey = Utils.decodeNamespacedKey(namespacedKey);
 		RecipeChoice choice = new RecipeChoice.MaterialChoice(ingredientMaterials.toArray(new Material[0]));
 		CookingRecipe<?> recipe;
 		switch (type) {
