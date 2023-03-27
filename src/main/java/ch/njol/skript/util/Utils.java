@@ -717,7 +717,7 @@ public abstract class Utils {
 			// if this character is legal to use in a namespace key
 			if (LEGAL_NAMESPACE_CHARS.contains(currentChar)) {
 				// if the original string had a ".x" in it, we need to escape it
-				// so decoding doesn't think it's an illegal character
+				// so decoding doesn't think it's a hex sequence
 				if (currentChar == '.' && key.charAt(i + 1) == 'x') {
 					i += 1; // skip the "x"
 					encodedKeyBuilder.append(".x");

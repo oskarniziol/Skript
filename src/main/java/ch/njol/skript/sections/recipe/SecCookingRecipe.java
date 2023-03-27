@@ -25,6 +25,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
+import org.apache.commons.lang.StringUtils;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import ch.njol.skript.doc.Description;
@@ -119,7 +120,7 @@ public class SecCookingRecipe extends Section {
 
 	private void execute(Event event) {
 		String key = this.key.getSingle(event);
-		if (key == null)
+		if (key == null || StringUtils.isBlank(key))
 			return;
 		ItemType result = this.result.getSingle(event);
 		if (result == null)
