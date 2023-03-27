@@ -27,27 +27,23 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.*;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.inventory.ShapelessRecipe;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Name("Crafting Recipe")
 @Description("Creates a shaped crafting recipe")
@@ -77,9 +73,9 @@ public class SecShapedRecipe extends Section {
 	private Expression<ItemType> ingredients;
 	private Expression<? extends ItemType> result;
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		EntryContainer entryContainer = validator.validate(sectionNode);
 		if (entryContainer == null)
 			return false;
@@ -104,7 +100,7 @@ public class SecShapedRecipe extends Section {
 	@Override
 	protected TriggerItem walk(Event event) {
 		execute(event);
-		return walk(event, false);
+		return super.walk(event, false);
 	}
 
 	private void execute(Event event) {

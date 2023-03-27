@@ -20,19 +20,17 @@ package ch.njol.skript.sections.recipe;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.config.EntryNode;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.util.Pair;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.Section;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.TriggerItem;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.*;
-import ch.njol.skript.log.RetainingLogHandler;
-import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
@@ -51,7 +49,6 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 @Name("Cooking Recipe")
@@ -92,9 +89,9 @@ public class SecCookingRecipe extends Section {
 	private Expression<? extends String> group;
 	private Expression<? extends ItemType> result;
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+	@SuppressWarnings("unchecked")
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
 		EntryContainer entryContainer = validator.validate(sectionNode);
 		if (entryContainer == null)
 			return false;
@@ -117,7 +114,7 @@ public class SecCookingRecipe extends Section {
 	@Override
 	protected TriggerItem walk(Event event) {
 		execute(event);
-		return walk(event, false);
+		return super.walk(event, false);
 	}
 
 	private void execute(Event event) {
