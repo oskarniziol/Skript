@@ -21,17 +21,21 @@ package ch.njol.skript.util;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import com.google.common.collect.Sets;
 import com.google.common.io.BaseEncoding;
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -692,6 +696,8 @@ public abstract class Utils {
 		return lastIndex;
 	}
 
+	private static Set<Character> LEGAL_NAMESPACE_CHARS = Sets.newHashSet(ArrayUtils.toObject("abcdefghijklmnopqrstuvwxyz0123456789._-/".toCharArray()));
+
 	/**
 	 * Gets a namespaced key encoded to avoid the character limitations of a normal key.
 	 * This key will be created in Skript's namespace.
@@ -700,9 +706,42 @@ public abstract class Utils {
 	 * @return a NamespacedKey with the encoded key in Skript's namespace
 	 */
 	public static NamespacedKey getNamespacedKey(String key) {
-		String encodedKey = BaseEncoding.base32().encode(key.getBytes(StandardCharsets.UTF_8));
-		encodedKey = encodedKey.toLowerCase().replace("=", "");
-		return new NamespacedKey(Skript.getInstance(), encodedKey);
+		// TODO: add tests for this
+		StringBuilder encodedKeyBuilder = new StringBuilder();
+		// keys must be all lowercase
+		key = key.toLowerCase();
+		key = key.replace(' ', '_');
+		int keyLength = key.length();
+		for (int i = 0; i < keyLength; i++) {
+			char currentChar = key.charAt(i);
+			// if this character is legal to use in a namespace key
+			if (LEGAL_NAMESPACE_CHARS.contains(currentChar)) {
+				// if the original string had a ".x" in it, we need to escape it
+				// so decoding doesn't think it's an illegal character
+				if (currentChar == '.' && key.charAt(i + 1) == 'x') {
+					i += 1; // skip the "x"
+					encodedKeyBuilder.append(".x");
+					encodedKeyBuilder.append(Integer.toHexString('.'));
+					encodedKeyBuilder.append(".x");
+					encodedKeyBuilder.append(Integer.toHexString('x'));
+					// if we're not at the end and the next char is a legal char, add the trailing dot
+					// to represent the end of the hex sequence
+					if (i != (keyLength - 1) && LEGAL_NAMESPACE_CHARS.contains(key.charAt(i + 1)))
+						encodedKeyBuilder.append('.');
+				} else {
+					// we are dealing with a legal character, so we can just append it
+					encodedKeyBuilder.append(currentChar);
+				}
+			} else {
+				// add ".x(hex code)" to the encoded key
+				encodedKeyBuilder.append(".x");
+				encodedKeyBuilder.append(Integer.toHexString(currentChar));
+				// only add the trailing dot if the next character is a legal character
+				if (i != (keyLength - 1) && LEGAL_NAMESPACE_CHARS.contains(key.charAt(i + 1)))
+					encodedKeyBuilder.append('.');
+			}
+		}
+		return new NamespacedKey(Skript.getInstance(), encodedKeyBuilder.toString());
 	}
 
 	/**
@@ -712,9 +751,35 @@ public abstract class Utils {
 	 * @return a Pair with the first element as the namespace and the second as the decoded key
 	 */
 	public static Pair<String, String> decodeNamespacedKey(NamespacedKey namespacedKey) {
-		byte[] keyBytes = BaseEncoding.base32().decode(namespacedKey.getKey().toUpperCase());
-		String decodedKey = new String(keyBytes, StandardCharsets.UTF_8);
-		return new Pair<>(namespacedKey.getNamespace(), decodedKey);
+		// TODO: add tests for this
+		String encodedKey = namespacedKey.getKey();
+		StringBuilder decodedKeyBuilder = new StringBuilder();
+		int encodedKeyLength = encodedKey.length();
+		int lastCharIndex = encodedKeyLength - 1;
+		for (int i = 0; i < encodedKeyLength; i++) {
+			char currentChar = encodedKey.charAt(i);
+			// if we are encountering a ".x" hex sequence
+			if (i != lastCharIndex && currentChar  == '.' && encodedKey.charAt(i + 1) == 'x') {
+				i += 2; // skip the ".x" so it isn't part of our hex string
+				StringBuilder hexString = new StringBuilder();
+				// The hex sequence continues until a . is encountered or we reach the end of the string
+				while (i <= lastCharIndex && encodedKey.charAt(i) != '.') {
+					hexString.append(encodedKey.charAt(i));
+					i++;
+				}
+				// if the . was the start of another ".x" hex sequence, back up by 1 character
+				if (i <= lastCharIndex && encodedKey.charAt(i + 1) == 'x')
+					i--;
+				// parse the hex sequence to a char
+				char decodedChar = (char) Long.parseLong(hexString.toString(), 16);
+				decodedKeyBuilder.append(decodedChar);
+			} else {
+				// this is just a normal character, not a hex sequence
+				// so we can just append it
+				decodedKeyBuilder.append(currentChar);
+			}
+		}
+		return new Pair<>(namespacedKey.getNamespace(), decodedKeyBuilder.toString());
 	}
 	
 }

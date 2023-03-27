@@ -23,6 +23,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.EntryNode;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.util.Pair;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import ch.njol.skript.doc.Description;
@@ -79,6 +80,7 @@ public class SecCookingRecipe extends Section {
 		.build();
 
 	enum CookingRecipeType {
+		//TODO: support using more than one of these in the syntax
 		BLAST_FURNACE, CAMPFIRE, FURNACE, SMOKER
 	}
 
@@ -143,6 +145,7 @@ public class SecCookingRecipe extends Section {
 		// the recipe APIs require an int :(
 		int cookTimeTicks = (int) cookTime.getTicks_i();
 		NamespacedKey namespacedKey = Utils.getNamespacedKey(key);
+		Pair<String, String> decodedKey = Utils.decodeNamespacedKey(namespacedKey);
 		RecipeChoice choice = new RecipeChoice.MaterialChoice(ingredientMaterials.toArray(new Material[0]));
 		CookingRecipe<?> recipe;
 		switch (type) {
