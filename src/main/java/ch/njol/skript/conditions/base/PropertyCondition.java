@@ -110,7 +110,7 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 		Bukkit.getScheduler().runTask(Skript.getInstance(), () -> {
 			SkriptPattern pattern = PatternCompiler.compile(property);
 			String negated = pattern.toString().trim();
-			if (negated.isBlank())
+			if (negated.isEmpty())
 				throw new MalformedPatternException(property, "A negated pattern cannot be empty when removed! " + c.getName());
 			switch (propertyType) {
 				case BE:
