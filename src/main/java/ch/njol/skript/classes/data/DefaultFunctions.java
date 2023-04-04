@@ -37,11 +37,11 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
-import ch.njol.skript.util.Date;
 import ch.njol.util.Math2;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.util.date.Date;
 
 public class DefaultFunctions {
 	
