@@ -1233,6 +1233,7 @@ entities:
 		pattern: display(|1¦s)
 	block display:
 		name: block display¦s
+<<<<<<< HEAD
 		pattern: block display(|1¦s) [[with block[s]] %-itemtypes%]
 	item display:
 		name: item display¦s
@@ -1240,6 +1241,15 @@ entities:
 	text display:
 		name: text display¦s
 		pattern: text display(|1¦s) #Skript cannot do literal String currently [[with (string[s]|text)] %-strings%]
+=======
+		pattern: block display(|1¦s)
+	item display:
+		name: item display¦s
+		pattern: item display(|1¦s)
+	text display:
+		name: text display¦s
+		pattern: text display(|1¦s)
+>>>>>>> c4e272043f9f1c9e90f5bea506d911578b6ea354
 
 # -- Heal Reasons --
 heal reasons:
