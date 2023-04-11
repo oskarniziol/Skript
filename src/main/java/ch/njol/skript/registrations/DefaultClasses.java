@@ -18,10 +18,13 @@
  */
 package ch.njol.skript.registrations;
 
+import java.util.Optional;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
+import org.joml.Quaternionf;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.util.Color;
@@ -30,29 +33,40 @@ import ch.njol.skript.util.Timespan;
 
 // When using these fields, be aware all ClassInfo's must be registered!
 public class DefaultClasses {
-	
+
 	public static ClassInfo<Object> OBJECT = getClassInfo(Object.class);
-	
+
+	// Java
 	public static ClassInfo<Number> NUMBER = getClassInfo(Number.class);
 	public static ClassInfo<Long> LONG = getClassInfo(Long.class);
 	public static ClassInfo<Boolean> BOOLEAN = getClassInfo(Boolean.class);
 	public static ClassInfo<String> STRING = getClassInfo(String.class);
-	
+
+	// Bukkit
 	public static ClassInfo<World> WORLD = getClassInfo(World.class);
 	public static ClassInfo<Location> LOCATION = getClassInfo(Location.class);
 	public static ClassInfo<Vector> VECTOR = getClassInfo(Vector.class);
-	
+
+	// Skript
 	public static ClassInfo<Color> COLOR = getClassInfo(Color.class);
 	public static ClassInfo<Date> DATE = getClassInfo(Date.class);
 	public static ClassInfo<Timespan> TIMESPAN = getClassInfo(Timespan.class);
-	
+
+	// Included
+	// 1.19.4+
+	public static Optional<ClassInfo<Quaternionf>> QUATERION = getOptionalClassInfo(Quaternionf.class);
+
 	@NonNull
-	private static <T> ClassInfo<T> getClassInfo(Class<T> tClass) {
+	private static <T> ClassInfo<T> getClassInfo(Class<T> type) {
 		//noinspection ConstantConditions
-		ClassInfo<T> classInfo = Classes.getExactClassInfo(tClass);
+		ClassInfo<T> classInfo = Classes.getExactClassInfo(type);
 		if (classInfo == null)
 			throw new NullPointerException();
 		return classInfo;
 	}
-	
+
+	private static <T> Optional<ClassInfo<T>> getOptionalClassInfo(Class<T> type) {
+		return Optional.ofNullable(Classes.getExactClassInfo(type));
+	}
+
 }

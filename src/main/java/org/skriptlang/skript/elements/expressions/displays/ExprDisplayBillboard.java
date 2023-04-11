@@ -16,13 +16,14 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.expressions.displays;
+package org.skriptlang.skript.elements.expressions.displays;
 
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Billboard;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -33,7 +34,7 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Display Billboard")
 @Description({
-	"Sets the <a href='classes.html#billboard'>billboard</a> setting of a display.",
+	"Returns or changes the <a href='classes.html#billboard'>billboard</a> setting of <a href='classes.html#display'>displays</a>.",
 	"This describes the axes/points around which the display can pivot.",
 	"Displays spawn with the default setting as 'fixed'. Resetting this expression also does so."
 })
@@ -42,7 +43,8 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprDisplayBillboard extends SimplePropertyExpression<Display, Billboard> {
 
 	static {
-		register(ExprDisplayBillboard.class, Billboard.class, "billboard", "displays");
+		if (Skript.isRunningMinecraft(1, 19, 4))
+			register(ExprDisplayBillboard.class, Billboard.class, "billboard", "displays");
 	}
 
 	@Override

@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.joml.Quaternionf;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
@@ -33,90 +34,156 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 
-/**
- * @author Peter Güttinger
- */
 @Name("Coordinate")
-@Description("Represents a given coordinate of a location. ")
-@Examples({"player's y-coordinate is smaller than 40:",
-		"	message \"Watch out for lava!\""})
-@Since("1.4.3")
-public class ExprCoordinate extends SimplePropertyExpression<Location, Number> {
-	
+@Description("Represents a given coordinate of locations or quaternions.")
+@Examples({
+	"player's y-coordinate is smaller than 40:",
+		"\tmessage \"Watch out for lava!\""
+})
+@Since("1.4.3, INSERT VERSION (quaternions)")
+public class ExprCoordinate extends SimplePropertyExpression<Object, Number> {
+
 	static {
-		register(ExprCoordinate.class, Number.class, "(0¦x|1¦y|2¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations");
+		registerDefault(ExprCoordinate.class, Number.class, "(0¦w|1¦x|2¦y|3¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations/quaternions");
 	}
-	
-	private final static char[] axes = {'x', 'y', 'z'};
-	
+
+	private final static char[] axes = {'w', 'x', 'y', 'z'};
+
 	private int axis;
-	
+
 	@Override
-	public boolean init(final Expression<?>[] exprs, final int matchedPattern, final Kleenean isDelayed, final ParseResult parseResult) {
-		super.init(exprs, matchedPattern, isDelayed, parseResult);
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		axis = parseResult.mark;
-		return true;
+		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
-	
+
 	@Override
-	public Number convert(final Location l) {
-		return axis == 0 ? l.getX() : axis == 1 ? l.getY() : l.getZ();
+	public Number convert(Object object) {
+		if (object instanceof Location) {
+			if (axis == 0)
+				return null;
+			Location location = (Location) object;
+			return axis == 1 ? location.getX() : axis == 2 ? location.getY() : location.getZ();
+		} else {
+			Quaternionf quaternion = (Quaternionf) object;
+			switch (axis) {
+				case 0:
+					return quaternion.w();
+				case 1:
+					return quaternion.x();
+				case 2:
+					return quaternion.y();
+				case 3:
+					return quaternion.z();
+				default:
+					return null;
+			}
+		}
 	}
-	
+
 	@Override
 	protected String getPropertyName() {
-		return "the " + axes[axis] + "-coordinate";
+		return axes[axis] + "-coordinate";
 	}
-	
+
 	@Override
 	public Class<? extends Number> getReturnType() {
 		return Number.class;
 	}
-	
+
 	@Override
 	@Nullable
-	public Class<?>[] acceptChange(final ChangeMode mode) {
+	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (getExpr().getReturnType().equals(Quaternionf.class)) {
+			if ((mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE))
+				return new Class[] {Number.class};
+		}
 		if ((mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) && getExpr().isSingle() && ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, Location.class))
 			return new Class[] {Number.class};
 		return null;
 	}
-	
+
 	@Override
-	public void change(final Event e, final @Nullable Object[] delta, final ChangeMode mode) throws UnsupportedOperationException {
+	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) throws UnsupportedOperationException {
 		assert delta != null;
-		final Location l = getExpr().getSingle(e);
-		if (l == null)
-			return;
-		double n = ((Number) delta[0]).doubleValue();
-		switch (mode) {
-			case REMOVE:
-				n = -n;
-				//$FALL-THROUGH$
-			case ADD:
-				if (axis == 0) {
-					l.setX(l.getX() + n);
-				} else if (axis == 1) {
-					l.setY(l.getY() + n);
-				} else {
-					l.setZ(l.getZ() + n);
+		if (getExpr().getSingle(event) instanceof Location) {
+			Object object = getExpr().getSingle(event);
+			if (object == null)
+				return;
+			double value = ((Number) delta[0]).doubleValue();
+			if (axis == 0)
+				return;
+			Location location = (Location) object;
+			switch (mode) {
+				case REMOVE:
+					value = -value;
+					//$FALL-THROUGH$
+				case ADD:
+					if (axis == 1) {
+						location.setX(location.getX() + value);
+					} else if (axis == 2) {
+						location.setY(location.getY() + value);
+					} else if (axis == 3) {
+						location.setZ(location.getZ() + value);
+					}
+					getExpr().change(event, new Location[] {location}, ChangeMode.SET);
+					break;
+				case SET:
+					if (axis == 1) {
+						location.setX(value);
+					} else if (axis == 2) {
+						location.setY(value);
+					} else if (axis == 3) {
+						location.setZ(value);
+					}
+					getExpr().change(event, new Location[] {location}, ChangeMode.SET);
+					break;
+				case DELETE:
+				case REMOVE_ALL:
+				case RESET:
+					assert false;
+			}
+		} else {
+			for (Object object : getExpr().getArray(event)) {
+				float value = ((Number) delta[0]).floatValue();
+				Quaternionf quaternion = (Quaternionf) object;
+				switch (mode) {
+					case REMOVE:
+						value = -value;
+						//$FALL-THROUGH$
+					case ADD:
+						if (axis == 0) {
+							quaternion.set(quaternion.w() + value, quaternion.x(), quaternion.y(), quaternion.z());
+						} else if (axis == 1) {
+							quaternion.set(quaternion.w(), quaternion.x() + value, quaternion.y(), quaternion.z());
+						} else if (axis == 2) {
+							quaternion.set(quaternion.w(), quaternion.x(), quaternion.y() + value, quaternion.z());
+						} else if (axis == 3) {
+							quaternion.set(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z() + value);
+						}
+						if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, Quaternionf.class))
+							getExpr().change(event, new Quaternionf[] {quaternion}, ChangeMode.SET);
+						break;
+					case SET:
+						if (axis == 0) {
+							quaternion.set(value, quaternion.x(), quaternion.y(), quaternion.z());
+						} else if (axis == 1) {
+							quaternion.set(quaternion.w(), value, quaternion.y(), quaternion.z());
+						} else if (axis == 2) {
+							quaternion.set(quaternion.w(), quaternion.x(), value, quaternion.z());
+						} else if (axis == 3) {
+							quaternion.set(quaternion.w(), quaternion.x(), quaternion.y(), value);
+						}
+						if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, Quaternionf.class))
+							getExpr().change(event, new Quaternionf[] {quaternion}, ChangeMode.SET);
+						break;
+					case DELETE:
+					case REMOVE_ALL:
+					case RESET:
+						assert false;
 				}
-				getExpr().change(e, new Location[] {l}, ChangeMode.SET);
-				break;
-			case SET:
-				if (axis == 0) {
-					l.setX(n);
-				} else if (axis == 1) {
-					l.setY(n);
-				} else {
-					l.setZ(n);
-				}
-				getExpr().change(e, new Location[] {l}, ChangeMode.SET);
-				break;
-			case DELETE:
-			case REMOVE_ALL:
-			case RESET:
-				assert false;
+			}
 		}
 	}
-	
+
 }

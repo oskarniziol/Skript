@@ -22,15 +22,18 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
 
-import ch.njol.skript.lang.function.FunctionEvent;
-import ch.njol.skript.lang.function.JavaFunction;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+import org.eclipse.jdt.annotation.Nullable;
+import org.joml.Quaternionf;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.expressions.base.EventValueExpression;
+import ch.njol.skript.lang.function.FunctionEvent;
 import ch.njol.skript.lang.function.Functions;
+import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.lang.util.SimpleLiteral;
@@ -41,7 +44,6 @@ import ch.njol.skript.util.Date;
 import ch.njol.util.Math2;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
-import org.eclipse.jdt.annotation.Nullable;
 
 public class DefaultFunctions {
 	
@@ -466,11 +468,31 @@ public class DefaultFunctions {
 				Long green = (Long) params[1][0];
 				Long blue = (Long) params[2][0];
 				
-				return CollectionUtils.array(new ColorRGB(red.intValue(), green.intValue(), blue.intValue()));
+				return CollectionUtils.array(ColorRGB.fromRGB(red.intValue(), green.intValue(), blue.intValue()));
 			}
 		}).description("Returns a RGB color from the given red, green and blue parameters.")
 			.examples("dye player's leggings rgb(120, 30, 45)")
 			.since("2.5");
+
+		if (Skript.classExists("org.joml.Quaternionf"))
+			Functions.registerFunction(new SimpleJavaFunction<Quaternionf>("quaternionf", new Parameter[] {
+					new Parameter<>("x", DefaultClasses.NUMBER, true, null),
+					new Parameter<>("x", DefaultClasses.NUMBER, true, null),
+					new Parameter<>("y", DefaultClasses.NUMBER, true, null),
+					new Parameter<>("z", DefaultClasses.NUMBER, true, null)
+				}, DefaultClasses.QUATERION.get(), true) {
+					@Override
+					public Quaternionf[] executeSimple(Object[][] params) {
+						double w = ((Number) params[0][0]).doubleValue();
+						double x = ((Number) params[1][0]).doubleValue();
+						double y = ((Number) params[2][0]).doubleValue();
+						double z = ((Number) params[3][0]).doubleValue();
+						return CollectionUtils.array(new Quaternionf(w, x, y, z));
+					}
+				}).description("Returns a quaternion from the given w, x, y and z parameters.")
+					.examples("quaternionf(1.2, 5.6, 45.21, 10)")
+					.since("INSERT VERSION");
+
 	}
 	
 }
