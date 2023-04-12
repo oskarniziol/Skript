@@ -23,6 +23,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.joml.Quaternionf;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
@@ -44,7 +45,10 @@ import ch.njol.util.Kleenean;
 public class ExprCoordinate extends SimplePropertyExpression<Object, Number> {
 
 	static {
-		registerDefault(ExprCoordinate.class, Number.class, "(0¦w|1¦x|2¦y|3¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", "locations/quaternions");
+		String types = "locations";
+		if (Skript.isRunningMinecraft(1, 19, 4))
+			types += "/quaternions";
+		registerDefault(ExprCoordinate.class, Number.class, "(0¦w|1¦x|2¦y|3¦z)(-| )(coord[inate]|pos[ition]|loc[ation])[s]", types);
 	}
 
 	private final static char[] axes = {'w', 'x', 'y', 'z'};
