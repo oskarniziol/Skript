@@ -37,6 +37,7 @@ import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.lang.util.SimpleLiteral;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
@@ -480,7 +481,7 @@ public class DefaultFunctions {
 					new Parameter<>("x", DefaultClasses.NUMBER, true, null),
 					new Parameter<>("y", DefaultClasses.NUMBER, true, null),
 					new Parameter<>("z", DefaultClasses.NUMBER, true, null)
-				}, DefaultClasses.QUATERION.get(), true) {
+				}, Classes.getExactClassInfo(Quaternionf.class), true) {
 					@Override
 					public Quaternionf[] executeSimple(Object[][] params) {
 						double w = ((Number) params[0][0]).doubleValue();

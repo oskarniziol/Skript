@@ -18,13 +18,10 @@
  */
 package ch.njol.skript.registrations;
 
-import java.util.Optional;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.NonNull;
-import org.joml.Quaternionf;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.util.Color;
@@ -52,10 +49,6 @@ public class DefaultClasses {
 	public static ClassInfo<Date> DATE = getClassInfo(Date.class);
 	public static ClassInfo<Timespan> TIMESPAN = getClassInfo(Timespan.class);
 
-	// Included
-	// 1.19.4+
-	public static Optional<ClassInfo<Quaternionf>> QUATERION = getOptionalClassInfo(Quaternionf.class);
-
 	@NonNull
 	private static <T> ClassInfo<T> getClassInfo(Class<T> type) {
 		//noinspection ConstantConditions
@@ -63,10 +56,6 @@ public class DefaultClasses {
 		if (classInfo == null)
 			throw new NullPointerException();
 		return classInfo;
-	}
-
-	private static <T> Optional<ClassInfo<T>> getOptionalClassInfo(Class<T> type) {
-		return Optional.ofNullable(Classes.getExactClassInfo(type));
 	}
 
 }
