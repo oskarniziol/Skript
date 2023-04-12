@@ -1937,6 +1937,24 @@ billboards:
 	horizontal: horizontal
 	vertical: vertical
 
+# -- Text Display Alignments --
+text alignments:
+	center: center, middle
+	left: left
+	right: right
+
+# -- Item Display Transforms --
+item display transforms:
+	firstperson_lefthand: first person left handed, first person left hand, left handed in first person
+	firstperson_righthand: first person right handed, first person right hand, right handed in first person
+	fixed: fixed, fixed position
+	ground: ground, the ground
+	gui: gui, menu
+	head: head
+	none: none, nothing
+	thirdperson_lefthand: third person left handed, third person left hand, left handed in third person
+	thirdperson_righthand: third person right handed, third person right hand, right handed in third person
+
 # -- Boolean --
 boolean:
 	true:

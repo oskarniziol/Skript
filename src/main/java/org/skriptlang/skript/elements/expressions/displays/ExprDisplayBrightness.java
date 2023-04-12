@@ -46,7 +46,7 @@ public class ExprDisplayBrightness extends SimplePropertyExpression<Display, Int
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			register(ExprDisplayBrightness.class, Integer.class, "(:sky|block) [light] brightness", "displays");
+			register(ExprDisplayBrightness.class, Integer.class, "(:sky|block) [light] brightness[es]", "displays");
 	}
 
 	private boolean sky;

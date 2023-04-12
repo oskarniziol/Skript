@@ -44,7 +44,7 @@ public class ExprDisplayTransformationRotation extends SimplePropertyExpression<
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			register(ExprDisplayTransformationRotation.class, Quaternionf.class, "(:left|right) transformation rotation", "displays");
+			registerDefault(ExprDisplayTransformationRotation.class, Quaternionf.class, "(:left|right) transformation rotation", "displays");
 	}
 
 	private boolean left;

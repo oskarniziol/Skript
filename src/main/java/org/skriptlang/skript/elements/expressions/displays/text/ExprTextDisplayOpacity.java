@@ -16,9 +16,10 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays;
+package org.skriptlang.skript.elements.expressions.displays.text;
 
 import org.bukkit.entity.Display;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,34 +30,28 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Display Shadow Radius/Strength")
-@Description("Returns or changes the shadow radius/strength of <a href='classes.html#display'>displays</a>.")
-@Examples("set shadow radius of the last spawned text display to 1.75")
+@Name("Text Display Opacity")
+@Description({
+	"Returns or changes the opacity of <a href='classes.html#display'>text displays</a>.",
+	"Values are between -127 and 127. The value of 127 represents it being completely opaque."
+})
+@Examples("set the opacity of the last spawned text display to -1 # Reset")
 @Since("INSERT VERSION")
-public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> {
+public class ExprTextDisplayOpacity extends SimplePropertyExpression<Display, Byte> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayShadow.class, Float.class, "(:radius|strength)", "displays");
-	}
-
-	private boolean radius;
-
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		radius = parseResult.hasTag("radius");
-		return super.init(exprs, matchedPattern, isDelayed, parseResult);
+			registerDefault(ExprTextDisplayOpacity.class, Byte.class, "[display] opacity", "displays");
 	}
 
 	@Override
 	@Nullable
-	public Float convert(Display display) {
-		return radius ? display.getShadowRadius() : display.getShadowStrength();
+	public Byte convert(Display display) {
+		if (!(display instanceof TextDisplay))
+			return null;
+		return ((TextDisplay) display).getTextOpacity();
 	}
 
 	@Nullable
@@ -67,53 +62,42 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		Display[] displays = getExpr().getArray(event);
-		float change = delta == null ? 0F : (int) ((Number) delta[0]).floatValue();
-		change = Math.max(0F, change);
+		byte change = delta == null ? -1 : ((Number) delta[0]).byteValue();
+		change = (byte) Math.max(-127, change);
 		switch (mode) {
 			case REMOVE_ALL:
 			case REMOVE:
-				change = -change;
+				change = (byte) -change;
 			case ADD:
 				for (Display display : displays) {
-					if (radius) {
-						float value = Math.max(0F, display.getShadowRadius() + change);
-						display.setShadowRadius(value);
-					} else {
-						float value = Math.max(0F, display.getShadowStrength() + change);
-						display.setShadowStrength(value);
-					}
+					if (!(display instanceof TextDisplay))
+						continue;
+					TextDisplay textDisplay = (TextDisplay) display;
+					byte value = (byte) Math.min(127, textDisplay.getTextOpacity() + change);
+					value = (byte) Math.max(-127, value);
+					textDisplay.setTextOpacity(value);
 				}
 				break;
 			case DELETE:
 			case RESET:
-				for (Display display : displays) {
-					if (radius) {
-						display.setShadowRadius(0F);
-					} else {
-						display.setShadowStrength(0F);
-					}
-				}
-				break;
 			case SET:
 				for (Display display : displays) {
-					if (radius) {
-						display.setShadowRadius(change);
-					} else {
-						display.setShadowStrength(change);
-					}
+					if (!(display instanceof TextDisplay))
+						continue;
+					((TextDisplay) display).setTextOpacity(change);
 				}
 				break;
 		}
 	}
 
 	@Override
-	public Class<? extends Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Byte> getReturnType() {
+		return Byte.class;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return radius ? "radius" : "strength";
+		return "opacity";
 	}
 
 }

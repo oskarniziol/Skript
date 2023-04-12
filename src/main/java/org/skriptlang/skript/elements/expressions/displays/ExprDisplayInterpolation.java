@@ -47,7 +47,7 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, 
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			register(ExprDisplayInterpolation.class, Timespan.class, "interpolation (:delay|duration)", "displays");
+			registerDefault(ExprDisplayInterpolation.class, Timespan.class, "interpolation (:delay|duration)[s]", "displays");
 	}
 
 	private boolean delay;

@@ -16,9 +16,11 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays;
+package org.skriptlang.skript.elements.expressions.displays.text;
 
 import org.bukkit.entity.Display;
+import org.bukkit.entity.TextDisplay;
+import org.bukkit.entity.TextDisplay.TextAligment;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,66 +33,59 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Display View Range")
-@Description({
-	"Returns or changes the view range of <a href='classes.html#display'>displays</a>.",
-	"Default value is 1.0."
-})
-@Examples("set view range of the last spawned text display to 2.7")
+@Name("Text Display Alignment")
+@Description("Returns or changes the <a href='classes.html#textalignment'>alignment</a> setting of <a href='classes.html#display'>text displays</a>.")
+@Examples("set text alignment of the last spawned text display to left")
 @Since("INSERT VERSION")
-public class ExprDisplayViewRange extends SimplePropertyExpression<Display, Float> {
+public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, TextAligment> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayViewRange.class, Float.class, "[display] view (range|radius)", "displays");
+			registerDefault(ExprTextDisplayAlignment.class, TextAligment.class, "text alignment[s]", "displays");
 	}
 
 	@Override
 	@Nullable
-	public Float convert(Display display) {
-		return display.getViewRange();
+	public TextAligment convert(Display display) {
+		if (!(display instanceof TextDisplay))
+			return null;
+		return ((TextDisplay) display).getAlignment();
 	}
 
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return CollectionUtils.array(Number.class);
+		switch (mode) {
+			case ADD:
+			case DELETE:
+			case REMOVE:
+			case REMOVE_ALL:
+				break;
+			case RESET:
+				return CollectionUtils.array();
+			case SET:
+				return CollectionUtils.array(TextAligment.class);
+		}
+		return null;
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		Display[] displays = getExpr().getArray(event);
-		float change = delta == null ? 0F : (int) ((Number) delta[0]).floatValue();
-		change = Math.max(0F, change);
-		switch (mode) {
-			case REMOVE_ALL:
-			case REMOVE:
-				change = -change;
-			case ADD:
-				for (Display display : displays) {
-					float value = Math.max(0F, display.getViewRange() + change);
-					display.setViewRange(value);
-				}
-				break;
-			case DELETE:
-			case RESET:
-				for (Display display : displays)
-					display.setViewRange(1.0F);
-				break;
-			case SET:
-				for (Display display : displays)
-					display.setViewRange(change);
-				break;
+		TextAligment alignment = mode == ChangeMode.RESET ? TextAligment.CENTER : (TextAligment) delta[0];
+		for (Display display : getExpr().getArray(event)) {
+			if (!(display instanceof TextDisplay))
+				continue;
+			((TextDisplay)display).setAlignment(alignment);
 		}
 	}
 
 	@Override
-	public Class<? extends Float> getReturnType() {
-		return Float.class;
+	public Class<? extends TextAligment> getReturnType() {
+		return TextAligment.class;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return  "view range";
+		return "text alignment";
 	}
 
 }

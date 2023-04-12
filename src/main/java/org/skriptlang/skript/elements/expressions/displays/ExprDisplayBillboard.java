@@ -44,7 +44,7 @@ public class ExprDisplayBillboard extends SimplePropertyExpression<Display, Bill
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			register(ExprDisplayBillboard.class, Billboard.class, "billboard", "displays");
+			registerDefault(ExprDisplayBillboard.class, Billboard.class, "billboard[s]", "displays");
 	}
 
 	@Override

@@ -5,3 +5,4 @@ test "spawn displays":
 		set billboard of display to center
 		assert billboard of display is center with "failed to set billboard to center"
 		clear display
+			

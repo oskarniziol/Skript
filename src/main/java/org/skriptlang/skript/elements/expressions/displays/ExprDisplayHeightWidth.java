@@ -47,7 +47,7 @@ public class ExprDisplayHeightWidth extends SimplePropertyExpression<Display, Fl
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			register(ExprDisplayHeightWidth.class, Float.class, "(:height|width)", "displays");
+			registerDefault(ExprDisplayHeightWidth.class, Float.class, "display (:height|width)", "displays");
 	}
 
 	private boolean height;
@@ -72,7 +72,7 @@ public class ExprDisplayHeightWidth extends SimplePropertyExpression<Display, Fl
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		Display[] displays = getExpr().getArray(event);
-		float change = delta == null ? 0F : (int) ((Number) delta[0]).floatValue();
+		float change = delta == null ? 0F : ((Number) delta[0]).floatValue();
 		change = Math.max(0F, change);
 		switch (mode) {
 			case REMOVE_ALL:
@@ -91,14 +91,6 @@ public class ExprDisplayHeightWidth extends SimplePropertyExpression<Display, Fl
 				break;
 			case DELETE:
 			case RESET:
-				for (Display display : displays) {
-					if (height) {
-						display.setDisplayHeight(0F);
-					} else {
-						display.setDisplayWidth(0F);
-					}
-				}
-				break;
 			case SET:
 				for (Display display : displays) {
 					if (height) {

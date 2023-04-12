@@ -44,7 +44,7 @@ public class ExprDisplayGlowOverride extends SimplePropertyExpression<Display, C
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			register(ExprDisplayGlowOverride.class, Color.class, "glow[ing] colo[u]r [override]", "displays");
+			registerDefault(ExprDisplayGlowOverride.class, Color.class, "glow[ing] colo[u]r[s] [override[s]]", "displays");
 	}
 
 	@Override

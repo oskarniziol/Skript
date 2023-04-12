@@ -16,9 +16,10 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays;
+package org.skriptlang.skript.elements.expressions.displays.text;
 
 import org.bukkit.entity.Display;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,34 +30,25 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Display Shadow Radius/Strength")
-@Description("Returns or changes the shadow radius/strength of <a href='classes.html#display'>displays</a>.")
-@Examples("set shadow radius of the last spawned text display to 1.75")
+@Name("Text Display Line Width")
+@Description("Returns or changes the line width of <a href='classes.html#display'>text displays</a>. Default is 200")
+@Examples("set the line width of the last spawned text display to 300")
 @Since("INSERT VERSION")
-public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> {
+public class ExprTextDisplayLineWidth extends SimplePropertyExpression<Display, Integer> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayShadow.class, Float.class, "(:radius|strength)", "displays");
-	}
-
-	private boolean radius;
-
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		radius = parseResult.hasTag("radius");
-		return super.init(exprs, matchedPattern, isDelayed, parseResult);
+			registerDefault(ExprTextDisplayLineWidth.class, Integer.class, "line width", "displays");
 	}
 
 	@Override
 	@Nullable
-	public Float convert(Display display) {
-		return radius ? display.getShadowRadius() : display.getShadowStrength();
+	public Integer convert(Display display) {
+		if (!(display instanceof TextDisplay))
+			return null;
+		return ((TextDisplay) display).getLineWidth();
 	}
 
 	@Nullable
@@ -67,53 +59,41 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		Display[] displays = getExpr().getArray(event);
-		float change = delta == null ? 0F : (int) ((Number) delta[0]).floatValue();
-		change = Math.max(0F, change);
+		int change = delta == null ? 200 : ((Number) delta[0]).intValue();
+		change = Math.max(0, change);
 		switch (mode) {
 			case REMOVE_ALL:
 			case REMOVE:
 				change = -change;
 			case ADD:
 				for (Display display : displays) {
-					if (radius) {
-						float value = Math.max(0F, display.getShadowRadius() + change);
-						display.setShadowRadius(value);
-					} else {
-						float value = Math.max(0F, display.getShadowStrength() + change);
-						display.setShadowStrength(value);
-					}
+					if (!(display instanceof TextDisplay))
+						continue;
+					TextDisplay textDisplay = (TextDisplay) display;
+					int value = Math.max(0, textDisplay.getLineWidth() + change);
+					textDisplay.setLineWidth(value);
 				}
 				break;
 			case DELETE:
 			case RESET:
-				for (Display display : displays) {
-					if (radius) {
-						display.setShadowRadius(0F);
-					} else {
-						display.setShadowStrength(0F);
-					}
-				}
-				break;
 			case SET:
 				for (Display display : displays) {
-					if (radius) {
-						display.setShadowRadius(change);
-					} else {
-						display.setShadowStrength(change);
-					}
+					if (!(display instanceof TextDisplay))
+						continue;
+					((TextDisplay) display).setLineWidth(change);
 				}
 				break;
 		}
 	}
 
 	@Override
-	public Class<? extends Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Integer> getReturnType() {
+		return Integer.class;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return radius ? "radius" : "strength";
+		return "line width";
 	}
 
 }
