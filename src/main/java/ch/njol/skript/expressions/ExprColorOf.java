@@ -66,7 +66,10 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprColorOf extends PropertyExpression<Object, Color> {
 
 	static {
-		register(ExprColorOf.class, Color.class, "colo[u]r[s]", "blocks/itemtypes/entities/fireworkeffects/displays");
+		String types = "blocks/itemtypes/entities/fireworkeffects";
+		if (Skript.isRunningMinecraft(1, 19, 4))
+			types += "/displays";
+		register(ExprColorOf.class, Color.class, "colo[u]r[s]", types);
 	}
 
 	@Override
