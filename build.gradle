@@ -96,6 +96,7 @@ tasks.withType(ShadowJar) {
 		include(dependency('io.papermc:paperlib'))
 		include(dependency('org.bstats:bstats-bukkit'))
 		include(dependency('org.bstats:bstats-base'))
+		include(dependency('net.kyori:'))
 	}
 	relocate 'io.papermc.lib', 'ch.njol.skript.paperlib'
 	relocate 'org.bstats', 'ch.njol.skript.bstats'

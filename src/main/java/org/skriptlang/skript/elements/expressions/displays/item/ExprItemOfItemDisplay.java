@@ -74,7 +74,7 @@ public class ExprItemOfItemDisplay extends SimplePropertyExpression<Display, Ite
 		for (Display display : getExpr().getArray(event)) {
 			if (!(display instanceof ItemDisplay))
 				continue;
-			((ItemDisplay)display).setItemStack(item);
+			((ItemDisplay) display).setItemStack(item);
 		}
 	}
 

@@ -2025,6 +2025,8 @@ types:
 	gamerulevalue: gamerule value¦s @a
 	display: display¦s @a
 	billboard: billboard¦s @a
+	textalignment: text alignment¦s @a
+	itemdisplaytransform: item display transform¦s @an
 
 	# Skript
 	weathertype: weather type¦s @a
