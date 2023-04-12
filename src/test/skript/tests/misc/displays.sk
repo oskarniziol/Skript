@@ -5,4 +5,3 @@ test "spawn displays" when running minecraft "1.19.4":
 		set billboard of display to center
 		assert billboard of display is center with "failed to set billboard to center"
 		clear display
-			

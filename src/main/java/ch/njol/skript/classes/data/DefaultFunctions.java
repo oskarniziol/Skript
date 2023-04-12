@@ -477,7 +477,7 @@ public class DefaultFunctions {
 
 		if (Skript.classExists("org.joml.Quaternionf"))
 			Functions.registerFunction(new SimpleJavaFunction<Quaternionf>("quaternionf", new Parameter[] {
-					new Parameter<>("x", DefaultClasses.NUMBER, true, null),
+					new Parameter<>("w", DefaultClasses.NUMBER, true, null),
 					new Parameter<>("x", DefaultClasses.NUMBER, true, null),
 					new Parameter<>("y", DefaultClasses.NUMBER, true, null),
 					new Parameter<>("z", DefaultClasses.NUMBER, true, null)

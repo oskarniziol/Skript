@@ -45,12 +45,14 @@ import net.md_5.bungee.api.chat.BaseComponent;
 @Since("INSERT VERSION")
 public class ExprTextOf extends SimplePropertyExpression<Object, String> {
 
-	private static final BungeeComponentSerializer serializer = BungeeComponentSerializer.get();
+	private static BungeeComponentSerializer serializer;
 
 	static {
 		String types = "";
-		if (Skript.isRunningMinecraft(1, 19, 4))
+		if (Skript.isRunningMinecraft(1, 19, 4)) {
+			serializer = BungeeComponentSerializer.get();
 			types += "displays";
+		}
 		// This is because this expression is setup to support future types.
 		// Remove this if non-verioning.
 		if (!types.isEmpty())
@@ -87,7 +89,7 @@ public class ExprTextOf extends SimplePropertyExpression<Object, String> {
 		for (Object object : getExpr().getArray(event)) {
 			if (!(object instanceof TextDisplay))
 				continue;
-			if (Skript.getServerPlatform() == ServerPlatform.BUKKIT_PAPER) {
+			if (Skript.getServerPlatform() == ServerPlatform.BUKKIT_PAPER && serializer != null) {
 				BaseComponent[] components = BungeeConverter.convert(ChatMessages.parseToArray(value));
 				((TextDisplay) object).text(serializer.deserialize(components));
 			} else {
