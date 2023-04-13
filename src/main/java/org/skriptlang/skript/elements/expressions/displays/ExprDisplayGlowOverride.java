@@ -36,7 +36,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Display Glow Color Override")
 @Description({
 	"Returns or changes the glowing color override of <a href='classes.html#display'>displays</a>.",
-	"This overrides whatever color is already set for the scoreboard of the displays."
+	"This overrides whatever color is already set for the scoreboard team of the displays."
 })
 @Examples("set glow color override of the last spawned text display to blue")
 @Since("INSERT VERSION")
