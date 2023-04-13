@@ -36,7 +36,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description({
 	"Returns or changes the <a href='classes.html#billboard'>billboard</a> setting of <a href='classes.html#display'>displays</a>.",
 	"This describes the axes/points around which the display can pivot.",
-	"Displays spawn with the default setting as 'fixed'. Resetting this expression also does so."
+	"Displays spawn with the default setting as 'fixed'. Resetting this expression will also set it to 'fixed'."
 })
 @Examples("set billboard of the last spawned text display to center")
 @Since("INSERT VERSION")

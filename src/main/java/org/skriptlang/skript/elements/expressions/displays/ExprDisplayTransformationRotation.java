@@ -37,7 +37,10 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Display Transformation Rotation")
-@Description("Returns or changes the transformation rotation of <a href='classes.html#display'>displays</a>.")
+@Description({
+        "Returns or changes the transformation rotation of <a href='classes.html#display'>displays</a>.",
+        "The left rotation is applied first, with the right rotation then being applied based on the rotated axis."
+})
 @Examples("set left transformation rotation of last spawned text display to quaternionf(1, 0, 0, 1)")
 @Since("INSERT VERSION")
 public class ExprDisplayTransformationRotation extends SimplePropertyExpression<Display, Quaternionf> {

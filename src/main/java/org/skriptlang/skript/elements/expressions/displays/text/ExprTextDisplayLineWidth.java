@@ -33,7 +33,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
 @Name("Text Display Line Width")
-@Description("Returns or changes the line width of <a href='classes.html#display'>text displays</a>. Default is 200")
+@Description("Returns or changes the line width of <a href='classes.html#display'>text displays</a>. Default is 200.")
 @Examples("set the line width of the last spawned text display to 300")
 @Since("INSERT VERSION")
 public class ExprTextDisplayLineWidth extends SimplePropertyExpression<Display, Integer> {

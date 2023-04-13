@@ -34,7 +34,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Display View Range")
 @Description({
 	"Returns or changes the view range of <a href='classes.html#display'>displays</a>.",
-	"Default value is 1.0."
+	"Default value is 1.0. This value is then multiplied by 64 and the player's entity view distance setting to determine the actual range."
 })
 @Examples("set view range of the last spawned text display to 2.7")
 @Since("INSERT VERSION")

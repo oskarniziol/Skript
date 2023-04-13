@@ -37,9 +37,9 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Display Height/Width")
 @Description({
 	"Returns or changes the height or width of <a href='classes.html#display'>displays</a>.",
-	"Rendering culling bounding box spans horizontally width/2 from entity position, "+
+	"The rendering culling bounding box spans horizontally width/2 from entity position, "+
 	"and the part beyond will be culled.",
-	"If set to 0, no culling on both vertical and horizonal directions. Default is 0.0"
+	"If set to 0, no culling will occur on both the vertical and horizontal directions. Default is 0.0."
 })
 @Examples("set height of the last spawned text display to 2.5")
 @Since("INSERT VERSION")

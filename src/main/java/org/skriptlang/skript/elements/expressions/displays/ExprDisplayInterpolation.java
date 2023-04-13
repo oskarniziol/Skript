@@ -39,7 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Description({
 	"Returns or changes the interpolation delay/duration of <a href='classes.html#display'>displays</a>.",
 	"Interpolation delay is the amount of ticks before client-side interpolation will commence.",
-	"Setting to 0 seconds will make it immediate"
+	"Setting to 0 seconds will make it immediate."
 })
 @Examples("set interpolation delay of the last spawned text display to 2 ticks")
 @Since("INSERT VERSION")
