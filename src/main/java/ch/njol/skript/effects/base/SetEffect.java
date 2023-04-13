@@ -93,19 +93,6 @@ public abstract class SetEffect<T> extends Effect {
 		return true;
 	}
 
-	/**
-	 * Returns the value of the boolean expression used.
-	 * 
-	 * @param event The event that is calling this syntax.
-	 * @return boolean from the boolean expression used in this set effect.
-	 */
-	@Nullable
-	protected final Boolean getBoolean(Event event) {
-		if (value == null)
-			return null;
-		return value.getSingle(event);
-	}
-
 	protected final boolean isNegated() {
 		return negated;
 	}
@@ -133,8 +120,9 @@ public abstract class SetEffect<T> extends Effect {
 
 	@Override
 	protected void execute(Event event) {
-		boolean value = make ? !negated : negated ? !getBoolean(event) : getBoolean(event);
-		getExpression().stream(event).forEach(expression -> apply().accept(expression, value));
+		boolean value = make ? !negated : negated ? !this.value.getSingle(event) : this.value.getSingle(event);
+		BiConsumer<T, Boolean> consumer = apply();
+		getExpression().stream(event).forEach(expression -> consumer.accept(expression, value));
 	}
 
 	@Override
