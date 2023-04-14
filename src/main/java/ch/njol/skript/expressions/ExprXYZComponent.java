@@ -56,13 +56,13 @@ import ch.njol.util.coll.CollectionUtils;
 	"send \"%x component of {_v}%, %y component of {_v}%, %z component of {_v}%\""
 })
 @Since("2.2-dev28, INSERT VERSION (Quaternions)")
-public class ExprVectorXYZ extends SimplePropertyExpression<Object, Number> {
+public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 
 	static {
 		String types = "vectors";
 		if (Skript.isRunningMinecraft(1, 19, 4))
 			types += "/quaternions";
-		register(ExprVectorXYZ.class, Number.class, "[vector|quaternion] (0¦x|1¦y|2¦z) [component[s]]", types);
+		register(ExprXYZComponent.class, Number.class, "[vector|quaternion] (0¦x|1¦y|2¦z) [component[s]]", types);
 	}
 
 	private final static Character[] axes = new Character[] {'x', 'y', 'z'};
@@ -138,6 +138,8 @@ public class ExprVectorXYZ extends SimplePropertyExpression<Object, Number> {
 						else
 							vector.setZ(value);
 						getExpr().change(event, new Vector[] {vector}, ChangeMode.SET);
+					default:
+						assert false;
 				}
 			} else {
 				float value = ((Number) delta[0]).floatValue();
