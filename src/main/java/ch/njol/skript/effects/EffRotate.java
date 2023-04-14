@@ -92,7 +92,7 @@ public class EffRotate extends Effect {
 	/**
 	 * The amount of times to rotate clockwise to get to the matched degree.
 	 */
-	private static final Map<Rotation, Integer> order = ImmutableMap.of(
+	private static final Map<Rotation, Integer> order = Map.of(
 			Rotation.CLOCKWISE_45, 1,
 			Rotation.CLOCKWISE, 2,
 			Rotation.CLOCKWISE_135, 3,
