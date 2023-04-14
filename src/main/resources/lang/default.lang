@@ -613,7 +613,7 @@ entities:
 		pattern: lightning bolt(|1¦s)
 	item frame:
 		name: item frame¦s @an
-		pattern: item[ ]frame(|1¦s) [(with|of) %-itemtype%] [[with rotation|rotated] %-rotation%]
+		pattern: item[ ]frame(|1¦s) [(with|of) %-itemtype%] [[(with rotation|rotated)] %-rotation%]
 	magma cube:
 		name: magma cube¦s
 		pattern: magma (cube|slime)(|1¦s)

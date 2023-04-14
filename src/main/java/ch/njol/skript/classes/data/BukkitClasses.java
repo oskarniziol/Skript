@@ -1504,13 +1504,6 @@ public class BukkitClasses {
 				.since("INSERT VERSION")
 				.defaultExpression(new EventValueExpression<>(ItemFrame.class)));
 
-		Classes.registerClass(new EnumClassInfo<>(Rotation.class, "rotation", "rotations")
-				.user("rotations?")
-				.name("Rotation")
-				.description(
-						"Specify a rotation based orientation, like that on a clock. Used in item frames.",
-						"It represents how something is viewed, as opposed to cardinal directions.")
-				.since("INSERT VERSION"));
-
 	}
+
 }

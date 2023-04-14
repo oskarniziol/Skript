@@ -49,8 +49,10 @@ public class ItemFrameData extends EntityData<ItemFrame> {
 
 	@Override
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
-		type = (ItemType) exprs[0].getSingle();
-		rotation = (Rotation) exprs[1].getSingle();
+		if (exprs[0] != null)
+			type = (ItemType) exprs[0].getSingle();
+		if (exprs[1] != null)
+			rotation = (Rotation) exprs[1].getSingle();
 		return true;
 	}
 
@@ -106,7 +108,7 @@ public class ItemFrameData extends EntityData<ItemFrame> {
 			return super.toString(flags);
 		StringBuilder builder = new StringBuilder();
 		builder.append(Noun.getArticleWithSpace(type.getTypes().get(0).getGender(), flags));
-		builder.append("item frame of " + type.toString(flags));
+		builder.append("item frame " + type == null ? "" : "of " + type.toString(flags));
 		builder.append("rotated " + Classes.toString(rotation));
 		return builder.toString();
 	}
@@ -115,14 +117,14 @@ public class ItemFrameData extends EntityData<ItemFrame> {
 	protected boolean equals_i(EntityData<?> entityData) {
 		if (!(entityData instanceof ItemFrameData))
 			return false;
-		return type.equals(((ItemFrameData) entityData).type) && rotation == ((ItemFrameData) entityData).rotation;
+		return type == null ? true : type.equals(((ItemFrameData) entityData).type) && rotation == ((ItemFrameData) entityData).rotation;
 	}
 
 	@Override
 	protected int hashCode_i() {
 		int prime = 31;
 		int result = 1;
-		result = prime * result + type.hashCode();
+		result = prime * result + (type == null ? 0 : type.hashCode());
 		result = prime * result + rotation.hashCode();
 		return result;
 	}
