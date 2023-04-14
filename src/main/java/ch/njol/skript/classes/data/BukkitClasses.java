@@ -28,18 +28,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import ch.njol.util.coll.iterator.ArrayIterator;
-import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.ConfigurationSerializer;
-import ch.njol.skript.classes.EnumClassInfo;
-import ch.njol.skript.classes.Parser;
-import ch.njol.skript.classes.Serializer;
-import ch.njol.skript.lang.util.SimpleLiteral;
-import ch.njol.skript.util.BlockUtils;
-import ch.njol.skript.util.EnchantmentType;
-import ch.njol.skript.util.PotionEffectUtils;
-import ch.njol.skript.util.StringMode;
-import io.papermc.paper.world.MoonPhase;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Difficulty;
@@ -49,6 +37,7 @@ import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Rotation;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -64,6 +53,7 @@ import org.bukkit.enchantments.EnchantmentOffer;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Panda.Gene;
 import org.bukkit.entity.Player;
@@ -92,14 +82,25 @@ import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EnchantmentUtils;
 import ch.njol.skript.bukkitutil.ItemUtils;
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.ConfigurationSerializer;
+import ch.njol.skript.classes.EnumClassInfo;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.ExprDamageCause;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.localization.Language;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.BlockUtils;
+import ch.njol.skript.util.EnchantmentType;
+import ch.njol.skript.util.PotionEffectUtils;
+import ch.njol.skript.util.StringMode;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
+import io.papermc.paper.world.MoonPhase;
 
 /**
  * @author Peter Güttinger
@@ -1495,5 +1496,21 @@ public class BukkitClasses {
 				.since("2.7")
 				.requiredPlugins("Paper 1.16+"));
 		}
+
+		Classes.registerClass(new ClassInfo<>(ItemFrame.class, "itemframe")
+				.user("item ?frames?")
+				.name("Item Frame")
+				.description("Represents the itemframe entity. This classinfo is used to manipulate settings of itemframes in syntaxes.")
+				.since("INSERT VERSION")
+				.defaultExpression(new EventValueExpression<>(ItemFrame.class)));
+
+		Classes.registerClass(new EnumClassInfo<>(Rotation.class, "rotation", "rotations")
+				.user("rotations?")
+				.name("Rotation")
+				.description(
+						"Specify a rotation based orientation, like that on a clock. Used in item frames.",
+						"It represents how something is viewed, as opposed to cardinal directions.")
+				.since("INSERT VERSION"));
+
 	}
 }
