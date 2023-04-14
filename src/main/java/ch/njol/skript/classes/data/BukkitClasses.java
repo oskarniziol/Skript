@@ -59,7 +59,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Panda.Gene;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
-import org.bukkit.entity.TextDisplay.TextAligment;
+import org.bukkit.entity.TextDisplay.TextAlignment;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
@@ -1511,7 +1511,7 @@ public class BukkitClasses {
 					.description("Represents the billboard setting of a display.")
 					.since("INSERT VERSION"));
 
-			Classes.registerClass(new EnumClassInfo<>(TextAligment.class, "textalignment", "text alignments")
+			Classes.registerClass(new EnumClassInfo<>(TextAlignment.class, "textalignment", "text alignments")
 					.user("text ?alignments?")
 					.name("Text Alignment")
 					.description("Represents the text alignment setting of a text display.")

@@ -20,7 +20,7 @@ package org.skriptlang.skript.elements.expressions.displays.text;
 
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.entity.TextDisplay.TextAligment;
+import org.bukkit.entity.TextDisplay.TextAlignment;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,16 +37,16 @@ import ch.njol.util.coll.CollectionUtils;
 @Description("Returns or changes the <a href='classes.html#textalignment'>alignment</a> setting of <a href='classes.html#display'>text displays</a>.")
 @Examples("set text alignment of the last spawned text display to left")
 @Since("INSERT VERSION")
-public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, TextAligment> {
+public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, TextAlignment> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprTextDisplayAlignment.class, TextAligment.class, "text alignment[s]", "displays");
+			registerDefault(ExprTextDisplayAlignment.class, TextAlignment.class, "text alignment[s]", "displays");
 	}
 
 	@Override
 	@Nullable
-	public TextAligment convert(Display display) {
+	public TextAlignment convert(Display display) {
 		if (!(display instanceof TextDisplay))
 			return null;
 		return ((TextDisplay) display).getAlignment();
@@ -63,14 +63,14 @@ public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, 
 			case RESET:
 				return CollectionUtils.array();
 			case SET:
-				return CollectionUtils.array(TextAligment.class);
+				return CollectionUtils.array(TextAlignment.class);
 		}
 		return null;
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		TextAligment alignment = mode == ChangeMode.RESET ? TextAligment.CENTER : (TextAligment) delta[0];
+		TextAlignment alignment = mode == ChangeMode.RESET ? TextAlignment.CENTER : (TextAlignment) delta[0];
 		for (Display display : getExpr().getArray(event)) {
 			if (!(display instanceof TextDisplay))
 				continue;
@@ -79,8 +79,8 @@ public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, 
 	}
 
 	@Override
-	public Class<? extends TextAligment> getReturnType() {
-		return TextAligment.class;
+	public Class<? extends TextAlignment> getReturnType() {
+		return TextAlignment.class;
 	}
 
 	@Override

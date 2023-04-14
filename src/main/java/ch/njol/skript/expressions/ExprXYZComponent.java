@@ -42,7 +42,10 @@ import ch.njol.util.coll.CollectionUtils;
  * @author bi0qaw
  */
 @Name("Vector/Quaternion - XYZ Component")
-@Description("Gets or changes the x, y or z component of <a href='classes.html#vector'>vectors</a>/<a href='classes.html#quaternion'>quaternions</a>.")
+@Description({
+	"Gets or changes the x, y or z component of <a href='classes.html#vector'>vectors</a>/<a href='classes.html#quaternion'>quaternions</a>.",
+	"cannot use w of vector. w is for quaternion only."
+})
 @Examples({
 	"set {_v} to vector 1, 2, 3",
 	"send \"%x of {_v}%, %y of {_v}%, %z of {_v}%\"",
@@ -62,25 +65,24 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 		String types = "vectors";
 		if (Skript.isRunningMinecraft(1, 19, 4))
 			types += "/quaternions";
-		register(ExprXYZComponent.class, Number.class, "[vector|quaternion] (0¦x|1¦y|2¦z) [component[s]]", types);
+		register(ExprXYZComponent.class, Number.class, "[vector|quaternion] (0¦w|1¦x|2¦y|3¦z) [component[s]]", types);
 	}
 
-	private final static Character[] axes = new Character[] {'x', 'y', 'z'};
+	private final static Character[] axes = new Character[] {'w', 'x', 'y', 'z'};
 
 	private int axis;
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		super.init(exprs, matchedPattern, isDelayed, parseResult);
 		axis = parseResult.mark;
-		return true;
+		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
 
 	@Override
 	public Number convert(Object object) {
 		if (object instanceof Vector) {
 			Vector vector = (Vector) object;
-			return axis == 0 ? vector.getX() : (axis == 1 ? vector.getY() : vector.getZ());
+			return axis == 1 ? vector.getX() : (axis == 2 ? vector.getY() : vector.getZ());
 		} else {
 			Quaternionf quaternion = (Quaternionf) object;
 			switch (axis) {
