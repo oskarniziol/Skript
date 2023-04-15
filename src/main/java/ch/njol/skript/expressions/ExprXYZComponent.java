@@ -81,6 +81,8 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 	@Override
 	public Number convert(Object object) {
 		if (object instanceof Vector) {
+			if (axis == 0)
+				return null;
 			Vector vector = (Vector) object;
 			return axis == 1 ? vector.getX() : (axis == 2 ? vector.getY() : vector.getZ());
 		} else {
@@ -117,6 +119,8 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 		assert delta != null;
 		for (Object object : getExpr().getArray(event)) {
 			if (object instanceof Vector) {
+				if (axis == 0)
+					return;
 				Vector vector = (Vector) object;
 				double value = ((Number) delta[0]).doubleValue();
 				switch (mode) {
@@ -124,18 +128,18 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 						value = -value;
 						//$FALL-THROUGH$
 					case ADD:
-						if (axis == 0)
+						if (axis == 1)
 							vector.setX(vector.getX() + value);
-						else if (axis == 1)
+						else if (axis == 2)
 							vector.setY(vector.getY() + value);
 						else
 							vector.setZ(vector.getZ() + value);
 						getExpr().change(event, new Vector[] {vector}, ChangeMode.SET);
 						break;
 					case SET:
-						if (axis == 0)
+						if (axis == 1)
 							vector.setX(value);
-						else if (axis == 1)
+						else if (axis == 2)
 							vector.setY(value);
 						else
 							vector.setZ(value);
