@@ -128,21 +128,23 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 						value = -value;
 						//$FALL-THROUGH$
 					case ADD:
-						if (axis == 1)
+						if (axis == 1) {
 							vector.setX(vector.getX() + value);
-						else if (axis == 2)
+						} else if (axis == 2) {
 							vector.setY(vector.getY() + value);
-						else
+						} else {
 							vector.setZ(vector.getZ() + value);
+						}
 						getExpr().change(event, new Vector[] {vector}, ChangeMode.SET);
 						break;
 					case SET:
-						if (axis == 1)
+						if (axis == 1) {
 							vector.setX(value);
-						else if (axis == 2)
+						} else if (axis == 2) {
 							vector.setY(value);
-						else
+						} else {
 							vector.setZ(value);
+						}
 						getExpr().change(event, new Vector[] {vector}, ChangeMode.SET);
 					default:
 						assert false;
