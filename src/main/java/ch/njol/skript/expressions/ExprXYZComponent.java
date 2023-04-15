@@ -44,7 +44,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Vector/Quaternion - XYZ Component")
 @Description({
 	"Gets or changes the x, y or z component of <a href='classes.html#vector'>vectors</a>/<a href='classes.html#quaternion'>quaternions</a>.",
-	"cannot use w of vector. w is for quaternion only."
+	"You cannot use w of vector. W is for quaternions only."
 })
 @Examples({
 	"set {_v} to vector 1, 2, 3",
