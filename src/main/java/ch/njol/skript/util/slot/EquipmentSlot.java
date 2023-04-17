@@ -45,7 +45,7 @@ public class EquipmentSlot extends SlotWithIndex {
 	 */
 	@Deprecated
 	@ScheduledForRemoval
-	// Developers note: These set and get methods should be implemented in a switch inside the EquipmentSlot#setItem method
+	// Developers note: These set and get methods should be implemented in a switch inside the EquipmentSlot#setItem method or make the enum private.
 	public enum EquipSlot {
 		TOOL {
 			@Override
