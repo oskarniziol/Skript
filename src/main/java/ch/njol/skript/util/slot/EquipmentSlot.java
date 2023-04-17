@@ -265,6 +265,8 @@ public class EquipmentSlot extends SlotWithIndex {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
+		if (slot == null)
+			return "unknown equipment slot";
 		if (this.debug) // Slot to string
 			return "the " + slot.name().toLowerCase(Locale.ENGLISH) + " of " + Classes.toString(equipment.getHolder()); // TODO localise?
 		else // Contents of slot to string
