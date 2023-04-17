@@ -151,6 +151,7 @@ public class EquipmentSlot extends SlotWithIndex {
 				case OFF_HAND:
 					return EquipSlot.OFF_HAND;
 				default:
+					assert false;
 					return null;
 			}
 		}
@@ -214,11 +215,15 @@ public class EquipmentSlot extends SlotWithIndex {
 	@Override
 	@Nullable
 	public ItemStack getItem() {
+		if (slot == null)
+			return null;
 		return slot.get(equipment);
 	}
 
 	@Override
 	public void setItem(@Nullable ItemStack item) {
+		if (slot == null)
+			return;
 		slot.set(equipment, item);
 		if (equipment.getHolder() instanceof Player)
 			PlayerUtils.updateInventory((Player) equipment.getHolder());
@@ -226,12 +231,16 @@ public class EquipmentSlot extends SlotWithIndex {
 
 	@Override
 	public int getAmount() {
+		if (slot == null)
+			return 0;
 		ItemStack item = slot.get(equipment);
 		return item != null ? item.getAmount() : 0;
 	}
 
 	@Override
 	public void setAmount(int amount) {
+		if (slot == null)
+			return;
 		ItemStack item = slot.get(equipment);
 		if (item != null)
 			item.setAmount(amount);
@@ -242,12 +251,15 @@ public class EquipmentSlot extends SlotWithIndex {
 	 * Gets underlying armor slot enum.
 	 * @return Armor slot.
 	 */
+	@Nullable
 	public EquipSlot getEquipSlot() {
 		return slot;
 	}
 
 	@Override
 	public int getIndex() {
+		if (slot == null)
+			return -1;
 		return slot.slotNumber;
 	}
 
