@@ -79,7 +79,7 @@ public abstract class SetEffect<T> extends Effect {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public final boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		make = matchedPattern >= 2;
 		if (exprs.length == 1) {
 			if (!make)
