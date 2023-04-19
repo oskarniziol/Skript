@@ -708,7 +708,7 @@ public class SimpleEvents {
 		}
 
 		Skript.registerEvent("Server Broadcast", SimpleEvent.class, BroadcastMessageEvent.class, "[server] broadcast")
-				.description("Called when the server broadcasts messages such as from the broadcast effect.")
+				.description("Called when the server broadcasts messages.")
 				.examples("on item mend:",
 						"on server broadcast",
 							"\tbroadcast-message contains \"example\"",
