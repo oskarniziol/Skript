@@ -88,6 +88,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
+import org.bukkit.event.server.BroadcastMessageEvent;
 import org.bukkit.event.server.ServerListPingEvent;
 import org.bukkit.event.vehicle.VehicleCreateEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
@@ -118,9 +119,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptEventHandler;
 import ch.njol.skript.lang.util.SimpleEvent;
 
-/**
- * @author Peter Güttinger
- */
 public class SimpleEvents {
 	static {
 		Skript.registerEvent("Can Build Check", SimpleEvent.class, BlockCanBuildEvent.class, "[block] can build check")
@@ -708,6 +706,14 @@ public class SimpleEvents {
 					.since("2.7")
 					.requiredPlugins("Paper 1.16+");
 		}
+
+		Skript.registerEvent("Server Broadcast", SimpleEvent.class, BroadcastMessageEvent.class, "[server] broadcast")
+				.description("Called when the server broadcasts messages such as from the broadcast effect.")
+				.examples("on item mend:",
+						"on server broadcast",
+							"\tbroadcast-message contains \"example\"",
+							"\tcancel event")
+				.since("INSERT VERSION");
 
 	}
 
