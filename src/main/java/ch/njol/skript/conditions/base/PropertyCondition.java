@@ -96,7 +96,7 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	}
 
 	/**
-	 * Registers a property condition. Use [!INSERT HERE] to set optional patterns for the negated part of the syntax.
+	 * Registers a property condition. Use [!PATTERN] to set optional patterns for the negated part of the syntax.
 	 * 
 	 * @param c the class to register
 	 * @param propertyType the property type, see {@link PropertyType}
