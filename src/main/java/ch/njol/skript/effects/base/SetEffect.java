@@ -74,7 +74,7 @@ public abstract class SetEffect<T> extends Effect {
 				"make %" + type + "% " + makeProperty,
 				"force %" + type + "% to " + makeProperty,
 				"make %" + type + "% not " + makeProperty,
-				"force %" + type + "% to not " + makeProperty);
+				"force %" + type + "% (to not|not to) " + makeProperty);
 	}
 
 	@Override
