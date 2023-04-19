@@ -48,7 +48,7 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 
 	/**
 	 * Registers an expression as {@link ExpressionType#PROPERTY} with the two default property patterns "property of %types%" and "%types%'[s] property"
-	 * You can use [!INSERT HERE] to negate an optional pattern from the first property. For vice versa see {@link #registerDefault(Class, Class, String, String)}
+	 * You can use [!PATTERN] to negate an optional pattern from the first property. For vice versa see {@link #registerDefault(Class, Class, String, String)}
 	 * 
 	 * @param c the PropertyExpression class being registered.
 	 * @param type the main expression type the property is based off of.
@@ -69,7 +69,7 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 	/**
 	 * Registers an expression as {@link ExpressionType#PROPERTY} with the two default property patterns "property [of %types%]" and "%types%'[s] property"
 	 * This method also makes the expression type optional to force a default expression on the property expression.
-	 * You can use [!INSERT HERE] to negate an optional pattern from the last property. For vice versa see {@link #register(Class, Class, String, String)}
+	 * You can use [!PATTERN] to negate an optional pattern from the last property. For vice versa see {@link #register(Class, Class, String, String)}
 	 * 
 	 * @param c the PropertyExpression class being registered.
 	 * @param type the main expression type the property is based off of.
