@@ -81,7 +81,7 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 		Bukkit.getScheduler().runTask(Skript.getInstance(), () -> {
 			SkriptPattern pattern = PatternCompiler.compile(property);
 			String negated = pattern.toString().trim();
-			if (negated.isBlank())
+			if (negated.isEmpty())
 				throw new MalformedPatternException(property, "A negated pattern cannot be empty when removed! " + c.getName());
 			Skript.registerExpression(c, type, ExpressionType.PROPERTY, "[the] " + property + " [of %" + fromType + "%]", "%" + fromType + "%'[s] " + negated);
 		});
