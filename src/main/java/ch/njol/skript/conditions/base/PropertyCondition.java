@@ -84,7 +84,8 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	private Expression<? extends T> expr;
 
 	/**
-	 * Registers a property condition. Use [!INSERT HERE] to set optional patterns for the negated part of the syntax.
+	 * Registers a property condition. Use [!PATTERN] to set optional patterns for the negated part of the syntax.
+	 * Example <code>[!no|a] [direct] line of sight</code> this means if <code>no</code> part was used it will mark the pattern as negated.
 	 * 
 	 * @param c the class to register
 	 * @param property the property name, for example <i>fly</i> in <i>players can fly</i>
