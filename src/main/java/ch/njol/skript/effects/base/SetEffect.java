@@ -132,7 +132,10 @@ public abstract class SetEffect<T> extends Effect {
 	public String toString(@Nullable Event event, boolean debug) {
 		if (debug || event == null)
 			return "setting " + getPropertyName();
-		return "set " + getPropertyName() + " of " + expression.toString(event, debug) + " to " + value.toString(event, debug);
+		this.event = event;
+		String string = "set " + getPropertyName() + " of " + expression.toString(event, debug) + " to " + value.toString(event, debug);
+		this.event = null;
+		return string;
 	}
 
 }
