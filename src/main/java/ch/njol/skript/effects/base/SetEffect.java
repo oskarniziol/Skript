@@ -46,6 +46,7 @@ public abstract class SetEffect<T> extends Effect {
 	private Expression<Boolean> value;
 	private Expression<T> expression;
 	private boolean make, negated;
+	protected Event event;
 
 	/**
 	 * Registers an effect with patterns "set property of %type% to %boolean%" and "set %types%'[s] property to %boolean%"
@@ -120,9 +121,11 @@ public abstract class SetEffect<T> extends Effect {
 
 	@Override
 	protected void execute(Event event) {
+		this.event = event;
 		boolean value = make ? !negated : negated ? !this.value.getSingle(event) : this.value.getSingle(event);
 		BiConsumer<T, Boolean> consumer = apply();
 		getExpression().stream(event).forEach(expression -> consumer.accept(expression, value));
+		this.event = null;
 	}
 
 	@Override
