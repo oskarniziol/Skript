@@ -62,7 +62,7 @@ public class EffSendSignChange extends Effect {
 	static {
 		String syntax = "make %players% see [sign[s]] %locations% with [text|lines] %strings%";
 		if (COLORS) {
-			syntax += " [colo[u]red [outline] %color%] [[with|to be] :glowing]";
+			syntax += " [(colo[u]red|with color) [outline] %color%] [[with|to be] :glowing]";
 		}
 		Skript.registerEffect(EffSendSignChange.class, syntax);
 	}
