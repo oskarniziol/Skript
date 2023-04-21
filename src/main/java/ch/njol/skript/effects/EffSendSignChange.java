@@ -57,11 +57,11 @@ import ch.njol.util.Kleenean;
 @Since("INSERT VERSION")
 public class EffSendSignChange extends Effect {
 
-	private static final boolean COLORS = Skript.methodExists(Player.class, "sendSignChange", Location.class, String[].class, DyeColor.class);
+	private static final boolean COLORS_SUPPORTED = Skript.methodExists(Player.class, "sendSignChange", Location.class, String[].class, DyeColor.class);
 
 	static {
 		String syntax = "make %players% see [sign[s]] %locations% with [text|lines] %strings%";
-		if (COLORS) {
+		if (COLORS_SUPPORTED) {
 			syntax += " [(colo[u]red|with color) [outline] %color%] [[with|to be] :glowing]";
 		}
 		Skript.registerEffect(EffSendSignChange.class, syntax);
@@ -80,7 +80,7 @@ public class EffSendSignChange extends Effect {
 		players = (Expression<Player>) exprs[0];
 		locations = (Expression<Location>) exprs[1];
 		lines = (Expression<String>) exprs[2];
-		if (COLORS) {
+		if (COLORS_SUPPORTED) {
 			color = (Expression<SkriptColor>) exprs[3];
 			glowing = parseResult.hasTag("glowing");
 		}
