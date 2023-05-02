@@ -200,21 +200,6 @@ public class CondCompare extends Condition {
 		final Class<?> f = first.getReturnType(), s = third == null ? second.getReturnType() : Utils.getSuperType(second.getReturnType(), third.getReturnType());
 		if (f == Object.class || s == Object.class)
 			return true;
-
-		/*
-		 * https://github.com/Mirreski/Skript/issues/10
-		 * 
-		if(Entity.class.isAssignableFrom(s)){
-			String[] split = expr.split(" ");
-			System.out.println(expr);
-			if(!split[split.length - 1].equalsIgnoreCase("player") && EntityData.parseWithoutIndefiniteArticle(split[split.length - 1]) != null){
-				comp = Comparators.getComparator(f, EntityData.class);
-				second = SkriptParser.parseLiteral(split[split.length - 1], EntityData.class, ParseContext.DEFAULT);
-			}else
-				comp = Comparators.getComparator(f, s);
-			
-		}
-		*///else
 		
 		comp = Comparators.getComparator(f, s);
 		
