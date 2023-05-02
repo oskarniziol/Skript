@@ -238,7 +238,7 @@ public class CondCompare extends Condition {
 		 * 
 		 * This is required due to Skript registering EntityDeathEvent as it's base for death events.
 		 */
-		if (first instanceof ExprAttacked && second instanceof SimpleLiteral && getParser().isCurrentEvent(EntityDeathEvent.class)) {
+		if (first instanceof ExprAttacked && second instanceof SimpleLiteral && getParser().isCurrentEvent(EntityDeathEvent.class) && !isNegated()) {
 			Object[] objects = ((SimpleLiteral<?>) second).getAll();
 			if (objects.length == 1 && objects[0] instanceof EntityData && HumanEntity.class.isAssignableFrom(((EntityData<?>) objects[0]).getType()))
 				getParser().setCurrentEvent(EvtEntity.PLAYER_DEATH_EVENT_NAME, PlayerDeathEvent.class);
