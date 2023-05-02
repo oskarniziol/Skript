@@ -18,16 +18,23 @@
  */
 package ch.njol.skript.conditions;
 
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.comparator.Comparator;
+import org.skriptlang.skript.lang.comparator.Comparators;
+import org.skriptlang.skript.lang.comparator.Relation;
 
 import ch.njol.skript.Skript;
-import org.skriptlang.skript.lang.comparator.Comparator;
-import org.skriptlang.skript.lang.comparator.Relation;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.events.EvtEntity;
+import ch.njol.skript.expressions.ExprAttacked;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionList;
@@ -39,7 +46,6 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
-import org.skriptlang.skript.lang.comparator.Comparators;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Checker;
@@ -194,6 +200,7 @@ public class CondCompare extends Condition {
 		final Class<?> f = first.getReturnType(), s = third == null ? second.getReturnType() : Utils.getSuperType(second.getReturnType(), third.getReturnType());
 		if (f == Object.class || s == Object.class)
 			return true;
+
 		/*
 		 * https://github.com/Mirreski/Skript/issues/10
 		 * 
@@ -237,7 +244,21 @@ public class CondCompare extends Condition {
 			}
 			
 		}
-		
+
+		/*
+		 * https://github.com/SkriptLang/Skript/issues/5657
+		 * 
+		 * Asserts that if the victim is a player, the event must be a PlayerDeathEvent
+		 * thus we can assert that to PlayerDeathEvent related syntaxes.
+		 * 
+		 * This is required due to Skript registering EntityDeathEvent as it's base for death events.
+		 */
+		if (first instanceof ExprAttacked && second instanceof SimpleLiteral && getParser().isCurrentEvent(EntityDeathEvent.class)) {
+			Object[] objects = ((SimpleLiteral<?>) second).getAll();
+			if (objects.length == 1 && objects[0] instanceof EntityData && HumanEntity.class.isAssignableFrom(((EntityData<?>) objects[0]).getType()))
+				getParser().setCurrentEvent(EvtEntity.PLAYER_DEATH_EVENT_NAME, PlayerDeathEvent.class);
+		}
+
 		return comp != null;
 	}
 	

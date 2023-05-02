@@ -38,9 +38,11 @@ import ch.njol.util.StringUtils;
 
 public final class EvtEntity extends SkriptEvent {
 
+	public static final String PLAYER_DEATH_EVENT_NAME = "Player Death";
+
 	static {
 		// Must be registered before EntityDeathEvent. Also SimpleEvent is correct.
-		Skript.registerEvent("Player Death", SimpleEvent.class, PlayerDeathEvent.class, "death of [a[n]] player", "player death")
+		Skript.registerEvent(PLAYER_DEATH_EVENT_NAME, SimpleEvent.class, PlayerDeathEvent.class, "death of [a[n]] player", "player death")
 				.description("Called when a player dies.")
 				.examples("on death of player:",
 						"\tbroadcast \"%player% has been slain in %world%!\"")
@@ -89,7 +91,7 @@ public final class EvtEntity extends SkriptEvent {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean check(Event event) {
 		if (types == null)
