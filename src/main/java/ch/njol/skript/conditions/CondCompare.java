@@ -26,6 +26,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparator;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
+import org.skriptlang.skript.lang.structure.Structure.StructureData;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -238,15 +239,23 @@ public class CondCompare extends Condition {
 		 * 
 		 * This is required due to Skript registering EntityDeathEvent as it's base for death events.
 		 */
-		if (first instanceof ExprAttacked && second instanceof SimpleLiteral && getParser().isCurrentEvent(EntityDeathEvent.class) && !isNegated()) {
+		if (first instanceof ExprAttacked && second instanceof SimpleLiteral) {
 			Object[] objects = ((SimpleLiteral<?>) second).getAll();
-			if (objects.length == 1 && objects[0] instanceof EntityData && HumanEntity.class.isAssignableFrom(((EntityData<?>) objects[0]).getType()))
-				getParser().setCurrentEvent(EvtEntity.PLAYER_DEATH_EVENT_NAME, PlayerDeathEvent.class);
+			if (objects.length == 1 && objects[0] instanceof EntityData && HumanEntity.class.isAssignableFrom(((EntityData<?>) objects[0]).getType())) {
+				StructureData structureData = getParser().getData(StructureData.class);
+				// Checking for 'is player' and hasn't applied change.
+				if (!isNegated() && getParser().isCurrentEvent(EntityDeathEvent.class)) {
+					getParser().setCurrentEvent(EvtEntity.PLAYER_DEATH_EVENT_NAME, PlayerDeathEvent.class);
+				// Checking for 'is not a player' and has already applied change.
+				} else if (isNegated() && structureData.hasOriginalEventChanged() && getParser().isCurrentEvent(PlayerDeathEvent.class)) {
+					getParser().setCurrentEvent("Death", EntityDeathEvent.class);
+				}
+			}
 		}
 
 		return comp != null;
 	}
-	
+
 	/**
 	 * Attempts to parse given expression again as a literal of given type.
 	 * This will only work if the expression is a literal and its unparsed
