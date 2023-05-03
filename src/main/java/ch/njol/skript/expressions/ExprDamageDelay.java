@@ -95,20 +95,13 @@ public class ExprDamageDelay extends SimplePropertyExpression<LivingEntity, Time
 				}
 				break;
 			case REMOVE:
-				for (LivingEntity entity : entities) {
-					if (max) {
-						entity.setMaximumNoDamageTicks(Math.max(entity.getMaximumNoDamageTicks() - ticks, 0));
-					} else {
-						entity.setNoDamageTicks(Math.max(entity.getNoDamageTicks() - ticks, 0));
-					}
-				}
-				break;
 			case ADD:
 				for (LivingEntity entity : entities) {
+					int newTicks = mode == ChangeMode.REMOVE ? -ticks : ticks;
 					if (max) {
-						entity.setMaximumNoDamageTicks(Math.max(entity.getMaximumNoDamageTicks() + ticks, 0));
+						entity.setMaximumNoDamageTicks(Math.max(entity.getMaximumNoDamageTicks() + newTicks, 0));
 					} else {
-						entity.setNoDamageTicks(Math.max(entity.getNoDamageTicks() + ticks, 0));
+						entity.setNoDamageTicks(Math.max(entity.getNoDamageTicks() + newTicks, 0));
 					}
 				}
 				break;
