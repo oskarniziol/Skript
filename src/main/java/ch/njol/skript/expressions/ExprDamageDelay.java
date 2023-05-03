@@ -45,7 +45,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprDamageDelay extends SimplePropertyExpression<LivingEntity, Timespan> {
 
 	static {
-		registerDefault(ExprDamageDelay.class, Timespan.class, "[max:max[imum]] (invulnerability|no damage) (tick[s]|delay)", "livingentities");
+		registerDefault(ExprDamageDelay.class, Timespan.class, "[max:max[imum]] (invulnerability|no damage) (time|delay)", "livingentities");
 	}
 
 	private boolean max;
