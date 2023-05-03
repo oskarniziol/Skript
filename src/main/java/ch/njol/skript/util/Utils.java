@@ -18,10 +18,7 @@
  */
 package ch.njol.skript.util;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -34,14 +31,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import com.google.common.collect.Sets;
-import com.google.common.io.BaseEncoding;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import com.google.common.collect.Iterables;
@@ -699,13 +694,26 @@ public abstract class Utils {
 	private static Set<Character> LEGAL_NAMESPACE_CHARS = Sets.newHashSet(ArrayUtils.toObject("abcdefghijklmnopqrstuvwxyz0123456789._-/".toCharArray()));
 
 	/**
-	 * Gets a namespaced key encoded to avoid the character limitations of a normal key.
+	 * Gets a namespaced key. This method will try to get existing keys first, but if that fails
+	 * it will create the key in Skript's namespace.
+	 * @param key the unparsed key
+	 * @return the resulting NamespacedKey
+	 */
+	public static NamespacedKey getNamespacedKey(String key) {
+		NamespacedKey namespacedKey = NamespacedKey.fromString(key);
+		if (namespacedKey != null)
+			return namespacedKey;
+		return Utils.createNamespacedKey(key);
+	}
+
+	/**
+	 * Creates a namespaced key in Skript's namespace encoded to avoid the character limitations of a normal key.
 	 * This key will be created in Skript's namespace.
 	 *
 	 * @param key The key to use
 	 * @return a NamespacedKey with the encoded key in Skript's namespace
 	 */
-	public static NamespacedKey getNamespacedKey(String key) {
+	public static NamespacedKey createNamespacedKey(String key) {
 		// TODO: add tests for this
 		StringBuilder encodedKeyBuilder = new StringBuilder();
 		// keys must be all lowercase

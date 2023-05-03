@@ -113,7 +113,7 @@ public class SecShapedRecipe extends Section {
 		ItemType[] ingredients = this.ingredients.getArray(event);
 		if (ingredients.length != 9)
 			return;
-		ShapedRecipe recipe = new ShapedRecipe(Utils.getNamespacedKey(key), result.getRandom());
+		ShapedRecipe recipe = new ShapedRecipe(Utils.createNamespacedKey(key), result.getRandom());
 		recipe.shape("abc", "def", "ghi");
 		for (char c = 'a'; c < 'j'; c++) {
 			ItemStack[] allChoices = Iterables.toArray(ingredients[c - 'a'].getAll(), ItemStack.class);

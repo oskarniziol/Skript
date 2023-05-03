@@ -56,10 +56,11 @@ import java.util.Set;
 @Description("Creates a cooking recipe")
 @Examples({
 	"create a furnace recipe:",
-	"\tingredient: ",
-	"\t\tdirt, dirt and dirt",
-	"\t\tdirt, diamond and dirt",
-	"\t\tdirt, dirt and dirt"
+	"\tkey: \"dirty-diamond-boots\"",
+	"\tresult: diamond boots named \"Dirty Diamond Boots\"",
+	"\tingredient: diamond",
+	"\tcook time: 1 second",
+	"\txp: 500"
 })
 @Since("INSERT VERSION")
 public class SecCookingRecipe extends Section {
@@ -142,7 +143,7 @@ public class SecCookingRecipe extends Section {
 
 		// the recipe APIs require an int :(
 		int cookTimeTicks = (int) cookTime.getTicks_i();
-		NamespacedKey namespacedKey = Utils.getNamespacedKey(key);
+		NamespacedKey namespacedKey = Utils.createNamespacedKey(key);
 		RecipeChoice choice = new RecipeChoice.MaterialChoice(ingredientMaterials.toArray(new Material[0]));
 		CookingRecipe<?> recipe;
 		switch (type) {
