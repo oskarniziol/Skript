@@ -60,8 +60,7 @@ public class CondIsEmpty extends PropertyCondition<Object> {
 			return item == null || !ItemUtils.isAir(item.getType());
 		}
 		if (object instanceof Entity) {
-			Entity entity = (Entity) object;
-			return entity.isEmpty();
+			return ((Entity) object).isEmpty();
 		}
 		assert false;
 		return false;
