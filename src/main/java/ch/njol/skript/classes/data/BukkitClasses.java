@@ -390,15 +390,21 @@ public class BukkitClasses {
 					}
 				}).serializer(new Serializer<Location>() {
 					@Override
-					public Fields serialize(final Location l) {
-						final Fields f = new Fields();
-						f.putObject("world", l.getWorld());
-						f.putPrimitive("x", l.getX());
-						f.putPrimitive("y", l.getY());
-						f.putPrimitive("z", l.getZ());
-						f.putPrimitive("yaw", l.getYaw());
-						f.putPrimitive("pitch", l.getPitch());
-						return f;
+					public Fields serialize(Location location) {
+						Fields fields = new Fields();
+						World world = null;
+						try {
+							world = location.getWorld();
+						} catch (IllegalArgumentException exception) {
+							Skript.warning("A location failed to serialize with its defined world, as the world was unloaded.");
+						}
+						fields.putObject("world", world);
+						fields.putPrimitive("x", location.getX());
+						fields.putPrimitive("y", location.getY());
+						fields.putPrimitive("z", location.getZ());
+						fields.putPrimitive("yaw", location.getYaw());
+						fields.putPrimitive("pitch", location.getPitch());
+						return fields;
 					}
 					
 					@Override
