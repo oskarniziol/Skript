@@ -303,9 +303,6 @@ public class SimpleEntityData extends EntityData<Entity> {
 
 		if (Skript.isRunningMinecraft(1, 19, 4)) {
 			addSimpleEntity("sniffer", Sniffer.class);
-//			addSimpleEntity("text display", TextDisplay.class);
-//			addSimpleEntity("item display", ItemDisplay.class);
-//			addSimpleEntity("block display", BlockDisplay.class);
 			addSimpleEntity("interaction", Interaction.class);
 		}
 

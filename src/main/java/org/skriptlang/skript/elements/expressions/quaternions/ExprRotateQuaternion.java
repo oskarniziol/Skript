@@ -18,7 +18,6 @@
  */
 package org.skriptlang.skript.elements.expressions.quaternions;
 
-import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
@@ -46,9 +45,10 @@ import ch.njol.util.Kleenean;
 public class ExprRotateQuaternion extends SimpleExpression<Quaternionf> {
 
 	static {
-		Skript.registerExpression(ExprRotateQuaternion.class, Quaternionf.class, ExpressionType.SIMPLE,
-				"%quaternions% rotated (around|on) [the] (:x|:y|:z)-axis by %number% [degrees|radians]",
-				"%quaternions% rotated by %vector%");
+		if (Skript.isRunningMinecraft(1, 19, 4))
+			Skript.registerExpression(ExprRotateQuaternion.class, Quaternionf.class, ExpressionType.SIMPLE,
+					"%quaternions% rotated (around|on) [the] (:x|:y|:z)-axis by %number% [degrees|radians]",
+					"%quaternions% rotated by %vector%");
 	}
 
 	private Expression<Quaternionf> quaternions;

@@ -27,7 +27,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.ItemDisplay;
-import org.bukkit.entity.TextDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -40,19 +39,29 @@ import ch.njol.skript.variables.Variables;
 
 public class DisplayData extends EntityData<Display> {
 
+	static {
+		if (Skript.isRunningMinecraft(1, 19, 4)) {
+			EntityData.register(DisplayData.class, "display", Display.class, 0, DisplayType.codeNames);
+			Variables.yggdrasil.registerSingleClass(DisplayType.class, "DisplayType");
+		}
+	}
+
 	private enum DisplayType {
 
-		ANY(Display.class, "display"),
-		BLOCK(BlockDisplay.class, "block display"),
-		ITEM(ItemDisplay.class, "item display"),
-		TEXT(TextDisplay.class, "text display");
+		ANY("org.bukkit.entity.Display", "display"),
+		BLOCK("org.bukkit.entity.BlockDisplay", "block display"),
+		ITEM("org.bukkit.entity.ItemDisplay", "item display"),
+		TEXT("org.bukkit.entity.TextDisplay", "text display");
 
 		@Nullable
-		final Class<? extends Display> c;
+		private Class<? extends Display> c;
 		private final String codeName;
 		
-		DisplayType(@Nullable Class<? extends Display> c, String codeName) {
-			this.c = c;
+		@SuppressWarnings("unchecked")
+		DisplayType(String className, String codeName) {
+			try {
+				this.c = (Class<? extends Display>) Class.forName(className);
+			} catch (ClassNotFoundException e) {}
 			this.codeName = codeName;
 		}
 
@@ -69,13 +78,6 @@ public class DisplayData extends EntityData<Display> {
 					cn.add(t.codeName);
 			}
 			codeNames = cn.toArray(new String[0]);
-		}
-	}
-
-	static {
-		if (Skript.isRunningMinecraft(1, 19, 4)) {
-			EntityData.register(DisplayData.class, "display", Display.class, 0, DisplayType.codeNames);
-			Variables.yggdrasil.registerSingleClass(DisplayType.class, "DisplayType");
 		}
 	}
 
