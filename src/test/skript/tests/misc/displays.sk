@@ -5,3 +5,16 @@ test "spawn displays" when running minecraft "1.19.4":
 		set billboard of display to center
 		assert billboard of display is center with "failed to set billboard to center"
 		clear display
+	assert last spawned text display is a display with "failed to compare text display with superclass display"
+	clear all entities
+	# Requiring Lime's literal compare pull requests
+	#spawn block display of grass_block[snowy=true] at spawn of world "world"
+	#assert last spawned block display is block display of grass_block[snowy=true] with "Failed to compare block display with block display"
+	clear all entities
+	spawn an item display of a diamond sword of sharpness at spawn of world "world":
+		assert item transform of event-display is none with "item transform was not none"
+		set item transform of display to head
+		assert item transform of display is head with "failed to set item transform to head"
+		# Waiting on fix for issue #5711
+		#assert display item of event-display is a diamond sword of sharpness with "failed to compare against the item of the display %display item of display%"
+		clear display

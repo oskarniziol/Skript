@@ -50,9 +50,13 @@ import ch.njol.util.Kleenean;
 @Name("Spawn")
 @Description({
 	"Spawns entities. This can be used as an effect and as a section.",
+	"",
 	"If it is used as a section, the section is run before the entity is added to the world.",
 	"You can modify the entity in this section, using for example 'event-entity' or 'cow'. ",
-	"Do note that other event values, such as 'player', won't work in this section."
+	"Do note that other event values, such as 'player', won't work in this section.",
+	"",
+	"If you're spawning a display and want it to be empty on initialization, like not having a block display be stone; " + 
+	"set hidden config node 'spawn empty displays' to true."
 })
 @Examples({
 	"spawn 3 creepers at the targeted block",
@@ -60,7 +64,7 @@ import ch.njol.util.Kleenean;
 	"spawn a zombie at the player:",
 		"\tset name of the zombie to \"\"",
 	"",
-	"spawn a text display at location above player:",
+	"spawn a block display of a ladder[waterlogged=true] at location above player:",
 		"\tset billboard of event-display to center # allows the display to rotate around the center axis"
 })
 @Since("1.0, 2.6.1 (with section)")

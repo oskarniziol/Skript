@@ -1230,16 +1230,16 @@ entities:
 		pattern: interaction(|1¦s)
 	display:
 		name: display¦s
-		pattern: display(|1¦s)
+		pattern: [a] display(|1¦s)
 	block display:
 		name: block display¦s
-		pattern: block display(|1¦s)
+		pattern: [a] block display(|1¦s) [of %-blockdata%]
 	item display:
 		name: item display¦s
-		pattern: item display(|1¦s)
+		pattern: item display(|1¦s) [of %-itemtype%]
 	text display:
 		name: text display¦s
-		pattern: text display(|1¦s)
+		pattern: [a] text display(|1¦s)
 
 # -- Heal Reasons --
 heal reasons:
@@ -2027,6 +2027,7 @@ types:
 	billboard: billboard¦s @a
 	textalignment: text alignment¦s @a
 	itemdisplaytransform: item display transform¦s @an
+	quaternion: quaternion¦s @a
 
 	# Skript
 	weathertype: weather type¦s @a
