@@ -27,6 +27,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
+import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
 import ch.njol.skript.Skript;
@@ -488,12 +489,11 @@ public class DefaultFunctions {
 						double x = ((Number) params[1][0]).doubleValue();
 						double y = ((Number) params[2][0]).doubleValue();
 						double z = ((Number) params[3][0]).doubleValue();
-						return CollectionUtils.array(new Quaternionf(w, x, y, z));
+						return CollectionUtils.array(new Quaternionf(x, y, z, w));
 					}
 				}).description("Returns a quaternion from the given w, x, y and z parameters.")
-					.examples("quaternionf(1.2, 5.6, 45.21, 10)")
+					.examples("quaternionf(1, 5.6, 45.21, 10)")
 					.since("INSERT VERSION");
-
 	}
-	
+
 }
