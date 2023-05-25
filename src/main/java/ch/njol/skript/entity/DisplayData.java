@@ -73,8 +73,10 @@ public class DisplayData extends EntityData<Display> {
 	}
 
 	static {
-		EntityData.register(DisplayData.class, "display", Display.class, 0, DisplayType.codeNames);
-		Variables.yggdrasil.registerSingleClass(DisplayType.class, "DisplayType");
+		if (Skript.isRunningMinecraft(1, 19, 4)) {
+			EntityData.register(DisplayData.class, "display", Display.class, 0, DisplayType.codeNames);
+			Variables.yggdrasil.registerSingleClass(DisplayType.class, "DisplayType");
+		}
 	}
 
 	private DisplayType type = DisplayType.ANY;
