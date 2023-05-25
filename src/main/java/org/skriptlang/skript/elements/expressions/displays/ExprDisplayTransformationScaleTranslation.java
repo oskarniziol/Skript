@@ -39,7 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Display Transformation Scale/Translation")
 @Description("Returns or changes the transformation scale or translation of <a href='classes.html#display'>displays</a>.")
-@Examples("set left transformation translation of last spawned text display to the angle between vector 2, 0, 0 and vector 0, 2, 1")
+@Examples("set transformation translation of display to vector from -0.5, -0.5, -0.5 # Center the display in the same position as a block")
 @Since("INSERT VERSION")
 public class ExprDisplayTransformationScaleTranslation extends SimplePropertyExpression<Display, Vector> {
 

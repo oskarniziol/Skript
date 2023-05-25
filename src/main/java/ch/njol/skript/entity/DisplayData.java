@@ -40,7 +40,7 @@ import ch.njol.skript.variables.Variables;
 
 public class DisplayData extends EntityData<Display> {
 
-	private static enum DisplayType {
+	private enum DisplayType {
 
 		ANY(Display.class, "display"),
 		BLOCK(BlockDisplay.class, "block display"),
