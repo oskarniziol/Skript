@@ -42,7 +42,7 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> 
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayShadow.class, Float.class, "(:radius|strength)", "displays");
+			registerDefault(ExprDisplayShadow.class, Float.class, "shadow (:radius|strength)", "displays");
 	}
 
 	private boolean radius;
