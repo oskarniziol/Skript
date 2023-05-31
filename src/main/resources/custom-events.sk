@@ -28,12 +28,6 @@ events:
 		class: com.destroystokyo.paper.event.block.BeaconEffectEvent
 		pattern: beacon effect apply [to player[s]]
 
-	# [on] [player] enter bed
-	player enter bed:
-		enabled: false
-		class: org.bukkit.event.player.PlayerBedEnterEvent
-		pattern: [player] enter bed
-
 	# [on] campfire lit
 	campfire lit:
 		enabled: false
