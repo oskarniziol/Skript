@@ -17,6 +17,7 @@ version: 1
 #	class - the class name to search for
 # 	pattern - the syntax pattern of the event
 # The optional pattern [on] gets prefixed on every Skript event.
+# Pattern cannot have expressions inside currently.
 # All event-values will be automatically applied.
 # If you need more info, make an issue report at https://github.com/SkriptLang/Skript/issues
 
