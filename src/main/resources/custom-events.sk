@@ -1,0 +1,41 @@
+
+# This file allows you to register custom events that aren't already registered under Skript.
+# The event classes you want to register must exist in the server class loader. So events from Paper/Spigot.
+# If you want to register an event from a plugin API, you must edit the plugin.yml in the jar of Skript to include:
+#
+# softdepend: [YourPlugin, SQLibrary, Vault, WorldGuard, Residence, PreciousStones, GriefPrevention]
+#
+# Reminder to maintain any existing defined plugins in this array as this example should not be directly copied.
+#! Additions or changes to this file requires a server restart.
+
+#! Internal version of this configuration. Don't modify.
+version: 1
+
+# The format must include a section where the section name is the event name.
+# The event section must include:
+# 	description - describing the event
+#	class - the class name to search for
+# 	pattern - the syntax pattern of the event
+# The optional pattern [on] gets prefixed on every Skript event.
+# All event-values will be automatically applied.
+# If you need more info, make an issue report at https://github.com/SkriptLang/Skript/issues
+
+# Examples are placed below. The 'enabled' node is not required, it's just to disable examples.
+events:
+	# [on] beacon effect apply
+	beacon effect:
+		enabled: false
+		class: com.destroystokyo.paper.event.block.BeaconEffectEvent
+		pattern: beacon effect apply [to player[s]]
+
+	# [on] [player] enter bed
+	player enter bed:
+		enabled: false
+		class: org.bukkit.event.player.PlayerBedEnterEvent
+		pattern: [player] enter bed
+
+	# [on] campfire lit
+	campfire lit:
+		enabled: false
+		class: org.bukkit.event.block.CampfireStartEvent
+		pattern: campfire (lit|start [burning])
