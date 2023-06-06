@@ -1573,6 +1573,13 @@ public final class BukkitEventValues {
 					return event.getItemsHarvested().toArray(new ItemStack[0]);
 				}
 			}, EventValues.TIME_NOW);
+			EventValues.registerEventValue(PlayerHarvestBlockEvent.class, Block.class, new Getter<Block, PlayerHarvestBlockEvent>() {
+				@Override
+				@Nullable
+				public Block get(PlayerHarvestBlockEvent event) {
+					return event.getHarvestedBlock();
+				}
+			}, EventValues.TIME_NOW);
 			EventValues.registerEventValue(PlayerHarvestBlockEvent.class, Slot.class, new Getter<Slot, PlayerHarvestBlockEvent>() {
 				@Override
 				@Nullable

@@ -28,7 +28,6 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Checker;
 
 public class EvtHarvest extends SkriptEvent {
 
@@ -36,19 +35,19 @@ public class EvtHarvest extends SkriptEvent {
 		if (Skript.classExists("org.bukkit.event.player.PlayerHarvestBlockEvent"))
 			Skript.registerEvent("Harvest", EvtHarvest.class, PlayerHarvestBlockEvent.class, "[player] [block|crop] harvest[ing] [[of] %-itemtypes%]")
 					.description("This event is called whenever a player harvests a block.",
-							"A 'harvest' is when a block drops an item (usually some sort of crop) and changes state, but is not broken in order to drop the item.",
-							"This event is not called for when a block is broken.")
+							"A 'harvest' is when a block drops an item (usually some sort of crop) and changes state, but is not broken in order to drop the item.")
 					.examples("on player harvesting:",
 							"\tmessage \"You harvested %block% which drops %event-items% from your %event-slot%!\"")
-					.requiredPlugins("Minecraft 1.17+")
+					.requiredPlugins("Spigot 1.17+")
 					.since("INSERT VERSION");
 	}
 
+	@Nullable
 	private Literal<ItemType> itemtypes;
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parser) {
+	public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
 		itemtypes = (Literal<ItemType>) args[0];
 		return true;
 	}
@@ -58,12 +57,7 @@ public class EvtHarvest extends SkriptEvent {
 		if (itemtypes == null)
 			return true;
 		Block block = ((PlayerHarvestBlockEvent) event).getHarvestedBlock();
-		return itemtypes.check(event, new Checker<ItemType>() {
-			@Override
-			public boolean check(ItemType itemtype) {
-				return itemtype.isOfType(block);
-			}
-		});
+		return itemtypes.check(event, itemtype -> itemtype.isOfType(block));
 	}
 
 	@Override
