@@ -18,6 +18,7 @@
  */
 package ch.njol.skript.effects;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,8 +26,6 @@ import org.bukkit.Rotation;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
-
-import com.google.common.collect.ImmutableMap;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -92,15 +91,17 @@ public class EffRotate extends Effect {
 	/**
 	 * The amount of times to rotate clockwise to get to the matched degree.
 	 */
-	private static final Map<Rotation, Integer> order = Map.of(
-			Rotation.CLOCKWISE_45, 1,
-			Rotation.CLOCKWISE, 2,
-			Rotation.CLOCKWISE_135, 3,
-			Rotation.FLIPPED, 4,
-			Rotation.FLIPPED_45, 5,
-			Rotation.COUNTER_CLOCKWISE, 6,
-			Rotation.COUNTER_CLOCKWISE_45, 7
-	);
+	private static final Map<Rotation, Integer> order = new HashMap<>();
+
+	static {
+		order.put(Rotation.CLOCKWISE_45, 1);
+		order.put(Rotation.CLOCKWISE, 2);
+		order.put(Rotation.CLOCKWISE_135, 3);
+		order.put(Rotation.FLIPPED, 4);
+		order.put(Rotation.FLIPPED_45, 5);
+		order.put(Rotation.COUNTER_CLOCKWISE, 6);
+		order.put(Rotation.COUNTER_CLOCKWISE_45, 7);
+	}
 
 	private Rotation rotate(Rotation relative, Rotation rotation) {
 		for (int i = 0; i < order.get(relative); i++)
