@@ -56,21 +56,17 @@ import java.util.regex.Pattern;
  * pages by combining data from annotations and templates.
  * 
  */
-public class HTMLGenerator {
+public class HTMLGenerator extends Generator {
 
 	private static final String SKRIPT_VERSION = Skript.getVersion().toString().replaceAll("-(dev|alpha|beta)\\d*", ""); // Filter branches
 	private static final Pattern NEW_TAG_PATTERN = Pattern.compile(SKRIPT_VERSION + "(?!\\.)"); // (?!\\.) to avoid matching 2.6 in 2.6.1 etc.
 	private static final Pattern RETURN_TYPE_LINK_PATTERN = Pattern.compile("( ?href=\"(classes\\.html|)#|)\\$\\{element\\.return-type-linkcheck}");
 
-	private final File template;
-	private final File output;
 	private final String skeleton;
 
 	public HTMLGenerator(File templateDir, File outputDir) {
-		this.template = templateDir;
-		this.output = outputDir;
-		
-		this.skeleton = readFile(new File(template + "/template.html")); // Skeleton which contains every other page
+		super(templateDir, outputDir);
+		this.skeleton = readFile(new File(this.templateDir + "/template.html")); // Skeleton which contains every other page
 	}
 
 	/**
@@ -205,15 +201,16 @@ public class HTMLGenerator {
 	 * Generates documentation using template and output directories
 	 * given in the constructor.
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void generate() {
-		for (File f : template.listFiles()) {
+		for (File f : templateDir.listFiles()) {
 			if (f.getName().matches("css|js|assets")) { // Copy CSS/JS/Assets folders
 				String slashName = "/" + f.getName();
-				File fileTo = new File(output + slashName);
+				File fileTo = new File(outputDir + slashName);
 				fileTo.mkdirs();
-				for (File filesInside : new File(template + slashName).listFiles()) {
-					if (filesInside.isDirectory()) 
+				for (File filesInside : new File(templateDir + slashName).listFiles()) {
+					if (filesInside.isDirectory())
 						continue;
 						
 					if (!filesInside.getName().toLowerCase(Locale.ENGLISH).endsWith(".png")) { // Copy images
@@ -259,7 +256,7 @@ public class HTMLGenerator {
 			}
 
 			for (String name : replace) {
-				String temp = readFile(new File(template + "/templates/" + name));
+				String temp = readFile(new File(templateDir + "/templates/" + name));
 				temp = temp.replace("${skript.version}", Skript.getVersion().toString());
 				page = page.replace("${include " + name + "}", temp);
 			}
@@ -270,7 +267,7 @@ public class HTMLGenerator {
 				String[] genParams = page.substring(generate + 11, nextBracket).split(" ");
 				StringBuilder generated = new StringBuilder();
 
-				String descTemp = readFile(new File(template + "/templates/" + genParams[1]));
+				String descTemp = readFile(new File(templateDir + "/templates/" + genParams[1]));
 				String genType = genParams[0];
 				boolean isDocsPage = genType.equals("docs");
 
@@ -364,7 +361,7 @@ public class HTMLGenerator {
 				page = minifyHtml(page);
 			}
 			assert page != null;
-			writeFile(new File(output + File.separator + name), page);
+			writeFile(new File(outputDir + File.separator + name), page);
 		}
 	}
 	
@@ -513,7 +510,7 @@ public class HTMLGenerator {
 		// Assume element.pattern generate
 		for (String data : toGen) {
 			String[] split = data.split(" ");
-			String pattern = readFile(new File(template + "/templates/" + split[1]));
+			String pattern = readFile(new File(templateDir + "/templates/" + split[1]));
 			StringBuilder patterns = new StringBuilder();
 			for (String line : getDefaultIfNullOrEmpty(info.patterns, "Missing patterns.")) {
 				assert line != null;
@@ -618,7 +615,7 @@ public class HTMLGenerator {
 		// Assume element.pattern generate
 		for (String data : toGen) {
 			String[] split = data.split(" ");
-			String pattern = readFile(new File(template + "/templates/" + split[1]));
+			String pattern = readFile(new File(templateDir + "/templates/" + split[1]));
 			StringBuilder patterns = new StringBuilder();
 			for (String line : getDefaultIfNullOrEmpty(info.patterns, "Missing patterns.")) {
 				assert line != null;
@@ -718,7 +715,7 @@ public class HTMLGenerator {
 		// Assume element.pattern generate
 		for (String data : toGen) {
 			String[] split = data.split(" ");
-			String pattern = readFile(new File(template + "/templates/" + split[1]));
+			String pattern = readFile(new File(templateDir + "/templates/" + split[1]));
 			StringBuilder patterns = new StringBuilder();
 			String[] lines = getDefaultIfNullOrEmpty(info.getUsage(), "Missing patterns.");
 			if (lines == null)
@@ -802,7 +799,7 @@ public class HTMLGenerator {
 		// Assume element.pattern generate
 		for (String data : toGen) {
 			String[] split = data.split(" ");
-			String pattern = readFile(new File(template + "/templates/" + split[1]));
+			String pattern = readFile(new File(templateDir + "/templates/" + split[1]));
 			String patterns = "";
 			Parameter<?>[] params = info.getParameters();
 			String[] types = new String[params.length];
