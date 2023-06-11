@@ -854,12 +854,7 @@ public class HTMLGenerator extends Generator {
 			String[] split = data.split(" ");
 			String pattern = readFile(new File(templateDir + "/templates/" + split[1]));
 			String patterns = "";
-			Parameter<?>[] params = info.getParameters();
-			String[] types = new String[params.length];
-			for (int i = 0; i < types.length; i++) {
-				types[i] = params[i].toString();
-			}
-			String line = docName + "(" + Joiner.on(", ").join(types) + ")"; // Better not have nulls
+			String line = info.getSignature().toString(false); // Better not have nulls
 			patterns += pattern.replace("${element.pattern}", line);
 			
 			desc = desc.replace("${generate element.patterns " + split[1] + "}", patterns);
