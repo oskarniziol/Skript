@@ -83,11 +83,15 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 			@Nullable
 			public Slot get(LivingEntity entity) {
 				if (!delayed) {
-					// When a player uses a number key to swap an item from hotbar to offhand. This simplifies the process with future states.
-					if (offHand && event instanceof InventoryClickEvent && ((InventoryClickEvent) event).getWhoClicked().equals(entity) && getTime() >= 0
-							&& ((InventoryClickEvent) event).getClick() == ClickType.NUMBER_KEY && ((InventoryClickEvent) event).getSlot() == 40) {
-						PlayerInventory inventory = ((InventoryClickEvent) event).getWhoClicked().getInventory();
-						return new InventorySlot(inventory, ((InventoryClickEvent) event).getHotbarButton());
+					if (offHand && event instanceof InventoryClickEvent && ((InventoryClickEvent) event).getWhoClicked().equals(entity) && getTime() >= 0) {
+						// When a player uses a number key to swap an item from hotbar to offhand. This simplifies the process with future states.
+						if ((((InventoryClickEvent) event).getClick() == ClickType.NUMBER_KEY && ((InventoryClickEvent) event).getSlot() == EquipmentSlot.EquipSlot.OFF_HAND.slotNumber)) {
+							PlayerInventory inventory = ((InventoryClickEvent) event).getWhoClicked().getInventory();
+							return new InventorySlot(inventory, ((InventoryClickEvent) event).getHotbarButton());
+						} else if (((InventoryClickEvent) event).getClick() == ClickType.SWAP_OFFHAND) {
+							PlayerInventory inventory = ((InventoryClickEvent) event).getWhoClicked().getInventory();
+							return new InventorySlot(inventory, ((InventoryClickEvent) event).getSlot());
+						}
 					} else if (!offHand && event instanceof PlayerItemHeldEvent && ((PlayerItemHeldEvent) event).getPlayer() == entity) {
 						PlayerInventory inventory = ((PlayerItemHeldEvent) event).getPlayer().getInventory();
 						return new InventorySlot(inventory, getTime() >= 0 ? ((PlayerItemHeldEvent) event).getNewSlot() : ((PlayerItemHeldEvent) event).getPreviousSlot());
