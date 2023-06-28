@@ -88,7 +88,7 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 						if ((((InventoryClickEvent) event).getClick() == ClickType.NUMBER_KEY && ((InventoryClickEvent) event).getSlot() == EquipmentSlot.EquipSlot.OFF_HAND.slotNumber)) {
 							PlayerInventory inventory = ((InventoryClickEvent) event).getWhoClicked().getInventory();
 							return new InventorySlot(inventory, ((InventoryClickEvent) event).getHotbarButton());
-						} else if (((InventoryClickEvent) event).getClick() == ClickType.SWAP_OFFHAND) {
+						} else if (((InventoryClickEvent) event).getClick() == ClickType.SWAP_OFFHAND || ((InventoryClickEvent) event).getSlot() == EquipmentSlot.EquipSlot.OFF_HAND.slotNumber) {
 							PlayerInventory inventory = ((InventoryClickEvent) event).getWhoClicked().getInventory();
 							return new InventorySlot(inventory, ((InventoryClickEvent) event).getSlot());
 						}
