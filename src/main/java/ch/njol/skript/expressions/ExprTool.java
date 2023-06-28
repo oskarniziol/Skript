@@ -42,7 +42,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.slot.EquipmentSlot;
 import ch.njol.skript.util.slot.InventorySlot;
@@ -85,7 +84,8 @@ public class ExprTool extends PropertyExpression<LivingEntity, Slot> {
 			public Slot get(LivingEntity entity) {
 				if (!delayed) {
 					// When a player uses a number key to swap an item from hotbar to offhand. This simplifies the process with future states.
-					if (offHand && event instanceof InventoryClickEvent && ((InventoryClickEvent) event).getWhoClicked().equals(entity) && getTime() >= 0 && ((InventoryClickEvent) event).getClick() == ClickType.NUMBER_KEY) {
+					if (offHand && event instanceof InventoryClickEvent && ((InventoryClickEvent) event).getWhoClicked().equals(entity) && getTime() >= 0
+							&& ((InventoryClickEvent) event).getClick() == ClickType.NUMBER_KEY && ((InventoryClickEvent) event).getSlot() == 40) {
 						PlayerInventory inventory = ((InventoryClickEvent) event).getWhoClicked().getInventory();
 						return new InventorySlot(inventory, ((InventoryClickEvent) event).getHotbarButton());
 					} else if (!offHand && event instanceof PlayerItemHeldEvent && ((PlayerItemHeldEvent) event).getPlayer() == entity) {
