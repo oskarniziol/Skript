@@ -171,6 +171,25 @@ public class EffOpenInventory extends Effect {
 		return true;
 	}
 
+	/**
+	 * Method because SecOpenInventory also uses this code block.
+	 */
+	@Nullable
+	public static Inventory createInventory(InventoryType type) {
+		Inventory inventory;
+		if (!type.isCreatable())
+			return null;
+		try {
+			return Bukkit.createInventory(null, type);
+		} catch (NullPointerException e) {
+			// Spigot forgot to label some InventoryType's as non creatable in some versions < 1.19.4
+			// So this throws NullPointerException aswell ontop of the IllegalArgumentException.
+			// See https://hub.spigotmc.org/jira/browse/SPIGOT-7301
+			Skript.error("You can't open a '" + Classes.toString(type + "' inventory to players. It's not creatable.");
+		}
+		return null;
+	}
+
 	@Override
 	protected void execute(Event event) {
 		if (inventory != null) { // Show
@@ -181,17 +200,7 @@ public class EffOpenInventory extends Effect {
 			if (object instanceof Inventory) {
 				inventory = (Inventory) object;
 			} else if (object instanceof InventoryType) {
-				InventoryType type = (InventoryType) object;
-				if (!type.isCreatable())
-					return;
-				try {
-					inventory = Bukkit.createInventory(null, type);
-				} catch (NullPointerException e) {
-					// Spigot forgot to label some InventoryType's as non creatable in some versions < 1.19.4
-					// So this throws NullPointerException aswell ontop of the IllegalArgumentException.
-					// See https://hub.spigotmc.org/jira/browse/SPIGOT-7301
-					Skript.error("You can't open a '" + Classes.toString((InventoryType) object) + "' inventory to players. It's not creatable.");
-				}
+				inventory = createInventory((InventoryType) object);
 			} else {
 				assert false;
 			}

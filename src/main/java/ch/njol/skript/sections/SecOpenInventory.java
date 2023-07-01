@@ -35,6 +35,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.effects.EffOpenInventory;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.Section;
@@ -117,14 +118,7 @@ public class SecOpenInventory extends Section {
 		if (object instanceof Inventory) {
 			inventory = (Inventory) object;
 		} else if (object instanceof InventoryType) {
-			try {
-				inventory = Bukkit.createInventory(null, (InventoryType) object);
-			} catch (Exception e) {
-				// Spigot forgot to label some InventoryType's as non creatable in some versions < 1.19.4
-				// So this throws NullPointerException aswell ontop of the IllegalArgumentException.
-				// See https://hub.spigotmc.org/jira/browse/SPIGOT-7301
-				Skript.error("You can't open a '" + Classes.toString((InventoryType) object) + "' inventory to players. It's not creatable.");
-			}
+			inventory = EffOpenInventory.createInventory((InventoryType) object);
 		} else {
 			assert false;
 		}
