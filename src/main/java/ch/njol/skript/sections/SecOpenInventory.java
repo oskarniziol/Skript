@@ -20,14 +20,13 @@ package ch.njol.skript.sections;
 
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
@@ -42,7 +41,6 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 
