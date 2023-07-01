@@ -176,7 +176,6 @@ public class EffOpenInventory extends Effect {
 	 */
 	@Nullable
 	public static Inventory createInventory(InventoryType type) {
-		Inventory inventory;
 		if (!type.isCreatable())
 			return null;
 		try {
@@ -185,7 +184,7 @@ public class EffOpenInventory extends Effect {
 			// Spigot forgot to label some InventoryType's as non creatable in some versions < 1.19.4
 			// So this throws NullPointerException aswell ontop of the IllegalArgumentException.
 			// See https://hub.spigotmc.org/jira/browse/SPIGOT-7301
-			Skript.error("You can't open a '" + Classes.toString(type + "' inventory to players. It's not creatable.");
+			Skript.error("You can't open a '" + Classes.toString(type) + "' inventory to players. It's not creatable.");
 		}
 		return null;
 	}
