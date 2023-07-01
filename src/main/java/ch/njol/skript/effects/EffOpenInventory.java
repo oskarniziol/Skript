@@ -180,7 +180,7 @@ public class EffOpenInventory extends Effect {
 			return null;
 		try {
 			return Bukkit.createInventory(null, type);
-		} catch (NullPointerException e) {
+		} catch (NullPointerException | IllegalArgumentException e) {
 			// Spigot forgot to label some InventoryType's as non creatable in some versions < 1.19.4
 			// So this throws NullPointerException aswell ontop of the IllegalArgumentException.
 			// See https://hub.spigotmc.org/jira/browse/SPIGOT-7301
