@@ -30,14 +30,15 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Name("Raw String")
 @Description(
@@ -45,8 +46,10 @@ import java.util.List;
 	+ "e.g. <code>raw \"&aHello There!\"</code> would output <code>&aHello There!</code>"
 )
 @Examples("send raw \"&aThis text is unformatted!\" to all players")
-@Since("INSERT VERSION")
+@Since("2.7")
 public class ExprRawString extends SimpleExpression<String> {
+
+	private static final Pattern HEX_PATTERN = Pattern.compile("(?i)&x((?:&\\p{XDigit}){6})");
 
 	static {
 		Skript.registerExpression(ExprRawString.class, String.class, ExpressionType.COMBINED, "raw %strings%");
@@ -76,14 +79,21 @@ public class ExprRawString extends SimpleExpression<String> {
 	}
 
 	@Override
-	protected String[] get(Event e) {
+	protected String[] get(Event event) {
 		List<String> strings = new ArrayList<>();
 		for (Expression<? extends String> message : messages) {
 			if (message instanceof VariableString) {
-				strings.add(((VariableString) message).toString(false, e));
+				strings.add(((VariableString) message).toString(false, event));
 				continue;
 			}
-			strings.addAll(Arrays.asList(message.getArray(e)));
+			for (String string : message.getArray(event)) {
+				String raw = SkriptColor.replaceColorChar(string);
+				if (raw.toLowerCase().contains("&x")) {
+					raw = HEX_PATTERN.matcher(raw).replaceAll(matchResult ->
+						"<#" + matchResult.group(1).replace("&", "") + '>');
+				}
+				strings.add(raw);
+			}
 		}
 		return strings.toArray(new String[0]);
 	}

@@ -20,44 +20,51 @@ package ch.njol.skript.lang;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.ConvertedExpression;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.BlockingLogHandler;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.structures.StructVariables.DefaultVariables;
 import ch.njol.skript.util.StringMode;
 import ch.njol.util.Checker;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.SingleItemIterator;
-import org.skriptlang.skript.bukkit.chat.elements.ExprColoured;
-import org.skriptlang.skript.bukkit.chat.util.ComponentHandler;
+import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.skriptlang.skript.bukkit.chat.elements.ExprColoured;
+import org.skriptlang.skript.bukkit.chat.util.ComponentHandler;
+import org.skriptlang.skript.lang.script.Script;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a string that may contain expressions, and is thus "variable".
- * 
- * @author Peter Güttinger
  */
 public class VariableString implements Expression<String> {
-	
-	private final String orig;
-	
+
 	@Nullable
-	private final Object[] string;
+	private final Script script;
+	private final String orig;
+
+	private final Object @Nullable [] string;
 
 	@Nullable
 	private final String simple;
+
 	@Nullable
 	private final Component simpleComponent;
 	@Nullable
@@ -68,21 +75,26 @@ public class VariableString implements Expression<String> {
 
 	/**
 	 * Creates a new VariableString which does not contain variables.
-	 * @param s Content for string.
+	 * 
+	 * @param input Content for string.
 	 */
-	private VariableString(String s) {
+	private VariableString(String input) {
 		isSimple = true;
-		simple = s.replace("%%", "%"); // This doesn't contain variables, so this wasn't done in newInstance!
-		simpleComponent = ComponentHandler.parse(s, false);
+		simple = input.replace("%%", "%"); // This doesn't contain variables, so this wasn't done in newInstance!
+		simpleComponent = ComponentHandler.parse(input, false);
 		simpleResolved = ComponentHandler.toLegacyString(simpleComponent);
-				
+
 		orig = simple;
 		string = null;
 		mode = StringMode.MESSAGE;
+
+		ParserInstance parser = getParser();
+		this.script = parser.isActive() ? parser.getCurrentScript() : null;
 	}
-	
+
 	/**
 	 * Creates a new VariableString which contains variables.
+	 * 
 	 * @param orig Original string (unparsed).
 	 * @param string Objects, some of them are variables.
 	 * @param mode String mode.
@@ -98,63 +110,19 @@ public class VariableString implements Expression<String> {
 		simple = null;
 		simpleComponent = null;
 		simpleResolved = null;
+
+		ParserInstance parser = getParser();
+		this.script = parser.isActive() ? parser.getCurrentScript() : null;
 	}
-	
+
 	/**
 	 * Prints errors
 	 */
 	@Nullable
-	public static VariableString newInstance(String s) {
-		return newInstance(s, StringMode.MESSAGE);
+	public static VariableString newInstance(String input) {
+		return newInstance(input, StringMode.MESSAGE);
 	}
 
-	/**
-	 * Tests whether a string is correctly quoted, i.e. only has doubled double quotes in it.
-	 * Singular double quotes are only allowed between percentage signs.
-	 * 
-	 * @param s The string
-	 * @param withQuotes Whether s must be surrounded by double quotes or not
-	 * @return Whether the string is quoted correctly
-	 */
-	public static boolean isQuotedCorrectly(String s, boolean withQuotes) {
-		if (withQuotes && (!s.startsWith("\"") || !s.endsWith("\"")))
-			return false;
-		boolean quote = false;
-		boolean percentage = false;
-		for (int i = withQuotes ? 1 : 0; i < (withQuotes ? s.length() - 1 : s.length()); i++) {
-			if (percentage) {
-				if (s.charAt(i) == '%')
-					percentage = false;
-				
-				continue;
-			}
-			
-			if (quote && s.charAt(i) != '"')
-				return false;
-			
-			if (s.charAt(i) == '"') {
-				quote = !quote;
-			} else if (s.charAt(i) == '%') {
-				percentage = true;
-			}
-		}
-		return !quote;
-	}
-	
-	/**
-	 * Removes quoted quotes from a string.
-	 * 
-	 * @param s The string
-	 * @param surroundingQuotes Whether the string has quotes at the start & end that should be removed
-	 * @return The string with double quotes replaced with signle ones and optionally with removed surrounding quotes.
-	 */
-	public static String unquote(String s, boolean surroundingQuotes) {
-		assert isQuotedCorrectly(s, surroundingQuotes);
-		if (surroundingQuotes)
-			return s.substring(1, s.length() - 1).replace("\"\"", "\"");
-		return s.replace("\"\"", "\"");
-	}
-	
 	/**
 	 * Creates an instance of VariableString by parsing given string.
 	 * Prints errors and returns null if it is somehow invalid.
@@ -171,7 +139,7 @@ public class VariableString implements Expression<String> {
 			Skript.error("The percent sign is used for expressions (e.g. %player%). To insert a '%' type it twice: %%.");
 			return null;
 		}
-		
+
 		// We must not parse color codes yet, as JSON support would be broken :(
 		String s;
 		if (mode != StringMode.VARIABLE_NAME) {
@@ -193,9 +161,8 @@ public class VariableString implements Expression<String> {
 		} else {
 			s = orig;
 		}
-		
+
 		List<Object> string = new ArrayList<>(n / 2 + 2); // List of strings and expressions
-		
 		int c = s.indexOf('%');
 		if (c != -1) {
 			if (c != 0)
@@ -258,11 +225,11 @@ public class VariableString implements Expression<String> {
 			// Only one string, no variable parts
 			string.add(s);
 		}
-		
+
 		// Check if this isn't actually variable string, and return
 		if (string.size() == 1 && string.get(0) instanceof String)
 			return new VariableString(s);
-		
+
 		Object[] sa = string.toArray();
 		if (string.size() == 1 && string.get(0) instanceof Expression &&
 				((Expression<?>) string.get(0)).getReturnType() == String.class &&
@@ -272,6 +239,71 @@ public class VariableString implements Expression<String> {
 			Skript.warning(expr + " is already a text, so you should not put it in one (e.g. " + expr + " instead of " + "\"%" + expr.replace("\"", "\"\"") + "%\")");
 		}
 		return new VariableString(orig, sa, mode);
+	}
+
+	/**
+	 * Attempts to properly quote a string (e.g. double the double quotations).
+	 * Please note that the string itself will not be surrounded with double quotations.
+	 * @param string The string to properly quote.
+	 * @return The input where all double quotations outside of expressions have been doubled.
+	 */
+	public static String quote(String string) {
+		StringBuilder fixed = new StringBuilder();
+		boolean inExpression = false;
+		for (char c : string.toCharArray()) {
+			if (c == '%') // If we are entering an expression, quotes should NOT be doubled
+				inExpression = !inExpression;
+			if (!inExpression && c == '"')
+				fixed.append('"');
+			fixed.append(c);
+		}
+		return fixed.toString();
+	}
+
+	/**
+	 * Tests whether a string is correctly quoted, i.e. only has doubled double quotes in it.
+	 * Singular double quotes are only allowed between percentage signs.
+	 * 
+	 * @param s The string
+	 * @param withQuotes Whether s must be surrounded by double quotes or not
+	 * @return Whether the string is quoted correctly
+	 */
+	public static boolean isQuotedCorrectly(String s, boolean withQuotes) {
+		if (withQuotes && (!s.startsWith("\"") || !s.endsWith("\"") || s.length() < 2))
+			return false;
+		boolean quote = false;
+		boolean percentage = false;
+		if (withQuotes)
+			s = s.substring(1, s.length() - 1);
+		for (char c : s.toCharArray()) {
+			if (percentage) {
+				if (c == '%')
+					percentage = false;
+				continue;
+			}
+			if (quote && c != '"')
+				return false;
+			if (c == '"') {
+				quote = !quote;
+			} else if (c == '%') {
+				percentage = true;
+			}
+		}
+		return !quote;
+	}
+
+	/**
+	 * Removes quoted quotes from a string.
+	 * 
+	 * @param s The string
+	 * @param surroundingQuotes Whether the string has quotes at the start & end that should be removed
+	 * @return The string with double quotes replaced with signle ones and optionally with removed surrounding quotes.
+	 */
+	public static String unquote(String s, boolean surroundingQuotes) {
+		assert isQuotedCorrectly(s, surroundingQuotes);
+		if (surroundingQuotes)
+			return s.substring(1, s.length() - 1).replace("\"\"", "\"");
+		return s.replace("\"\"", "\"");
 	}
 
 	/**
@@ -324,19 +356,19 @@ public class VariableString implements Expression<String> {
 		}
 		return strings;
 	}
-	
+
 	/**
 	 * Parses all expressions in the string and returns it.
 	 * If this is a simple string, the event may be null.
 	 *
 	 * Simple formatting (colors) will be processed.
-	 * 
-	 * @param e Event to pass to the expressions.
+	 *
+	 * @param event Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 * @see #toString(boolean, Event)
 	 */
-	public String toString(@Nullable Event e) {
-		return toString(true, e);
+	public String toString(@Nullable Event event) {
+		return toString(true, event);
 	}
 
 	/**
@@ -344,10 +376,10 @@ public class VariableString implements Expression<String> {
 	 * If this is a simple string, the event may be null.
 	 *
 	 * @param format Whether simple formatting (colors) should be processed.
-	 * @param e Event to pass to the expressions.
+	 * @param event Event to pass to the expressions.
 	 * @return The input string with all expressions replaced.
 	 */
-	public String toString(boolean format, @Nullable Event e) {
+	public String toString(boolean format, @Nullable Event event) {
 		if (isSimple) {
 			if (format) {
 				assert simpleResolved != null;
@@ -358,98 +390,136 @@ public class VariableString implements Expression<String> {
 			}
 		}
 
-		if (e == null) {
+		if (event == null) {
 			throw new IllegalArgumentException("Event may not be null in non-simple VariableStrings!");
 		}
 
 		Object[] string = this.string;
 		assert string != null;
-		StringBuilder b = new StringBuilder();
-		for (Object o : string) {
-			if (o instanceof Expression<?>) {
-				boolean escape = !(o instanceof ExprColoured) && format;
-				String expression = Classes.toString(((Expression<?>) o).getArray(e), true, mode);
-				if (escape)
+		StringBuilder builder = new StringBuilder();
+		List<Class<?>> types = new ArrayList<>();
+		for (Object object : string) {
+			if (object instanceof Expression<?>) {
+				Object[] objects = ((Expression<?>) object).getArray(event);
+				if (objects.length > 0)
+					types.add(objects[0].getClass());
+				String expression = Classes.toString(objects, true, mode);
+				if (!(object instanceof ExprColoured) && format)
 					expression = ComponentHandler.escape(expression);
-				b.append(expression);
+				builder.append(expression);
 			} else {
-				b.append(o);
+				builder.append(object);
 			}
 		}
-		return format ? ComponentHandler.toLegacyString(b.toString(), false) : b.toString();
+		String complete = builder.toString();
+
+		if (script != null && mode == StringMode.VARIABLE_NAME && !types.isEmpty()) {
+			DefaultVariables data = script.getData(DefaultVariables.class);
+			if (data != null)
+				data.add(complete, types.toArray(new Class<?>[0]));
+		}
+
+		return format ? ComponentHandler.toLegacyString(builder.toString(), false) : builder.toString();
 	}
 	
 	@Override
 	public String toString() {
 		return toString(null, false);
 	}
-	
+
 	/**
-	 * Use {@link #toString(Event)} to get the actual string
+	 * Use {@link #toString(Event)} to get the actual string. This method is for debugging.
 	 */
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
+	public String toString(@Nullable Event event, boolean debug) {
 		if (isSimple) {
 			assert simple != null;
 			return '"' + simple + '"';
 		}
 		Object[] string = this.string;
 		assert string != null;
-		StringBuilder b = new StringBuilder("\"");
-		for (Object o : string) {
-			if (o instanceof Expression) {
-				b.append("%").append(((Expression<?>) o).toString(e, debug)).append("%");
+		StringBuilder builder = new StringBuilder("\"");
+		for (Object object : string) {
+			if (object instanceof Expression) {
+				builder.append("%").append(((Expression<?>) object).toString(event, debug)).append("%");
 			} else {
-				b.append(o);
+				builder.append(object);
 			}
 		}
-		b.append('"');
-		return b.toString();
+		builder.append('"');
+		return builder.toString();
 	}
 
-	public Component getAsComponent(@Nullable Event e) {
+	public Component getAsComponent(@Nullable Event event) {
 		if (isSimple) {
 			assert simpleComponent != null;
 			return simpleComponent;
 		}
 
-		if (e == null)
+		if (event == null)
 			throw new IllegalArgumentException("Event may not be null in non-simple VariableStrings!");
 
-		return ComponentHandler.parse(toString(false, e));
+		return ComponentHandler.parse(toString(false, event));
 	}
-	
-	public String getDefaultVariableName() {
+
+	/**
+	 * Builds all possible default variable type hints based on the super type of the expression.
+	 * 
+	 * @return List<String> of all possible super class code names.
+	 */
+	@NotNull
+	public List<String> getDefaultVariableNames(String variableName, Event event) {
+		if (script == null || mode != StringMode.VARIABLE_NAME)
+			return Lists.newArrayList();
+
 		if (isSimple) {
 			assert simple != null;
-			return simple;
+			return Lists.newArrayList(simple, "object");
 		}
-		Object[] string = this.string;
+
+		DefaultVariables data = script.getData(DefaultVariables.class);
+		// Checked in Variable#getRaw already
+		assert data != null : "default variables not present in current script";
+
+		Class<?>[] savedHints = data.get(variableName);
+		if (savedHints == null || savedHints.length == 0)
+			return Lists.newArrayList();
+
+		List<StringBuilder> typeHints = Lists.newArrayList(new StringBuilder());
+		// Represents the index of which expression in a variable string, example name::%entity%::%object% the index of 0 will be entity.
+		int hintIndex = 0;
 		assert string != null;
-		StringBuilder b = new StringBuilder();
-		for (Object o : string) {
-			if (o instanceof Expression) {
-				b.append("<")
-					.append(Classes.getSuperClassInfo(((Expression<?>) o).getReturnType()).getCodeName())
-					.append(">");
-			} else {
-				b.append(o);
+		for (Object object : string) {
+			if (!(object instanceof Expression)) {
+				typeHints.forEach(builder -> builder.append(object));
+				continue;
 			}
+			StringBuilder[] current = typeHints.toArray(new StringBuilder[0]);
+			for (ClassInfo<?> classInfo : Classes.getAllSuperClassInfos(savedHints[hintIndex])) {
+				for (StringBuilder builder : current) {
+					String hint = builder.toString() + "<" + classInfo.getCodeName() + ">";
+					// Has to duplicate the builder as it builds multiple off the last builder.
+					typeHints.add(new StringBuilder(hint));
+					typeHints.remove(builder);
+				}
+			}
+			hintIndex++;
 		}
-		return b.toString();
+		return typeHints.stream().map(StringBuilder::toString).collect(Collectors.toList());
 	}
-	
+
 	public boolean isSimple() {
 		return isSimple;
 	}
-	
+
 	public StringMode getMode() {
 		return mode;
 	}
-	
+
 	public VariableString setMode(StringMode mode) {
 		if (this.mode == mode || isSimple)
 			return this;
+		@SuppressWarnings("resource")
 		BlockingLogHandler h = new BlockingLogHandler().start();
 		try {
 			VariableString vs = newInstance(orig, mode);
