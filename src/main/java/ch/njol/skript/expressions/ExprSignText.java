@@ -20,8 +20,6 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.block.Block;
@@ -33,9 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
-import ch.njol.skript.ServerPlatform;
 import ch.njol.skript.Skript;
-import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -69,7 +65,7 @@ import ch.njol.util.coll.CollectionUtils;
 })
 public class ExprSignText extends SimpleExpression<String> {
 
-	private static final boolean ADVENTURE = Skript.isRunningMinecraft(1, 16) && Skript.getServerPlatform() == ServerPlatform.BUKKIT_PAPER;
+	private static final boolean ADVENTURE = Skript.classExists("net.kyori.adventure.text.Component");
 	private static final boolean RUNNING_1_20 = Skript.isRunningMinecraft(1, 20);
 
 	static {
@@ -190,7 +186,7 @@ public class ExprSignText extends SimpleExpression<String> {
 				case REMOVE:
 				case REMOVE_ALL:
 					assert stringDelta != null;
-					stringDelta = handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
+					stringDelta = ExprLore.handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
 					//$FALL-THROUGH$
 				case DELETE:
 					stringDelta = CollectionUtils.array("", "", "", "");
@@ -248,7 +244,7 @@ public class ExprSignText extends SimpleExpression<String> {
 						case REMOVE:
 						case REMOVE_ALL:
 							assert stringDelta != null;
-							stringDelta = handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
+							stringDelta = ExprLore.handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
 							//$FALL-THROUGH$
 						case DELETE:
 							stringDelta = CollectionUtils.array("", "", "", "");
@@ -296,21 +292,6 @@ public class ExprSignText extends SimpleExpression<String> {
 					}
 					sign.update(true, false);
 				});
-	}
-
-	private String handleRemove(String input, String toRemove, boolean all) {
-		if (SkriptConfig.caseSensitive.value()) {
-			if (all) {
-				return input.replace(toRemove, "");
-			} else {
-				// .replaceFirst requires the regex to be quoted, .replace does it internally
-				return input.replaceFirst(Pattern.quote(toRemove), "");
-			}
-		} else {
-			final Matcher m = Pattern.compile(Pattern.quote(toRemove),
-					Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(input);
-			return all ? m.replaceAll("") : m.replaceFirst("");
-		}
 	}
 
 	@Override
