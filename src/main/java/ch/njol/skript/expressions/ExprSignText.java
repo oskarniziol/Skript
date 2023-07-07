@@ -20,6 +20,8 @@ package ch.njol.skript.expressions;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.bukkit.block.Block;
@@ -33,6 +35,7 @@ import com.google.common.collect.Lists;
 
 import ch.njol.skript.ServerPlatform;
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -187,7 +190,7 @@ public class ExprSignText extends SimpleExpression<String> {
 				case REMOVE:
 				case REMOVE_ALL:
 					assert stringDelta != null;
-					stringDelta = ExprLore.handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
+					stringDelta = handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
 					//$FALL-THROUGH$
 				case DELETE:
 					stringDelta = CollectionUtils.array("", "", "", "");
@@ -245,7 +248,7 @@ public class ExprSignText extends SimpleExpression<String> {
 						case REMOVE:
 						case REMOVE_ALL:
 							assert stringDelta != null;
-							stringDelta = ExprLore.handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
+							stringDelta = handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
 							//$FALL-THROUGH$
 						case DELETE:
 							stringDelta = CollectionUtils.array("", "", "", "");
@@ -293,6 +296,21 @@ public class ExprSignText extends SimpleExpression<String> {
 					}
 					sign.update(true, false);
 				});
+	}
+
+	private String handleRemove(String input, String toRemove, boolean all) {
+		if (SkriptConfig.caseSensitive.value()) {
+			if (all) {
+				return input.replace(toRemove, "");
+			} else {
+				// .replaceFirst requires the regex to be quoted, .replace does it internally
+				return input.replaceFirst(Pattern.quote(toRemove), "");
+			}
+		} else {
+			final Matcher m = Pattern.compile(Pattern.quote(toRemove),
+					Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(input);
+			return all ? m.replaceAll("") : m.replaceFirst("");
+		}
 	}
 
 	@Override

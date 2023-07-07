@@ -236,7 +236,7 @@ public class ExprLore extends SimpleExpression<String> {
 		}
 	}
 
-	public static String handleRemove(String input, String toRemove, boolean all) {
+	private String handleRemove(String input, String toRemove, boolean all) {
 		if (SkriptConfig.caseSensitive.value()) {
 			if (all) {
 				return input.replace(toRemove, "");
