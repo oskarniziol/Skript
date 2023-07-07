@@ -49,6 +49,7 @@ import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 
 @Name("Sign Text")
 @Description("A line of text on a sign. Can be changed, but remember that there is a 16 character limit per line (including color codes that use 2 characters each).")
@@ -60,12 +61,11 @@ import ch.njol.util.coll.CollectionUtils;
 })
 @Since("1.3, INSERT VERSION (all lines, back side, multiple blocks, and Skript's ChatFormat (hex, font, etc))")
 @RequiredPlugins({
-	"Paper 1.16+ required to use Skript ChatFormat",
+	"Paper 1.16+ or Adventure API installed to use Skript ChatFormat",
 	"Spigot 1.20+ required to use the sign side"
 })
 public class ExprSignText extends SimpleExpression<String> {
 
-	private static final boolean ADVENTURE = Skript.classExists("net.kyori.adventure.text.Component");
 	private static final boolean RUNNING_1_20 = Skript.isRunningMinecraft(1, 20);
 
 	static {
@@ -79,6 +79,9 @@ public class ExprSignText extends SimpleExpression<String> {
 	}
 
 	@Nullable
+	private static BungeeComponentSerializer serializer;
+
+	@Nullable
 	private Expression<Number> line;
 	private Expression<Block> blocks;
 	private boolean lines;
@@ -89,6 +92,8 @@ public class ExprSignText extends SimpleExpression<String> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		if (Skript.classExists("net.kyori.adventure.text.Component"))
+			serializer = BungeeComponentSerializer.get();
 		if (matchedPattern == 2) {
 			line = (Expression<Number>) exprs[0];
 		} else if (matchedPattern == 3) {
@@ -200,10 +205,7 @@ public class ExprSignText extends SimpleExpression<String> {
 					if (lines) {
 						for (int i = 0; i < 4; i++) {
 							String value = stringDelta.length > i ? (String) stringDelta[i] : "";
-							if (ADVENTURE) {
-								net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer serializer = net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer.get();
-								if (value.isEmpty()) // Reduce callings.
-									changeEvent.line(i, net.kyori.adventure.text.Component.empty());
+							if (serializer != null) {
 								changeEvent.line(i, serializer.deserialize(BungeeConverter.convert(ChatMessages.parseToArray(value))));
 								continue;
 							}
@@ -259,10 +261,7 @@ public class ExprSignText extends SimpleExpression<String> {
 								if (lines) {
 									for (int i = 0; i < 4; i++) {
 										String value = stringDelta.length > i ? (String) stringDelta[i] : "";
-										if (ADVENTURE) {
-											net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer serializer = net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer.get();
-											if (value.isEmpty()) // Reduce callings.
-												sign.getSide(side).line(i, net.kyori.adventure.text.Component.empty());
+										if (serializer != null) {
 											sign.getSide(side).line(i, serializer.deserialize(BungeeConverter.convert(ChatMessages.parseToArray(value))));
 											continue;
 										}
@@ -275,10 +274,7 @@ public class ExprSignText extends SimpleExpression<String> {
 							if (lines) {
 								for (int i = 0; i < 4; i++) {
 									String value = stringDelta.length > i ? (String) stringDelta[i] : "";
-									if (ADVENTURE) {
-										net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer serializer = net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer.get();
-										if (value.isEmpty()) // Reduce callings.
-											sign.line(i, net.kyori.adventure.text.Component.empty());
+									if (serializer != null) {
 										sign.line(i, serializer.deserialize(BungeeConverter.convert(ChatMessages.parseToArray(value))));
 										continue;
 									}
