@@ -80,14 +80,13 @@ public class ExprDisplayTransformationRotation extends SimplePropertyExpression<
 		Quaternionf quaternion = (Quaternionf) delta[0];
 		for (Display display : displays) {
 			Transformation transformation = display.getTransformation();
+			Transformation change = null;
 			if (left) {
-				// change = new Transformation(transformation.getTranslation(), quaternion, transformation.getScale(), transformation.getRightRotation());
-				transformation.getLeftRotation().set(quaternion);
+				change = new Transformation(transformation.getTranslation(), quaternion, transformation.getScale(), transformation.getRightRotation());
 			} else {
-				// change = new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale(), quaternion);
-				transformation.getRightRotation().set(quaternion);
+				change = new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale(), quaternion);
 			}
-			display.setTransformation(transformation);
+			display.setTransformation(change);
 		}
 	}
 

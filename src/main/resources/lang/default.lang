@@ -1230,16 +1230,16 @@ entities:
 		pattern: interaction(|1¦s)
 	display:
 		name: display¦s
-		pattern: [a] display(|1¦s)
+		pattern: [a] display(|1¦s) [entity]
 	block display:
 		name: block display¦s
-		pattern: [a] block display(|1¦s) [of %-blockdata%]
+		pattern: [a] block display(|1¦s) [entity] [of %-blockdata%]
 	item display:
 		name: item display¦s
-		pattern: item display(|1¦s) [of %-itemtype%]
+		pattern: item display(|1¦s) [entity] [of %-itemtype%]
 	text display:
 		name: text display¦s
-		pattern: [a] text display(|1¦s)
+		pattern: [a] text display(|1¦s) [entity]
 
 # -- Heal Reasons --
 heal reasons:
