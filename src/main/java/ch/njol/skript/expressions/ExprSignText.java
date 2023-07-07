@@ -32,8 +32,6 @@ import org.jetbrains.annotations.Nullable;
 import com.google.common.collect.Lists;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.Aliases;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -65,7 +63,6 @@ import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 public class ExprSignText extends SimpleExpression<String> {
 
 	private static final boolean RUNNING_1_20 = Skript.isRunningMinecraft(1, 20);
-	private static final ItemType SIGN_ALIASES = Aliases.javaItemType("sign");
 	private static BungeeComponentSerializer serializer;
 
 	static {
@@ -124,7 +121,8 @@ public class ExprSignText extends SimpleExpression<String> {
 		}
 		int finalLine = line;
 		return blocks.stream(event)
-				.filter(SIGN_ALIASES::isOfType)
+				.map(Block::getState)
+				.filter(Sign.class::isInstance)
 				.map(Sign.class::cast)
 				.flatMap(sign -> {
 					if (RUNNING_1_20) {
@@ -222,7 +220,8 @@ public class ExprSignText extends SimpleExpression<String> {
 		}
 		int finalLine = line;
 		blocks.stream(event)
-				.filter(SIGN_ALIASES::isOfType)
+				.map(Block::getState)
+				.filter(Sign.class::isInstance)
 				.map(Sign.class::cast)
 				.forEach(sign -> {
 					String[] stringDelta = delta == null ? null : Arrays.copyOf(delta, delta.length, String[].class);

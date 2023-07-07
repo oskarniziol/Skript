@@ -1939,6 +1939,11 @@ quit reasons:
 	kicked: kicked
 	timed_out: timed out
 
+# -- Sign Sides --
+sign sides:
+	front: front
+	back: back
+
 # -- Boolean --
 boolean:
 	true:
@@ -2008,6 +2013,7 @@ types:
 	gene: panda gene¦s @a
 	gamerulevalue: gamerule value¦s @a
 	quitreason: quit reason¦s @a
+	signside: sign side¦s @a
 
 	# Skript
 	weathertype: weather type¦s @a

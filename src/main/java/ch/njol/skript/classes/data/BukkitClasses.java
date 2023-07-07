@@ -46,6 +46,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.sign.Side;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentOffer;
@@ -1510,6 +1511,14 @@ public class BukkitClasses {
 					.name("Quit Reason")
 					.description("Represents a quit reason from a player quit server event.")
 					.requiredPlugins("Paper 1.16.5+")
+					.since("INSERT VERSION"));
+
+		if (Skript.isRunningMinecraft(1, 20))
+			Classes.registerClass(new EnumClassInfo<>(Side.class, "signside", "sign sides")
+					.user("sign ?sides?")
+					.name("Sign Sides")
+					.description("Represents a side of a sign.")
+					.requiredPlugins("Spigot 1.20+")
 					.since("INSERT VERSION"));
 	}
 }
