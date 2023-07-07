@@ -1932,6 +1932,12 @@ moon phases:
 	waxing_crescent: waxing crescent
 	waxing_gibbous: waxing gibbous
 
+quit reasons:
+	disconnected: disconnected, quit
+	erroneous_state: erroneous, erroneous state
+	kicked: kicked
+	timed_out: timed out
+
 # -- Display Billboards --
 billboards:
 	center: center, middle
@@ -2025,6 +2031,7 @@ types:
 	resourcepackstate: resource pack state¦s @a
 	gene: panda gene¦s @a
 	gamerulevalue: gamerule value¦s @a
+	quitreason: quit reason¦s @a
 	display: display¦s @a
 	billboard: billboard¦s @a
 	textalignment: text alignment¦s @a

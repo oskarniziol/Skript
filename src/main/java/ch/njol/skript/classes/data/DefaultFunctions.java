@@ -27,7 +27,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
-import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
 import ch.njol.skript.Skript;
@@ -309,7 +308,37 @@ public class DefaultFunctions {
 		}.description("Returns the minimum number from a list of numbers.")
 			.examples("min(1) = 1", "min(1, 2, 3, 4) = 1", "min({some list variable::*})")
 			.since("2.2"));
-		
+
+		Functions.registerFunction(new SimpleJavaFunction<Number>("clamp", new Parameter[]{
+			new Parameter<>("values", DefaultClasses.NUMBER, false, null),
+			new Parameter<>("min", DefaultClasses.NUMBER, true, null),
+			new Parameter<>("max", DefaultClasses.NUMBER, true, null)
+		}, DefaultClasses.NUMBER, false) {
+			@Override
+			public @Nullable Number[] executeSimple(Object[][] params) {
+				Number[] values = (Number[]) params[0];
+				Double[] clampedValues = new Double[values.length];
+				double min = ((Number) params[1][0]).doubleValue();
+				double max = ((Number) params[2][0]).doubleValue();
+				// we'll be nice and swap them if they're in the wrong order
+				double trueMin = Math.min(min, max);
+				double trueMax = Math.max(min, max);
+				for (int i = 0; i < values.length; i++) {
+					double value = values[i].doubleValue();
+					clampedValues[i] = Math.max(Math.min(value, trueMax), trueMin);
+				}
+				return clampedValues;
+			}
+		}).description("Clamps one or more values between two numbers.")
+			.examples(
+					"clamp(5, 0, 10) = 5",
+					"clamp(5.5, 0, 5) = 5",
+					"clamp(0.25, 0, 0.5) = 0.25",
+					"clamp(5, 7, 10) = 7",
+					"clamp((5, 0, 10, 9, 13), 7, 10) = (7, 7, 10, 9, 10)",
+					"set {_clamped::*} to clamp({_values::*}, 0, 10)")
+			.since("INSERT VERSION");
+
 		// misc
 		
 		Functions.registerFunction(new SimpleJavaFunction<World>("world", new Parameter[] {
