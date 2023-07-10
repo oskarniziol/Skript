@@ -1,0 +1,8 @@
+on script load:
+	ensure junit test "org.skriptlang.skript.test.tests.regression._5804_IsBurning" completes "piggy burning"
+
+on damage of pig:
+	junit test is "org.skriptlang.skript.test.tests.regression._5804_IsBurning"
+	assert custom name of victim is "_5804_IsBurning" with "piggy was not the same name"
+	assert victim is burning with "is burning failed"
+	complete objective "piggy burning" for junit test "org.skriptlang.skript.test.tests.regression._5804_IsBurning"
