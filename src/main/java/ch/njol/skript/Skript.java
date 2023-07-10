@@ -75,6 +75,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.eclipse.jdt.annotation.Nullable;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.skriptlang.skript.lang.comparator.Comparator;
+import org.skriptlang.skript.lang.comparator.Comparators;
+import org.skriptlang.skript.lang.converter.Converter;
+import org.skriptlang.skript.lang.converter.Converters;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
@@ -86,8 +90,6 @@ import com.google.gson.Gson;
 import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.bukkitutil.BurgerHelper;
 import ch.njol.skript.classes.ClassInfo;
-import org.skriptlang.skript.lang.comparator.Comparator;
-import org.skriptlang.skript.lang.converter.Converter;
 import ch.njol.skript.classes.data.BukkitClasses;
 import ch.njol.skript.classes.data.BukkitEventValues;
 import ch.njol.skript.classes.data.DefaultComparators;
@@ -100,6 +102,7 @@ import ch.njol.skript.doc.Documentation;
 import ch.njol.skript.events.EvtSkript;
 import ch.njol.skript.hooks.Hook;
 import ch.njol.skript.lang.Condition;
+import ch.njol.skript.lang.Condition.ConditionType;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionInfo;
@@ -124,8 +127,6 @@ import ch.njol.skript.log.LogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.log.Verbosity;
 import ch.njol.skript.registrations.Classes;
-import org.skriptlang.skript.lang.comparator.Comparators;
-import org.skriptlang.skript.lang.converter.Converters;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.test.runner.EffObjectives;
 import ch.njol.skript.test.runner.SkriptJUnitTest;
@@ -1326,10 +1327,29 @@ public final class Skript extends JavaPlugin implements Listener {
 
 	// ================ CONDITIONS & EFFECTS & SECTIONS ================
 
-	private static final Collection<SyntaxElementInfo<? extends Condition>> conditions = new ArrayList<>(50);
-	private static final Collection<SyntaxElementInfo<? extends Effect>> effects = new ArrayList<>(50);
-	private static final Collection<SyntaxElementInfo<? extends Statement>> statements = new ArrayList<>(100);
-	private static final Collection<SyntaxElementInfo<? extends Section>> sections = new ArrayList<>(50);
+	private static final List<SyntaxElementInfo<? extends Condition>> conditions = new ArrayList<>(50);
+	private static final List<SyntaxElementInfo<? extends Effect>> effects = new ArrayList<>(50);
+	private static final List<SyntaxElementInfo<? extends Statement>> statements = new ArrayList<>(100);
+	private static final List<SyntaxElementInfo<? extends Section>> sections = new ArrayList<>(50);
+
+	public static Collection<SyntaxElementInfo<? extends Statement>> getStatements() {
+		return statements;
+	}
+
+	public static Collection<SyntaxElementInfo<? extends Effect>> getEffects() {
+		return effects;
+	}
+
+	public static Collection<SyntaxElementInfo<? extends Section>> getSections() {
+		return sections;
+	}
+
+	// ================ CONDITIONS ================
+	public static Collection<SyntaxElementInfo<? extends Condition>> getConditions() {
+		return conditions;
+	}
+
+	private final static int[] conditionTypesStartIndices = new int[ConditionType.values().length];
 
 	/**
 	 * registers a {@link Condition}.
@@ -1337,14 +1357,27 @@ public final class Skript extends JavaPlugin implements Listener {
 	 * @param condition The condition's class
 	 * @param patterns Skript patterns to match this condition
 	 */
-	public static <E extends Condition> void registerCondition(final Class<E> condition, final String... patterns) throws IllegalArgumentException {
+	public static <E extends Condition> void registerCondition(Class<E> condition, String... patterns) throws IllegalArgumentException {
+		registerCondition(condition, ConditionType.COMBINED, patterns);
+	}
+
+	/**
+	 * registers a {@link Condition}.
+	 * 
+	 * @param condition The condition's class
+	 * @param type The conditions {@link ConditionType type}. This is used to determine in which order to try to parse conditions.
+	 * @param patterns Skript patterns to match this condition
+	 */
+	public static <E extends Condition> void registerCondition(Class<E> condition, ConditionType type, String... patterns) throws IllegalArgumentException {
 		checkAcceptRegistrations();
 		String originClassPath = Thread.currentThread().getStackTrace()[2].getClassName();
 		final SyntaxElementInfo<E> info = new SyntaxElementInfo<>(patterns, condition, originClassPath);
-		conditions.add(info);
-		statements.add(info);
+		conditions.add(conditionTypesStartIndices[type.ordinal()], info);
+		statements.add(conditionTypesStartIndices[type.ordinal()], info);
+		for (int i = type.ordinal(); i < ConditionType.values().length; i++)
+			conditionTypesStartIndices[i]++;
 	}
-	
+
 	/**
 	 * Registers an {@link Effect}.
 	 * 
@@ -1373,28 +1406,12 @@ public final class Skript extends JavaPlugin implements Listener {
 		sections.add(info);
 	}
 
-	public static Collection<SyntaxElementInfo<? extends Statement>> getStatements() {
-		return statements;
-	}
-	
-	public static Collection<SyntaxElementInfo<? extends Condition>> getConditions() {
-		return conditions;
-	}
-	
-	public static Collection<SyntaxElementInfo<? extends Effect>> getEffects() {
-		return effects;
-	}
-
-	public static Collection<SyntaxElementInfo<? extends Section>> getSections() {
-		return sections;
-	}
-
 	// ================ EXPRESSIONS ================
-	
+
 	private final static List<ExpressionInfo<?, ?>> expressions = new ArrayList<>(100);
-	
+
 	private final static int[] expressionTypesStartIndices = new int[ExpressionType.values().length];
-	
+
 	/**
 	 * Registers an expression.
 	 * 

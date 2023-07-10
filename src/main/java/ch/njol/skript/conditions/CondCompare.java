@@ -20,16 +20,13 @@ package ch.njol.skript.conditions;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.lang.comparator.Comparator;
+import org.skriptlang.skript.lang.comparator.ComparatorInfo;
+import org.skriptlang.skript.lang.comparator.Comparators;
+import org.skriptlang.skript.lang.comparator.Relation;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
-
-import org.skriptlang.skript.lang.comparator.Comparator;
-import org.skriptlang.skript.lang.comparator.ComparatorInfo;
-import org.skriptlang.skript.lang.comparator.Relation;
-import org.skriptlang.skript.lang.converter.ConverterInfo;
-import org.skriptlang.skript.lang.converter.Converters;
-
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -46,8 +43,6 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.registrations.Classes;
-
-import org.skriptlang.skript.lang.comparator.Comparators;
 import ch.njol.skript.util.Patterns;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Checker;
@@ -95,7 +90,7 @@ public class CondCompare extends Condition {
 	});
 	
 	static {
-		Skript.registerCondition(CondCompare.class, patterns.getPatterns());
+		Skript.registerCondition(CondCompare.class, ConditionType.PATTERN_MATCHES_EVERYTHING, patterns.getPatterns());
 	}
 	
 	private Expression<?> first;
