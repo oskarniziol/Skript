@@ -58,7 +58,7 @@ public abstract class SetEffect<T> extends Effect {
 		Skript.registerEffect(effect, "set " + property + " of %" + type + "% to %boolean%",
 				"set %" + type + "%'[s] " + property + " to %boolean%");
 	}
-	
+
 	/**
 	 * Registers an effect with patterns "set property of %type% to %boolean%", "set %types%'[s] property to %boolean%"
 	 * and "make %types% makeProperty" with "force %types% to makeProperty"
@@ -104,6 +104,16 @@ public abstract class SetEffect<T> extends Effect {
 	 */
 	protected final Expression<T> getExpression() {
 		return expression;
+	}
+
+	/**
+	 * For usage when overriding the {@link #init(Expression[], int, Kleenean, ParseResult)} method.
+	 * Set the expression to be used for the SetEffect utility class.
+	 * 
+	 * @param expression The expression that contains the data value for the SetEffect.
+	 */
+	protected final void setExpression(Expression<T> expression) {
+		this.expression = expression;
 	}
 
 	/**
