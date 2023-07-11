@@ -33,10 +33,10 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
@@ -48,29 +48,26 @@ import ch.njol.util.coll.CollectionUtils;
 	"You will need a permissions plugin or to save them yourself in variables."
 })
 @Examples("set {_permissions::*} to all permissions of the player")
-@Since("2.2-dev33, INSERT VERSION (Changers)")
-public class ExprPermissions extends SimpleExpression<String> {
+@Since("2.2-dev33, INSERT VERSION (changers)")
+public class ExprPermissions extends PropertyExpression<Entity, String> {
 
 	static {
 		Skript.registerExpression(ExprPermissions.class, String.class, ExpressionType.PROPERTY,
-			"[all [[of] the]|the] permissions (from|of) %entities%",
-			"[all [of] the] %entities%'[s] permissions"
+				"[all [[of] the]|the] permissions (from|of) %entities%",
+				"[all [of] the] %entities%'[s] permissions"
 		);
 	}
-
-	private Expression<Entity> entities;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		entities = (Expression<Entity>) exprs[0];
+		setExpr((Expression<Entity>) exprs[0]);
 		return true;
 	}
 
 	@Override
-	@Nullable
-	protected String[] get(Event event) {
-		return entities.stream(event)
+	protected String[] get(Event event, Entity[] source) {
+		return getExpr().stream(event)
 				.flatMap(permissible -> permissible.getEffectivePermissions().stream())
 				.map(permission -> permission.getPermission())
 				.toArray(String[]::new);
@@ -96,7 +93,7 @@ public class ExprPermissions extends SimpleExpression<String> {
 			}
 		}
 		if (mode == ChangeMode.DELETE || mode == ChangeMode.REMOVE) {
-			for (Entity entity : entities.getArray(event)) {
+			for (Entity entity : getExpr().getArray(event)) {
 				for (PermissionAttachmentInfo info : entity.getEffectivePermissions()) {
 					PermissionAttachment attachment = info.getAttachment();
 					if (attachment == null)
@@ -112,7 +109,7 @@ public class ExprPermissions extends SimpleExpression<String> {
 			}
 			return;
 		}
-		for (Entity entity : entities.getAll(event)) {
+		for (Entity entity : getExpr().getAll(event)) {
 			PermissionAttachment attachment = getPermission(entity);
 			for (String permission : permissions)
 				attachment.setPermission(permission, true);
@@ -125,17 +122,17 @@ public class ExprPermissions extends SimpleExpression<String> {
 	}
 
 	@Override
-	public Class<String> getReturnType() {
+	public Class<? extends String> getReturnType() {
 		return String.class;
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "permissions of " + entities.toString(event, debug);
+		return "permissions of " + getExpr().toString(event, debug);
 	}
 
 	/**
-	 * Grabs the Skript added PermissionAttachment.
+	 * Grabs the PermissionAttachment added by Skript.
 	 * 
 	 * @param entity The entity to grab the attachment from
 	 * @return PermissionAttachment with Skript as the plugin
