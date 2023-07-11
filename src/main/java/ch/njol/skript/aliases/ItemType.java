@@ -34,7 +34,6 @@ import java.util.Random;
 import java.util.RandomAccess;
 import java.util.Set;
 
-import ch.njol.skript.classes.Comparator.Relation;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -166,7 +165,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 			this.block = block;
 		}
 	}
-	
+
 	public ItemType() {}
 	
 	public ItemType(Material id) {
@@ -1299,7 +1298,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 		
 		// Apply new meta to all datas
 		for (ItemData data : types) {
-			data.applyMeta(meta);
+			data.setItemMeta(meta);
 		}
 	}
 	
@@ -1327,7 +1326,7 @@ public class ItemType implements Unit, Iterable<ItemData>, Container<ItemStack>,
 	public ItemType getBaseType() {
 		ItemType copy = new ItemType();
 		for (ItemData data : types) {
-			copy.add(data.aliasCopy());
+			copy.add_(data.aliasCopy());
 		}
 		return copy;
 	}
