@@ -533,7 +533,9 @@ public class BukkitClasses {
 					@Override
 					@Nullable
 					public World parse(String input, ParseContext context) {
-						return Bukkit.getWorld(input);
+						if (context == ParseContext.COMMAND || context == ParseContext.CONFIG)
+							return Bukkit.getWorld(input);
+						return null;
 					}
 
 					@Override
