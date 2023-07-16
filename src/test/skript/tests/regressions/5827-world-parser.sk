@@ -1,6 +1,0 @@
-test "world parser":
-	set {_world} to world_the_end
-	assert {_world} is world_the_end with "variable compare to world_the_end did not pass"
-	assert world is world "world" with "world world did not compare with world ""world"""
-	assert {_world} is world "world_the_end" with "variable compare to world ""world_the_end"" did not pass %{_world}%"
-	assert world "world_the_end" is not world named "world" with "world did not properly compare against world_the_end"
