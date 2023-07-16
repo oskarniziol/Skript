@@ -530,19 +530,10 @@ public class BukkitClasses {
 				.defaultExpression(new EventValueExpression<>(World.class))
 				.parser(new Parser<World>() {
 
-					//private final Pattern parsePattern = Pattern.compile("(?:(?:the )?world )?\"(.+)\"", Pattern.CASE_INSENSITIVE);
-
 					@Override
 					@Nullable
 					public World parse(String input, ParseContext context) {
 						return Bukkit.getWorld(input);
-						// REMIND allow shortcuts '[over]world', 'nether' and '[the_]end' (server.properties: 'level-name=world') // inconsistent with 'world is "..."'
-//						if (context == ParseContext.COMMAND || context == ParseContext.CONFIG)
-//							return Bukkit.getWorld(input);
-//						final Matcher m = parsePattern.matcher(input);
-//						if (m.matches())
-//							return Bukkit.getWorld(m.group(1));
-//						return null;
 					}
 
 					@Override
