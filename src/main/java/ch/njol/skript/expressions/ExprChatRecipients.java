@@ -100,7 +100,7 @@ public class ExprChatRecipients extends SimpleExpression<CommandSender> {
 					}
 				} else {
 					for (CommandSender sender : recipients)
-						((BroadcastMessageEvent) event).getRecipients().add((Player) sender);
+						((BroadcastMessageEvent) event).getRecipients().add(sender);
 				}
 				break;
 			case SET:

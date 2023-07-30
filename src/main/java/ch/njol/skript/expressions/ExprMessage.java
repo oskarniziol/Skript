@@ -68,7 +68,7 @@ import ch.njol.util.coll.CollectionUtils;
 		"\tset the broadcast message to \"something else!\""
 })
 @Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message), INSERT VERSION (broadcast message)")
-@Events({"chat", "join", "quit", "death"})
+@Events({"chat", "join", "quit", "death", "server_broadcast"})
 public class ExprMessage extends SimpleExpression<String> {
 
 	@SuppressWarnings("unchecked")
@@ -133,7 +133,7 @@ public class ExprMessage extends SimpleExpression<String> {
 			@Override
 			@Nullable
 			String get(Event event) {
-				return ((PlayerJoinEvent) event).getJoinMessage();
+				return ((BroadcastMessageEvent) event).getMessage();
 			}
 			
 			@Override
