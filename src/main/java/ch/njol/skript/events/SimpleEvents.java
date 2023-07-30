@@ -732,7 +732,7 @@ public class SimpleEvents {
 		Skript.registerEvent("Server Broadcast", SimpleEvent.class, BroadcastMessageEvent.class, "[server] broadcast")
 				.description("Called when the server broadcasts messages.")
 				.examples(
-						"on server broadcast",
+						"on server broadcast:",
 							"\tbroadcast-message contains \"example\"",
 							"\tcancel event"
 				)
