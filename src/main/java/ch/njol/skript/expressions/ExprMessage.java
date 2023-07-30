@@ -46,25 +46,27 @@ import ch.njol.util.coll.CollectionUtils;
 @SuppressWarnings("deprecation")
 @Name("Message")
 @Description("The (chat) message of a chat event, the join message of a join event, the quit message of a quit event, or the death message on a death event. This expression is mostly useful for being changed.")
-@Examples({"on chat:",
-		"	player has permission \"admin\"",
-		"	set message to \"&c%message%\"",
-		"",
-		"on first join:",
-		"	set join message to \"Welcome %player% to our awesome server!\"",
-		"",
-		"on join:",
-		"	player has played before",
-		"	set join message to \"Welcome back, %player%!\"",
-		"",
-		"on quit:",
-		"	set quit message to \"%player% left this awesome server!\"",
-		"",
-		"on death:",
-		"	set the death message to \"%player% died!\"",
-		"",
-		"on server broadcast:",
-		"	set the broadcast message to \"something else!\""})
+@Examples({
+	"on chat:",
+		"\tplayer has permission \"admin\"",
+		"\tset message to \"&c%message%\"",
+	"",
+	"on first join:",
+		"\tset join message to \"Welcome %player% to our awesome server!\"",
+	"",
+	"on join:",
+		"\tplayer has played before",
+		"\tset join message to \"Welcome back, %player%!\"",
+	"",
+	"on quit:",
+		"\tset quit message to \"%player% left this awesome server!\"",
+	"",
+	"on death:",
+		"\tset the death message to \"%player% died!\"",
+	"",
+	"on server broadcast:",
+		"\tset the broadcast message to \"something else!\""
+})
 @Since("1.4.6 (chat message), 1.4.9 (join & quit messages), 2.0 (death message), INSERT VERSION (broadcast message)")
 @Events({"chat", "join", "quit", "death"})
 public class ExprMessage extends SimpleExpression<String> {
@@ -136,7 +138,7 @@ public class ExprMessage extends SimpleExpression<String> {
 			
 			@Override
 			void set(Event event, String message) {
-				((PlayerJoinEvent) event).setJoinMessage(message);
+				((BroadcastMessageEvent) event).setMessage(message);
 			}
 		};
 
