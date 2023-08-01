@@ -157,10 +157,10 @@ public class Signature<T> {
 
 	@Override
 	public String toString() {
-		return toString(true);
+		return toString(true, true);
 	}
 
-	public String toString(boolean includeReturnType) {
+	public String toString(boolean includeReturnType, boolean debug) {
 		StringBuilder signatureBuilder = new StringBuilder();
 
 		if (local)
@@ -170,7 +170,7 @@ public class Signature<T> {
 		signatureBuilder.append('(');
 		int lastParameterIndex = parameters.length - 1;
 		for (int i = 0; i < parameters.length; i++) {
-			signatureBuilder.append(parameters[i]);
+			signatureBuilder.append(parameters[i].toString(debug));
 			if (i != lastParameterIndex)
 				signatureBuilder.append(", ");
 		}

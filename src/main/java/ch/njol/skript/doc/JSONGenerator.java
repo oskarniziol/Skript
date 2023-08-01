@@ -184,7 +184,7 @@ public class JSONGenerator extends Generator {
 		functionJsonObject.addProperty("description", joinStringArray(function.getDescription(), '\n'));
 		functionJsonObject.addProperty("examples", joinStringArray(function.getExamples(), '\n'));
 
-		String functionSignature = function.getSignature().toString(false);
+		String functionSignature = function.getSignature().toString(false, false);
 		functionJsonObject.add("patterns", convertToJsonArray(new String[] { functionSignature }));
 
 		return functionJsonObject;
@@ -210,6 +210,7 @@ public class JSONGenerator extends Generator {
 		Stream<StructureInfo<? extends Structure>> structuresExcludingEvents = Skript.getStructures().stream()
 				.filter(structureInfo -> !(structureInfo instanceof SkriptEventInfo));
 		jsonDocs.add("structures", generateStructureElementArray(structuresExcludingEvents.iterator()));
+		jsonDocs.add("sections", generateSyntaxElementArray(Skript.getSections().iterator()));
 
 		jsonDocs.add("functions", generateFunctionArray(Functions.getJavaFunctions().iterator()));
 
