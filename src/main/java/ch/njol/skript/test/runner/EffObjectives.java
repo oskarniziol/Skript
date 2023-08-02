@@ -92,8 +92,7 @@ public class EffObjectives extends Effect  {
 	 * @return boolean true if the test passed.
 	 */
 	public static boolean isJUnitComplete() {
-		if (completeness.isEmpty() && requirements.isEmpty())
-			assert false;
+		assert !completeness.isEmpty() || !requirements.isEmpty();
 		return completeness.equals(requirements);
 	}
 

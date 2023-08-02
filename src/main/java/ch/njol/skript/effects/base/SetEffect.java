@@ -72,10 +72,8 @@ public abstract class SetEffect<T> extends Effect {
 	public static void registerMake(Class<? extends SetEffect<?>> effect, String property, String makeProperty, String type) {
 		Skript.registerEffect(effect, "set " + property + " of %" + type + "% to %boolean%",
 				"set %" + type + "%'[s] " + property + " to %boolean%",
-				"make %" + type + "% " + makeProperty,
-				"force %" + type + "% to " + makeProperty,
-				"make %" + type + "% not " + makeProperty,
-				"force %" + type + "% (to not|not to) " + makeProperty);
+				"make %" + type + "% [:not] " + makeProperty,
+				"force %" + type + "% [not:(to not|not to)] " + makeProperty);
 	}
 
 	@Override
@@ -86,7 +84,7 @@ public abstract class SetEffect<T> extends Effect {
 			if (!make)
 				throw new SkriptAPIException("There was not two expressions in the SetEffect class '" + getClass().getName() + "' exprs: " + Arrays.toString(exprs));
 			expression = (Expression<T>) exprs[0];
-			negated = matchedPattern >= 4;
+			negated = parseResult.hasTag("not");
 			return true;
 		}
 		expression = (Expression<T>) exprs[matchedPattern];
@@ -140,7 +138,7 @@ public abstract class SetEffect<T> extends Effect {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		if (debug || event == null)
+		if (expression == null)
 			return "setting " + getPropertyName();
 		this.event = event;
 		String string = "set " + getPropertyName() + " of " + expression.toString(event, debug) + " to " + value.toString(event, debug);

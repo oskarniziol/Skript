@@ -664,13 +664,14 @@ public final class Skript extends JavaPlugin implements Listener {
 							info("Test development mode enabled. Test scripts are at " + TestMode.TEST_DIR);
 							return;
 						} else {
-							if (TestMode.JUNIT)
+							if (TestMode.JUNIT) {
 								// Loads custom syntaxes for the test runner.
 								try {
 									Utils.getClasses(Skript.getInstance(), "org.skriptlang.skript.test", "registration");
 								} catch (IOException e) {
 									Skript.exception(e, "loading the org.skriptlang.skript.test.registration classes");
 								}
+							}
 							info("Loading all tests from " + TestMode.TEST_DIR);
 
 							// Treat parse errors as fatal testing failure
