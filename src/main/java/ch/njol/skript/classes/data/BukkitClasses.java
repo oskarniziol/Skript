@@ -530,12 +530,26 @@ public class BukkitClasses {
 				.defaultExpression(new EventValueExpression<>(World.class))
 				.parser(new Parser<World>() {
 
+					private final Pattern parsePattern = Pattern.compile("(?:(?:the )?world )?\"(.+)\"", Pattern.CASE_INSENSITIVE);
+
 					@Override
 					@Nullable
 					public World parse(String input, ParseContext context) {
-						if (context == ParseContext.COMMAND || context == ParseContext.CONFIG)
-							return Bukkit.getWorld(input);
-						return null;
+						switch (context) {
+							case COMMAND:
+							case CONFIG:
+								return Bukkit.getWorld(input);
+							case EVENT:
+								Matcher matcher = parsePattern.matcher(input);
+								if (matcher.matches())
+									return Bukkit.getWorld(matcher.group(1));
+								return Bukkit.getWorld(input);
+							// These are captured by ExprWorldFromName
+							case DEFAULT:
+							case SCRIPT:
+							default:
+								return null;
+						}
 					}
 
 					@Override
