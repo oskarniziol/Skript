@@ -84,7 +84,7 @@ public class CustomEvents {
 		if (configuration != null) {
 			configuration.load(CustomEvents.class);
 			// When we need to change values in the future of this file, bump the version node.
-			if (configuration.get("version").isEmpty() || !configuration.get("version").equalsIgnoreCase("1")) {
+			if (configuration.get("version", "").isEmpty() || !configuration.get("version", "").equalsIgnoreCase("1")) {
 				Skript.warning("Your custom-events.sk config file is outdated. " +
 						"Backup any changes you've made, and delete your custom-events.sk in the Skript folder to update it. " +
 						"After, re-add any nodes you've changed.");
@@ -131,8 +131,6 @@ public class CustomEvents {
 						}
 						continue;
 					}
-					if (event == null)
-						continue;
 					if (!(Event.class.isAssignableFrom(event))) {
 						Skript.error("Class '" + eventClass + "' for event node '" + name + "' was not a valid Event class!");
 						continue;

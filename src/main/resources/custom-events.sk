@@ -18,7 +18,7 @@ version: 1
 # 	pattern - the syntax pattern of the event
 # The optional pattern [on] gets prefixed on every Skript event.
 # Pattern cannot have expressions inside currently.
-# All event-values will be automatically applied.
+# event-values of subclass events will be automatically applied.
 # If you need more info, make an issue report at https://github.com/SkriptLang/Skript/issues
 
 # Examples are placed below. The 'enabled' node is not required, it's just to disable examples.
@@ -26,11 +26,13 @@ events:
 	# [on] beacon effect apply
 	beacon effect:
 		enabled: false
+		description: "Called when entities receive potion effects from a beacon"
 		class: com.destroystokyo.paper.event.block.BeaconEffectEvent
 		pattern: beacon effect apply [to player[s]]
 
 	# [on] campfire lit
 	campfire lit:
 		enabled: false
+		description: "Called when a campfire starts cooking"
 		class: org.bukkit.event.block.CampfireStartEvent
-		pattern: campfire (lit|start [burning])
+		pattern: campfire start[ing] cooking
