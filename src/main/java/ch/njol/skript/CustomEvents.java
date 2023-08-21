@@ -31,8 +31,6 @@ import ch.njol.skript.config.Node;
 import ch.njol.skript.config.OptionSection;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.util.SimpleEvent;
-import ch.njol.skript.log.ParseLogHandler;
-import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.util.FileUtils;
 
@@ -84,7 +82,8 @@ public class CustomEvents {
 		if (configuration != null) {
 			configuration.load(CustomEvents.class);
 			// When we need to change values in the future of this file, bump the version node.
-			if (configuration.get("version", "").isEmpty() || !configuration.get("version", "").equalsIgnoreCase("1")) {
+			String version = configuration.get("version");
+			if (version != null && version.isEmpty() || !version.equalsIgnoreCase("1")) {
 				Skript.warning("Your custom-events.sk config file is outdated. " +
 						"Backup any changes you've made, and delete your custom-events.sk in the Skript folder to update it. " +
 						"After, re-add any nodes you've changed.");
@@ -93,11 +92,15 @@ public class CustomEvents {
 			if (section != null && !section.isEmpty()) {
 				for (Node node : section) {
 					if (!(node instanceof SectionNode)) {
-						Skript.warning("Event node '" + node.getKey() + "' was not a section, ignoring.");
+						Skript.error("Event node '" + node.getKey() + "' was not a section, ignoring.");
 						continue;
 					}
 					SectionNode eventSection = (SectionNode) node;
 					String name = node.getKey();
+					if (name.isEmpty()) {
+						Skript.error("Event node '" + node.getKey() + "' is empty/blank.");
+						continue;
+					}
 					String enabled = eventSection.get("enabled", "true");
 					if (enabled.equalsIgnoreCase("false"))
 						continue;
