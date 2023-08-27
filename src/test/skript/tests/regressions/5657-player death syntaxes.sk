@@ -8,7 +8,7 @@ on death:
 	keep inventory
 	keep experience
 	victim is not a player
-	#keep inventory should error
+	#keep inventory should error now that the condition has determined they're not a player
 	#keep experience should error. needs parse: section to finish test.
 	victim is a player
 	keep inventory
