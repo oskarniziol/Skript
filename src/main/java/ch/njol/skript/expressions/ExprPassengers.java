@@ -18,9 +18,7 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -76,7 +74,6 @@ public class ExprPassengers extends PropertyExpression<Entity, Entity> {
 	}
 
 	@Override
-	@Nullable
 	protected Entity[] get(Event event, Entity[] source) {
 		Converter<Entity, Entity[]> converter = entity -> {
 			if (getTime() != EventValues.TIME_PAST && event instanceof VehicleEnterEvent && entity.equals(((VehicleEnterEvent) event).getVehicle()))
@@ -89,13 +86,10 @@ public class ExprPassengers extends PropertyExpression<Entity, Entity> {
 				return new Entity[] {((EntityDismountEvent) event).getEntity()};
 			return entity.getPassengers().toArray(new Entity[0]);
 		};
-		List<Entity> entities = new ArrayList<>();
-		for (Entity entity : source) {
-			Entity[] array = converter.convert(entity);
-			if (array != null && array.length > 0)
-				entities.addAll(Arrays.asList(array));
-		}
-		return entities.toArray(new Entity[0]);
+		return Arrays.stream(source)
+				.map(converter::convert)
+				.flatMap(Arrays::stream)
+				.toArray(Entity[]::new);
 	}
 
 	@Override
@@ -176,7 +170,7 @@ public class ExprPassengers extends PropertyExpression<Entity, Entity> {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "passengers of " + getExpr().toString(event, debug);
+		return "passenger" + (plural ? "s " : " ") + "of " + getExpr().toString(event, debug);
 	}
 
 }

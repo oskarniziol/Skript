@@ -59,11 +59,14 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 		registerDefault(ExprPassengers.class, Entity.class, "vehicle[:s]", "entities");
 	}
 
+	private boolean plural;
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		setExpr((Expression<? extends Entity>) exprs[0]);
-		if (parseResult.hasTag("s") && getExpr().isDefault())
+		setExpr((Expression<Entity>) exprs[0]);
+		plural = parseResult.hasTag("s");
+		if (plural && getExpr().isDefault())
 			Skript.error("An event cannot contain multiple vehicles. Use 'vehicle' with no plurality in vehicle events.");
 		return true;
 	}
@@ -121,6 +124,11 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 	}
 
 	@Override
+	public boolean isSingle() {
+		return !plural && getExpr().isSingle();
+	}
+
+	@Override
 	public boolean setTime(int time) {
 		if (time == EventValues.TIME_PAST)
 			super.setTime(time, getExpr(), EntityDismountEvent.class, VehicleExitEvent.class);
@@ -136,7 +144,7 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "vehicle of " + getExpr().toString(event, debug);
+		return "vehicle" + (plural ? "s " : " ") + "of " + getExpr().toString(event, debug);
 	}
 
 }
