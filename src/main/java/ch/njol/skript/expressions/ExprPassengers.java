@@ -40,7 +40,6 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -60,28 +59,25 @@ import ch.njol.util.coll.CollectionUtils;
 	"clear passengers of boat"
 })
 @Since("2.0, 2.2-dev26 (multiple passengers)")
-public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpression due to isSingle
+public class ExprPassengers extends PropertyExpression<Entity, Entity> {
 
 	static {
-		PropertyExpression.registerDefault(ExprPassengers.class, Entity.class, "passenger[:s]", "entities");
+		registerDefault(ExprPassengers.class, Entity.class, "passenger[:s]", "entities");
 	}
 
-	@Nullable
-	private Expression<Entity> vehicles;
 	private boolean plural;
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		vehicles = (Expression<Entity>) exprs[0];
+		setExpr((Expression<Entity>) exprs[0]);
 		plural = parseResult.hasTag("s");
 		return true;
 	}
 
 	@Override
 	@Nullable
-	protected Entity[] get(Event event) {
-		Entity[] source = vehicles.getArray(event);
+	protected Entity[] get(Event event, Entity[] source) {
 		Converter<Entity, Entity[]> converter = entity -> {
 			if (getTime() != EventValues.TIME_PAST && event instanceof VehicleEnterEvent && entity.equals(((VehicleEnterEvent) event).getVehicle()))
 				return new Entity[] {((VehicleEnterEvent) event).getEntered()};
@@ -120,7 +116,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		Entity[] vehicles = this.vehicles.getArray(event);
+		Entity[] vehicles = getExpr().getArray(event);
 		switch (mode) {
 			case SET:
 				for (Entity vehicle : vehicles)
@@ -160,15 +156,17 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 	}
 
 	@Override
-	public boolean setTime(int time) {
-		if (time == EventValues.TIME_PAST)
-			return super.setTime(time);
-		return super.setTime(time, vehicles, VehicleEnterEvent.class, VehicleExitEvent.class);
+	public boolean isSingle() {
+		return !plural && getExpr().isSingle();
 	}
 
 	@Override
-	public boolean isSingle() {
-		return !plural && vehicles.isSingle();
+	public boolean setTime(int time) {
+		if (time == EventValues.TIME_PAST)
+			super.setTime(time, getExpr(), EntityDismountEvent.class, VehicleExitEvent.class);
+		if (time == EventValues.TIME_FUTURE)
+			return super.setTime(time, getExpr(), EntityMountEvent.class, VehicleEnterEvent.class);
+		return super.setTime(time, getExpr(), EntityDismountEvent.class, VehicleExitEvent.class, EntityMountEvent.class, VehicleEnterEvent.class);
 	}
 
 	@Override
@@ -178,7 +176,7 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "passengers of " + vehicles.toString(event, debug);
+		return "passengers of " + getExpr().toString(event, debug);
 	}
 
 }

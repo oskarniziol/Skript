@@ -77,8 +77,6 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 				return ((EntityDismountEvent) event).getDismounted();
 			if (getTime() != EventValues.TIME_FUTURE && event instanceof VehicleExitEvent && entity.equals(((VehicleExitEvent) event).getExited()))
 				return ((VehicleExitEvent) event).getVehicle();
-			if (getTime() == EventValues.TIME_PAST)
-				return entity.getVehicle();
 			if (getTime() != EventValues.TIME_PAST && event instanceof VehicleEnterEvent && entity.equals(((VehicleEnterEvent) event).getEntered()))
 				return ((VehicleEnterEvent) event).getVehicle();
 			return entity.getVehicle();
@@ -124,7 +122,11 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 
 	@Override
 	public boolean setTime(int time) {
-		return super.setTime(time, getExpr(), VehicleEnterEvent.class, VehicleExitEvent.class);
+		if (time == EventValues.TIME_PAST)
+			super.setTime(time, getExpr(), EntityDismountEvent.class, VehicleExitEvent.class);
+		if (time == EventValues.TIME_FUTURE)
+			return super.setTime(time, getExpr(), EntityMountEvent.class, VehicleEnterEvent.class);
+		return super.setTime(time, getExpr(), EntityDismountEvent.class, VehicleExitEvent.class, EntityMountEvent.class, VehicleEnterEvent.class);
 	}
 
 	@Override
