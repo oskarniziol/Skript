@@ -47,9 +47,7 @@ public class CondHasPassengers extends PropertyCondition<Entity> {
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<? extends Entity>) exprs[0]);
-		setNegated(matchedPattern == 1);
-		if (parseResult.hasTag("no"))
-			setNegated(true);
+		setNegated(matchedPattern == 1 || parseResult.hasTag("no"));
 		return true;
 	}
 

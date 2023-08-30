@@ -28,7 +28,6 @@ import org.spigotmc.event.entity.EntityMountEvent;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import org.skriptlang.skript.lang.converter.Converter;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -36,7 +35,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.Kleenean;
@@ -45,17 +43,20 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Vehicle")
 @Description({
 	"The vehicle an entity is in, if any. This can actually be any entity, e.g. spider jockeys are skeletons that ride on a spider, so the spider is the 'vehicle' of the skeleton.",
-	"See also: <a href='#ExprPassenger'>passenger</a>"
+	"See also: <a href='#ExprPassengers'>passengers</a>"
 })
-@Examples("vehicle of the player is a minecart")
-@Since("2.0")
+@Examples({
+	"vehicle of the player is a minecart",
+	"",
+	"on vehicle exit:",
+		"\tvehicle was a minecart",
+		"\tteleport the passenger to spawn of the passenger's world"
+})
+@Since("2.0, 2.2-dev14 (entity mount)")
 public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 
 	static {
-		Skript.registerExpression(ExprPassengers.class, Entity.class, ExpressionType.PROPERTY,
-				"[the] vehicle[:s] [of %entities%]", // Vehicles can be plural due to there being multiple entities.
-				"%entities%'[s] vehicle[s]"
-		);
+		registerDefault(ExprPassengers.class, Entity.class, "vehicle[:s]", "entities");
 	}
 
 	@Override
@@ -63,26 +64,24 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		setExpr((Expression<? extends Entity>) exprs[0]);
 		if (parseResult.hasTag("s") && getExpr().isDefault())
-			Skript.error("An event cannot contain multiple vehicles. Use 'vehicle' in vehicle events.");
+			Skript.error("An event cannot contain multiple vehicles. Use 'vehicle' with no plurality in vehicle events.");
 		return true;
 	}
 
 	@Override
 	protected Entity[] get(Event event, Entity[] source) {
-		return get(source, new Converter<Entity, Entity>() {
-			@Override
-			@Nullable
-			public Entity convert(Entity entity) {
-				if (getTime() != EventValues.TIME_PAST && event instanceof VehicleEnterEvent && entity.equals(((VehicleEnterEvent) event).getEntered()))
-					return ((VehicleEnterEvent) event).getVehicle();
-				if (getTime() != EventValues.TIME_PAST && event instanceof VehicleExitEvent && entity.equals(((VehicleExitEvent) event).getExited()))
-					return ((VehicleExitEvent) event).getVehicle();
-				if (getTime() != EventValues.TIME_PAST && event instanceof EntityMountEvent && entity.equals(((EntityMountEvent) event).getEntity()))
-					return ((EntityMountEvent) event).getMount();
-				if (getTime() != EventValues.TIME_PAST && event instanceof EntityDismountEvent && entity.equals(((EntityDismountEvent) event).getEntity()))
-					return ((EntityDismountEvent) event).getDismounted();
+		return get(source, entity -> {
+			if (getTime() != EventValues.TIME_PAST && event instanceof EntityMountEvent && entity.equals(((EntityMountEvent) event).getEntity()))
+				return ((EntityMountEvent) event).getMount();
+			if (getTime() != EventValues.TIME_FUTURE && event instanceof EntityDismountEvent && entity.equals(((EntityDismountEvent) event).getEntity()))
+				return ((EntityDismountEvent) event).getDismounted();
+			if (getTime() != EventValues.TIME_FUTURE && event instanceof VehicleExitEvent && entity.equals(((VehicleExitEvent) event).getExited()))
+				return ((VehicleExitEvent) event).getVehicle();
+			if (getTime() == EventValues.TIME_PAST)
 				return entity.getVehicle();
-			}
+			if (getTime() != EventValues.TIME_PAST && event instanceof VehicleEnterEvent && entity.equals(((VehicleEnterEvent) event).getEntered()))
+				return ((VehicleEnterEvent) event).getVehicle();
+			return entity.getVehicle();
 		});
 	}
 
@@ -92,9 +91,10 @@ public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 		if (mode == ChangeMode.SET) {
 			if (isSingle())
 				return CollectionUtils.array(Entity.class, EntityData.class);
-			Skript.error("You may only set the vehicle of one entity at a time." + 
-					"The same vehicle cannot be applied to multiple entities." +
+			Skript.error("You may only set the vehicle of one entity at a time. " + 
+					"The same vehicle cannot be applied to multiple entities. " +
 					"Use the 'passengers of' expression if you wish to update multiple riders.");
+			// EffChanger/ChangerUtils handles ignoring when error is present. No need to return null here.
 		}
 		return super.acceptChange(mode);
 	}

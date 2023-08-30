@@ -47,15 +47,11 @@ import ch.njol.util.coll.CollectionUtils;
 
 @Name("Passengers")
 @Description({
-	"The passenger of a vehicle, or the rider of a mob.",
-	"For 1.11.2 and above, it returns a list of passengers and you can use all changers in it.",
+	"The passengers of a vehicle, or the riders of a mob.",
+	"You can use all changers in it.",
 	"See also: <a href='#ExprVehicle'>vehicle</a>"
 })
 @Examples({
-	"#for 1.11 and lower",
-	"passenger of the minecart is a creeper or a cow",
-	"the saddled pig's passenger is a player",
-	"#for 1.11.2+",
 	"passengers of the minecart contains a creeper or a cow",
 	"the boat's passenger contains a pig",
 	"add a cow and a zombie to passengers of last spawned boat",
@@ -63,7 +59,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"remove all pigs from player's vehicle",
 	"clear passengers of boat"
 })
-@Since("2.0, 2.2-dev26 (Multiple passengers for 1.11.2+)")
+@Since("2.0, 2.2-dev26 (multiple passengers)")
 public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpression due to isSingle
 
 	static {
@@ -86,20 +82,17 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 	@Nullable
 	protected Entity[] get(Event event) {
 		Entity[] source = vehicles.getArray(event);
-		Converter<Entity, Entity[]> converter = new Converter<Entity, Entity[]>() {
-			@Override
-			@Nullable
-			public Entity[] convert(Entity entity) {
-				if (getTime() != EventValues.TIME_PAST && event instanceof VehicleEnterEvent && entity.equals(((VehicleEnterEvent) event).getVehicle()))
-					return new Entity[] {((VehicleEnterEvent) event).getEntered()};
-				if (getTime() != EventValues.TIME_PAST && event instanceof VehicleExitEvent && entity.equals(((VehicleExitEvent) event).getVehicle()))
-					return new Entity[] {((VehicleExitEvent) event).getExited()};
-				if (getTime() != EventValues.TIME_PAST && event instanceof EntityMountEvent && entity.equals(((EntityMountEvent) event).getEntity()))
-					return new Entity[] {((EntityMountEvent) event).getEntity()};
-				if (getTime() != EventValues.TIME_PAST && event instanceof EntityDismountEvent && entity.equals(((EntityDismountEvent) event).getEntity()))
-					return new Entity[] {((EntityDismountEvent) event).getEntity()};
-				return entity.getPassengers().toArray(new Entity[0]);
-			}};
+		Converter<Entity, Entity[]> converter = entity -> {
+			if (getTime() != EventValues.TIME_PAST && event instanceof VehicleEnterEvent && entity.equals(((VehicleEnterEvent) event).getVehicle()))
+				return new Entity[] {((VehicleEnterEvent) event).getEntered()};
+			if (getTime() != EventValues.TIME_FUTURE && event instanceof VehicleExitEvent && entity.equals(((VehicleExitEvent) event).getVehicle()))
+				return new Entity[] {((VehicleExitEvent) event).getExited()};
+			if (getTime() != EventValues.TIME_PAST && event instanceof EntityMountEvent && entity.equals(((EntityMountEvent) event).getEntity()))
+				return new Entity[] {((EntityMountEvent) event).getEntity()};
+			if (getTime() != EventValues.TIME_FUTURE && event instanceof EntityDismountEvent && entity.equals(((EntityDismountEvent) event).getEntity()))
+				return new Entity[] {((EntityDismountEvent) event).getEntity()};
+			return entity.getPassengers().toArray(new Entity[0]);
+		};
 		List<Entity> entities = new ArrayList<>();
 		for (Entity entity : source) {
 			Entity[] array = converter.convert(entity);
@@ -112,7 +105,17 @@ public class ExprPassengers extends SimpleExpression<Entity> { // SimpleExpressi
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return CollectionUtils.array(Entity[].class, EntityData[].class);
+		switch (mode) {
+			case ADD:
+			case DELETE:
+			case REMOVE:
+			case REMOVE_ALL:
+			case RESET:
+			case SET:
+				return CollectionUtils.array(Entity[].class, EntityData[].class);
+			default:
+				return null;
+		}
 	}
 
 	@Override
