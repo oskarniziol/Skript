@@ -59,7 +59,7 @@ public class ExprFireworkFlownTime extends SimplePropertyExpression<Firework, Ti
 	 * Paper does not agree with Spigot's method naming, so they have Spigot's deprecated.
 	 */
 	static {
-		registerDefault(ExprFireworkFlownTime.class, Timespan.class, "firework ([detonate:max[imum]] life[time]|flown time|detonate:time until detonat(e|ion))", "fireworks");
+		registerDefault(ExprFireworkFlownTime.class, Timespan.class, "[firework] ([detonate:max[imum]] life[time]|flown time|detonate:time until detonat(e|ion))", "fireworks");
 	}
 
 	private boolean detonate;
@@ -80,7 +80,17 @@ public class ExprFireworkFlownTime extends SimplePropertyExpression<Firework, Ti
 	@Nullable
 	@Override
 	public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-		return (mode != ChangeMode.REMOVE_ALL) ? CollectionUtils.array(Timespan.class) : null;
+		switch (mode) {
+			case ADD:
+			case DELETE:
+			case REMOVE:
+			case RESET:
+			case SET:
+				return CollectionUtils.array(Timespan.class);
+			case REMOVE_ALL:
+			default:
+				return null;
+		}
 	}
 
 	@Override
@@ -125,7 +135,6 @@ public class ExprFireworkFlownTime extends SimplePropertyExpression<Firework, Ti
 				}
 				break;
 			case DELETE:
-			case REMOVE_ALL:
 			case RESET:
 				for (Firework firework : getExpr().getArray(event)) {
 					if (detonate) {
@@ -142,6 +151,9 @@ public class ExprFireworkFlownTime extends SimplePropertyExpression<Firework, Ti
 						}
 					}
 				}
+				break;
+			case REMOVE_ALL:
+			default:
 				break;
 		}
 	}
