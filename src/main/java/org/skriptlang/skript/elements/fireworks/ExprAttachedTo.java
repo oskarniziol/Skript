@@ -70,9 +70,9 @@ public class ExprAttachedTo extends SimplePropertyExpression<Firework, LivingEnt
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
+		if (!RUNNING_1_19)
+			Skript.error("You can only set/clear the 'attached entity' in 1.19+");
 		if (mode == ChangeMode.SET) {
-			if (!RUNNING_1_19)
-				Skript.error("You can only set the 'attached entity' in 1.19+");
 			return CollectionUtils.array(LivingEntity.class);
 		} else if (mode == ChangeMode.DELETE) {
 			return CollectionUtils.array();
