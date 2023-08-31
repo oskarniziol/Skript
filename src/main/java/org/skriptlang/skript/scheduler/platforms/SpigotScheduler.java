@@ -18,7 +18,7 @@
  */
 package org.skriptlang.skript.scheduler.platforms;
 
-import java.util.HashMap;
+import java.util.WeakHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -38,8 +38,8 @@ import ch.njol.skript.Skript;
 
 public class SpigotScheduler implements PlatformScheduler {
 
-	private static final Map<Integer, AsyncTask> asyncTasks = new HashMap<>();
-	private static final Map<Integer, Task> tasks = new HashMap<>();
+	private static final Map<Integer, AsyncTask> asyncTasks = new WeakHashMap<>();
+	private static final Map<Integer, Task> tasks = new WeakHashMap<>();
 
 	@Override
 	public void run(Task task, long delayInTicks) {
@@ -108,6 +108,12 @@ public class SpigotScheduler implements PlatformScheduler {
 				.map(taskID -> Bukkit.getScheduler().isQueued(taskID) || Bukkit.getScheduler().isCurrentlyRunning(taskID))
 				.findFirst()
 				.orElse(false);
+	}
+
+	@Override
+	public void cancelAll(Plugin plugin) {
+		asyncTasks.values().stream().filter(task -> task.getPlugin().equals(plugin)).forEach(task -> this.cancel(task));
+		tasks.values().stream().filter(task -> task.getPlugin().equals(plugin)).forEach(task -> this.cancel(task));
 	}
 
 	/**

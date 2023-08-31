@@ -20,6 +20,7 @@ package org.skriptlang.skript.scheduler;
 
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.plugin.Plugin;
 import org.skriptlang.skript.scheduler.platforms.FoliaScheduler;
 import org.skriptlang.skript.scheduler.platforms.SpigotScheduler;
 
@@ -74,6 +75,10 @@ public class TaskManager {
 
 	public static boolean isAlive(AsyncTask task) {
 		return scheduler.isAlive(task);
+	}
+
+	public static void cancelAll(Plugin plugin) {
+		scheduler.cancelAll(plugin);
 	}
 
 }

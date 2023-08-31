@@ -20,6 +20,8 @@ package org.skriptlang.skript.scheduler;
 
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.plugin.Plugin;
+
 /**
  * Represents a Task for a dedicated platform like Sponge, Paper, Bukkit or Folia.
  */
@@ -36,5 +38,7 @@ public interface PlatformScheduler {
 	boolean cancel(AsyncTask task);
 
 	boolean isAlive(AsyncTask task);
+
+	void cancelAll(Plugin plugin);
 
 }

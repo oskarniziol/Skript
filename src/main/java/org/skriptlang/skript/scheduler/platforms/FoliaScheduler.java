@@ -20,6 +20,7 @@ package org.skriptlang.skript.scheduler.platforms;
 
 import java.util.concurrent.TimeUnit;
 
+import org.bukkit.plugin.Plugin;
 import org.skriptlang.skript.scheduler.AsyncTask;
 import org.skriptlang.skript.scheduler.PlatformScheduler;
 import org.skriptlang.skript.scheduler.Task;
@@ -60,6 +61,12 @@ public class FoliaScheduler implements PlatformScheduler {
 	public boolean isAlive(AsyncTask task) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void cancelAll(Plugin plugin) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
