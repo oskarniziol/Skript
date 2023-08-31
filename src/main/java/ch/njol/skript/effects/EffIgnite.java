@@ -33,6 +33,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.Task;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 
@@ -82,12 +83,12 @@ public class EffIgnite extends Effect {
 		}
 		for (final Entity en : entities.getArray(e)) {
 			if (e instanceof EntityDamageEvent && ((EntityDamageEvent) e).getEntity() == en && !Delay.isDelayed(e)) {
-				Bukkit.getScheduler().scheduleSyncDelayedTask(Skript.getInstance(), new Runnable() {
+				new Task(Skript.getInstance(), 1) {
 					@Override
 					public void run() {
 						en.setFireTicks(d);
 					}
-				});
+				};
 			} else {
 				if (e instanceof EntityCombustEvent && ((EntityCombustEvent) e).getEntity() == en && !Delay.isDelayed(e))
 					((EntityCombustEvent) e).setCancelled(true);// can't change the duration, thus simply cancel the event (and create a new one)
