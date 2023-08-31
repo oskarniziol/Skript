@@ -95,7 +95,7 @@ public class ExprAttachedTo extends SimplePropertyExpression<Firework, LivingEnt
 
 	@Override
 	protected String getPropertyName() {
-		return "attached entity";
+		return "firework attached entity";
 	}
 
 }
