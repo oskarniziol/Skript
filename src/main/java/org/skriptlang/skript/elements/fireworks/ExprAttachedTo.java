@@ -83,14 +83,9 @@ public class ExprAttachedTo extends SimplePropertyExpression<Firework, LivingEnt
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		assert RUNNING_1_19;
-		LivingEntity attach = (LivingEntity) delta[0];
-		for (Firework firework : getExpr().getArray(event)) {
-			if (mode == ChangeMode.DELETE) {
-				firework.setAttachedTo(null);
-				continue;
-			}
+		LivingEntity attach = mode == ChangeMode.DELETE ? null : (LivingEntity) delta[0];
+		for (Firework firework : getExpr().getArray(event))
 			firework.setAttachedTo(attach);
-		}
 	}
 
 	@Override
