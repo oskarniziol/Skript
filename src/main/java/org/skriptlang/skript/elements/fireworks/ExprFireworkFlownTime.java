@@ -95,7 +95,7 @@ public class ExprFireworkFlownTime extends SimplePropertyExpression<Firework, Ti
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		long ticks = ((Timespan) delta[0]).getTicks_i();
+		long ticks = (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) ? 0 : ((Timespan) delta[0]).getTicks_i();
 		switch (mode) {
 			case REMOVE:
 				ticks = -ticks;

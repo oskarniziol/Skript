@@ -56,7 +56,7 @@ public class ExprAttachedTo extends SimplePropertyExpression<Firework, LivingEnt
 
 	static {
 		if (RUNNING_1_19 || BOOSTED_ENTITY)
-			register(ExprAttachedTo.class, LivingEntity.class, "(attached [to]|boost(ing|ed)) entity", "fireworks");
+			registerDefault(ExprAttachedTo.class, LivingEntity.class, "(attached [to]|boost(ing|ed)) entity", "fireworks");
 	}
 
 	@Override
@@ -74,6 +74,8 @@ public class ExprAttachedTo extends SimplePropertyExpression<Firework, LivingEnt
 			if (!RUNNING_1_19)
 				Skript.error("You can only set the 'attached entity' in 1.19+");
 			return CollectionUtils.array(LivingEntity.class);
+		} else if (mode == ChangeMode.DELETE) {
+			return CollectionUtils.array();
 		}
 		return null;
 	}
@@ -82,8 +84,13 @@ public class ExprAttachedTo extends SimplePropertyExpression<Firework, LivingEnt
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		assert RUNNING_1_19;
 		LivingEntity attach = (LivingEntity) delta[0];
-		for (Firework firework : getExpr().getArray(event))
+		for (Firework firework : getExpr().getArray(event)) {
+			if (mode == ChangeMode.DELETE) {
+				firework.setAttachedTo(null);
+				continue;
+			}
 			firework.setAttachedTo(attach);
+		}
 	}
 
 	@Override

@@ -48,15 +48,13 @@ public class CondElytraBoostConsume extends Condition {
 			Skript.registerCondition(CondElytraBoostConsume.class, "[event] (will [:not]|not:won't) consume [the] firework");
 	}
 
-	private boolean negate;
-
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		if (getParser().isCurrentEvent(PlayerElytraBoostEvent.class)) {
 			Skript.error("You can only use the 'will consume firework' condition in the 'on elytra boost' event!");
 			return false;
 		}
-		negate = parseResult.hasTag("not");
+		setNegated(parseResult.hasTag("not"));
 		return true;
 	}
 
@@ -64,12 +62,12 @@ public class CondElytraBoostConsume extends Condition {
 	public boolean check(Event event) {
 		if (!(event instanceof PlayerElytraBoostEvent))
 			return false;
-		return negate && !((PlayerElytraBoostEvent) event).shouldConsume();
+		return isNegated() && !((PlayerElytraBoostEvent) event).shouldConsume();
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "will " + (negate ? " not " : "") + "consume the firework";
+		return "will " + (isNegated() ? " not " : "") + "consume the firework";
 	}
 
 }
