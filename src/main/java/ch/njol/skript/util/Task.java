@@ -22,41 +22,42 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import ch.njol.skript.Skript;
 import ch.njol.util.Closeable;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask.ExecutionState;
 
-/**
- * @author Peter Güttinger
- */
 public abstract class Task implements Runnable, Closeable {
 	
 	private final Plugin plugin;
 	private final boolean async;
 	private long period = -1;
 	
-	private int taskID = -1;
+	private @NotNull ScheduledTask taskID;
 	
-	public Task(final Plugin plugin, final long delay, final long period) {
+	public Task(Plugin plugin, long delay, long period) {
 		this(plugin, delay, period, false);
 	}
 	
-	public Task(final Plugin plugin, final long delay, final long period, final boolean async) {
+	public Task(Plugin plugin, long delay, long period, boolean async) {
 		this.plugin = plugin;
 		this.period = period;
 		this.async = async;
 		schedule(delay);
 	}
 	
-	public Task(final Plugin plugin, final long delay) {
+	public Task(Plugin plugin, long delay) {
 		this(plugin, delay, false);
 	}
 	
-	public Task(final Plugin plugin, final long delay, final boolean async) {
+	public Task(Plugin plugin, long delay, boolean async) {
 		this.plugin = plugin;
 		this.async = async;
 		schedule(delay);
@@ -67,43 +68,43 @@ public abstract class Task implements Runnable, Closeable {
 	 * 
 	 * @param delay
 	 */
-	private void schedule(final long delay) {
+	private void schedule(long delay) {
 		assert !isAlive();
 		if (!Skript.getInstance().isEnabled())
 			return;
 		
 		if (period == -1) {
 			if (async) {
-				taskID = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, this, delay).getTaskId();
+				taskID = Bukkit.getAsyncScheduler().runDelayed(plugin, task -> this.run(), (delay / 20) * 1000, TimeUnit.MILLISECONDS);
 			} else {
-				taskID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, this, delay);
+				taskID = Bukkit.getGlobalRegionScheduler().runDelayed(plugin, task -> this.run(), delay);
 			}
 		} else {
 			if (async) {
-				taskID = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this, delay, period).getTaskId();
+				taskID = Bukkit.getAsyncScheduler().runAtFixedRate(plugin, task -> this.run(), (delay / 20) * 1000, (period / 20) * 1000, TimeUnit.MILLISECONDS);
 			} else {
-				taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, delay, period);
+				taskID = Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, task -> this.run(), delay, period);
 			}
 		}
-		assert taskID != -1;
+		assert taskID != null;
 	}
-	
+
 	/**
 	 * @return Whether this task is still running, i.e. whether it will run later or is currently running.
 	 */
 	public final boolean isAlive() {
-		if (taskID == -1)
+		if (taskID == null)
 			return false;
-		return Bukkit.getScheduler().isQueued(taskID) || Bukkit.getScheduler().isCurrentlyRunning(taskID);
+		return taskID.getExecutionState() == ExecutionState.RUNNING;
 	}
-	
+
 	/**
 	 * Cancels this task.
 	 */
 	public final void cancel() {
-		if (taskID != -1) {
-			Bukkit.getScheduler().cancelTask(taskID);
-			taskID = -1;
+		if (taskID != null) {
+			taskID.cancel();
+			taskID = null;
 		}
 	}
 	
