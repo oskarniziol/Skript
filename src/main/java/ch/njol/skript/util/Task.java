@@ -75,9 +75,17 @@ public abstract class Task implements Runnable, Closeable {
 		
 		if (period == -1) {
 			if (async) {
-				taskID = Bukkit.getAsyncScheduler().runDelayed(plugin, task -> this.run(), (delay / 20) * 1000, TimeUnit.MILLISECONDS);
+				if (delay <= 0) {
+					taskID = Bukkit.getAsyncScheduler().runNow(plugin, task -> this.run());
+				} else {
+					taskID = Bukkit.getAsyncScheduler().runDelayed(plugin, task -> this.run(), (delay / 20) * 1000, TimeUnit.MILLISECONDS);
+				}
 			} else {
-				taskID = Bukkit.getGlobalRegionScheduler().runDelayed(plugin, task -> this.run(), delay);
+				if (delay <= 0) {
+					taskID = Bukkit.getGlobalRegionScheduler().run(plugin, task -> this.run());
+				} else {
+					taskID = Bukkit.getGlobalRegionScheduler().runDelayed(plugin, task -> this.run(), delay);
+				}
 			}
 		} else {
 			if (async) {
