@@ -56,6 +56,8 @@ public class EffSendBlockChange extends Effect {
 	private Expression<Block> blocks;
 	private Expression<Player> players;
 
+	private boolean reset;
+
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -69,6 +71,7 @@ public class EffSendBlockChange extends Effect {
 			case 2:
 				blocks = (Expression<Block>) exprs[0];
 				players = (Expression<Player>) exprs[1];
+				reset = true;
 		}
 		return true;
 	}
@@ -107,6 +110,16 @@ public class EffSendBlockChange extends Effect {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
+		if (reset)
+			return String.format("reset %s for %s with the server",
+					blocks.toString(event, debug),
+					players.toString(event, debug)
+			);
+		if (as == null)
+			return String.format("make %s see %s as normal",
+					players.toString(event, debug),
+					blocks.toString(event, debug)
+			);
 		return String.format("make %s see %s as %s",
 				players.toString(event, debug),
 				blocks.toString(event, debug),
