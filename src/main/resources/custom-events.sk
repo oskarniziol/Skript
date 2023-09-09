@@ -30,8 +30,8 @@ events:
 		class: com.destroystokyo.paper.event.block.BeaconEffectEvent
 		pattern: beacon effect apply [to player[s]]
 
-	# [on] campfire lit
-	campfire lit:
+	# [on] campfire start cooking
+	campfire cooking:
 		enabled: false
 		description: "Called when a campfire starts cooking"
 		class: org.bukkit.event.block.CampfireStartEvent
