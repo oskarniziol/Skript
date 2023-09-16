@@ -27,6 +27,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.ItemDisplay;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -89,6 +90,9 @@ public class DisplayData extends EntityData<Display> {
 	@Nullable
 	private ItemStack item;
 
+	@Nullable
+	private String text;
+
 	public DisplayData() {}
 
 	public DisplayData(DisplayType type) {
@@ -140,6 +144,7 @@ public class DisplayData extends EntityData<Display> {
 							item = ((ItemDisplay) entity).getItemStack();
 							break;
 						case TEXT:
+							text = ((TextDisplay) entity).getText();
 							break;
 						default:
 							break;
@@ -158,14 +163,22 @@ public class DisplayData extends EntityData<Display> {
 			case ANY:
 				break;
 			case BLOCK:
+				if (!(entity instanceof BlockDisplay))
+					return;
 				if (blockData != null)
 					((BlockDisplay) entity).setBlock(blockData);
 				break;
 			case ITEM:
+				if (!(entity instanceof ItemDisplay))
+					return;
 				if (item != null)
 					((ItemDisplay) entity).setItemStack(item);
 				break;
 			case TEXT:
+				if (!(entity instanceof TextDisplay))
+					return;
+				if (text != null)
+					((TextDisplay) entity).setText(text);
 				break;
 			default:
 				break;
@@ -178,14 +191,22 @@ public class DisplayData extends EntityData<Display> {
 			case ANY:
 				break;
 			case BLOCK:
+				if (!(entity instanceof BlockDisplay))
+					return false;
 				if (blockData != null && !((BlockDisplay) entity).getBlock().equals(blockData))
 					return false;
 				break;
 			case ITEM:
+				if (!(entity instanceof ItemDisplay))
+					return false;
 				if (item != null && !((ItemDisplay) entity).getItemStack().isSimilar(item))
 					return false;
 				break;
 			case TEXT:
+				if (!(entity instanceof TextDisplay))
+					return false;
+				if (item != null && !((TextDisplay) entity).getText().equals(text))
+					return false;
 				break;
 			default:
 				break;
@@ -215,7 +236,7 @@ public class DisplayData extends EntityData<Display> {
 	public boolean isSupertypeOf(EntityData<?> e) {
 		if (e instanceof DisplayData)
 			return type == DisplayType.ANY || ((DisplayData) e).type == type;
-		return false;
+		return Display.class.isAssignableFrom(e.getType());
 	}
 
 	@Override

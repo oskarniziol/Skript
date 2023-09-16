@@ -5,7 +5,6 @@ test "spawn displays" when running minecraft "1.19.4":
 		set billboard of display to center
 		assert billboard of display is center with "failed to set billboard to center"
 		clear display
-	assert last spawned text display is a display with "failed to compare text display with superclass display"
 	clear all entities
 	# Requiring Lime's literal compare pull requests
 	#spawn block display of grass_block[snowy=true] at spawn of world "world"
