@@ -86,7 +86,7 @@ public class CondCanSee extends Condition {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		return PropertyCondition.toString(this, PropertyType.CAN, event, debug, players,
-				"see" + entities.toString(event, debug));
+				"see " + entities.toString(event, debug));
 	}
 
 }
