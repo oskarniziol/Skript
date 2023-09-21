@@ -84,7 +84,7 @@ import java.util.WeakHashMap;
 		"\tset {Coins::%loop-index%} to loop-value + 5 # Same as \"add 5 to {Coins::%loop-index%}\" where loop-index is the uuid of " +
 			"the player and loop-value is the actually coins value such as 200"
 })
-@Since("1.0, INSERT VERSION (reference)")
+@Since("1.0, INSERT VERSION (index/value reference)")
 public class SecLoop extends LoopSection {
 
 	static {
@@ -105,7 +105,7 @@ public class SecLoop extends LoopSection {
 	private ReferenceType referenceType;
 
 	private enum ReferenceType {
-		VALUE, INDEX, BOTH;
+		VALUE, INDEX, BOTH; // order matters with matchedPattern
 	}
 
 	private final transient Map<Event, Object> current = new WeakHashMap<>();
