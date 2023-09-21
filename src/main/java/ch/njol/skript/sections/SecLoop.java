@@ -101,9 +101,6 @@ public class SecLoop extends LoopSection {
 	@Nullable
 	private Variable<?> asIndex, asValue;
 
-	@SuppressWarnings("NotNullFieldNotInitialized")
-	private ReferenceType referenceType;
-
 	private enum ReferenceType {
 		VALUE, INDEX, BOTH; // order matters with matchedPattern
 	}
@@ -140,7 +137,7 @@ public class SecLoop extends LoopSection {
 			return false;
 		}
 
-		referenceType = ReferenceType.values()[matchedPattern];
+		ReferenceType referenceType = ReferenceType.values()[matchedPattern];
 
 		if (exprs.length > 1 && exprs[1] != null && !(exprs[1] instanceof Variable)) {
 			if (referenceType == ReferenceType.INDEX)
