@@ -34,6 +34,7 @@ import ch.njol.skript.lang.util.ContainerExpression;
 import ch.njol.skript.util.Container;
 import ch.njol.skript.util.Container.ContainerType;
 import ch.njol.skript.util.LiteralUtils;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -83,11 +84,14 @@ import java.util.WeakHashMap;
 public class SecLoop extends LoopSection {
 
 	static {
-		Skript.registerSection(SecLoop.class, "loop %objects%");
+		Skript.registerSection(SecLoop.class, "loop %objects% [as %-object%]");
 	}
 
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> expr;
+
+	@Nullable
+	private Variable<?> asExpr;
 
 	private final transient Map<Event, Object> current = new WeakHashMap<>();
 	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
@@ -121,6 +125,12 @@ public class SecLoop extends LoopSection {
 			return false;
 		}
 
+		if (exprs[1] != null && !(exprs[1] instanceof Variable)) {
+			Skript.error("Loop 'reference' must be a variable (e.g. 'loop 5 times as {_num}')");
+			return false;
+		}
+		asExpr = (Variable<?>) exprs[1];
+
 		loadOptionalCode(sectionNode);
 		super.setNext(this);
 
@@ -131,7 +141,7 @@ public class SecLoop extends LoopSection {
 	@Nullable
 	protected TriggerItem walk(Event event) {
 		Iterator<?> iter = currentIter.get(event);
-		if (iter == null) {
+		if (iter == null) { // first time
 			iter = expr instanceof Variable ? ((Variable<?>) expr).variablesIterator(event) : expr.iterator(event);
 			if (iter != null) {
 				if (iter.hasNext())
@@ -140,13 +150,16 @@ public class SecLoop extends LoopSection {
 					iter = null;
 			}
 		}
-		if (iter == null || !iter.hasNext()) {
+		if (iter == null || !iter.hasNext()) { // no next, exit
 			exit(event);
 			debug(event, false);
 			return actualNext;
-		} else {
-			current.put(event, iter.next());
-			currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1);
+		} else { // has next, keep looping
+			Object nextIter = iter.next();
+			current.put(event, nextIter); // loop-value
+			currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1); // loop-counter
+			if (asExpr != null)
+				Variables.setVariable(asExpr.getName().toString(event), nextIter, event, asExpr.isLocal()); // {var}
 			return walk(event, true);
 		}
 	}
