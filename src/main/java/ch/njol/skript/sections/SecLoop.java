@@ -66,32 +66,47 @@ import java.util.WeakHashMap;
 })
 @Examples({
 	"loop all players:",
-	"\tsend \"Hello %loop-player%!\" to loop-player",
+		"\tsend \"Hello %loop-player%!\" to loop-player",
 	"",
 	"loop items in player's inventory:",
-	"\tif loop-item is dirt:",
-	"\t\tset loop-item to air",
+		"\tif loop-item is dirt:",
+			"\t\tset loop-item to air",
 	"",
 	"loop 10 times:",
-	"\tsend title \"%11 - loop-value%\" and subtitle \"seconds left until the game begins\" to player for 1 second # 10, 9, 8 etc.",
-	"\twait 1 second",
+		"\tsend title \"%11 - loop-value%\" and subtitle \"seconds left until the game begins\" to player for 1 second # 10, 9, 8 etc.",
+		"\twait 1 second",
 	"",
 	"loop {Coins::*}:",
-	"\tset {Coins::%loop-index%} to loop-value + 5 # Same as \"add 5 to {Coins::%loop-index%}\" where loop-index is the uuid of " +
-		"the player and loop-value is the actually coins value such as 200"
+		"\tset {Coins::%loop-index%} to loop-value + 5 # Same as \"add 5 to {Coins::%loop-index%}\" where loop-index is the uuid of " +
+			"the player and loop-value is the actually coins value such as 200",
+	"",
+	"loop {data::*} as {_data}:",
+		"\tset {Coins::%loop-index%} to loop-value + 5 # Same as \"add 5 to {Coins::%loop-index%}\" where loop-index is the uuid of " +
+			"the player and loop-value is the actually coins value such as 200"
 })
-@Since("1.0")
+@Since("1.0, INSERT VERSION (reference)")
 public class SecLoop extends LoopSection {
 
 	static {
-		Skript.registerSection(SecLoop.class, "loop %objects% [as %-object%]");
+		Skript.registerSection(SecLoop.class,
+			"loop %objects% [[with value] as %-~object%]", // value/no reference
+			"loop %objects% with index as %-~object%", // index
+			"loop %objects% [with index] as %-~object%[ and|,] [with value] %-~object%" // index, value
+		);
 	}
 
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private Expression<?> expr;
 
 	@Nullable
-	private Variable<?> asVariable;
+	private Variable<?> asIndex, asValue;
+
+	@SuppressWarnings("NotNullFieldNotInitialized")
+	private ReferenceType referenceType;
+
+	private enum ReferenceType {
+		VALUE, INDEX, BOTH;
+	}
 
 	private final transient Map<Event, Object> current = new WeakHashMap<>();
 	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
@@ -125,11 +140,29 @@ public class SecLoop extends LoopSection {
 			return false;
 		}
 
-		if (exprs[1] != null && !(exprs[1] instanceof Variable)) {
-			Skript.error("Loop 'reference' must be a variable (e.g. 'loop 5 times as {_num}')");
+		referenceType = ReferenceType.values()[matchedPattern];
+
+		if (exprs.length > 1 && exprs[1] != null && !(exprs[1] instanceof Variable)) {
+			if (referenceType == ReferenceType.INDEX)
+				Skript.error("Loop index reference must be a variable (e.g. 'loop {data::*} with index as {_i}')");
+			else // VALUE/BOTH
+				Skript.error("Loop value reference must be a variable (e.g. 'loop 5 times as {_value}')");
 			return false;
 		}
-		asVariable = (Variable<?>) exprs[1];
+
+		if (exprs.length > 2 && exprs[2] != null && !(exprs[2] instanceof Variable)) { // BOTH
+			Skript.error("Loop value reference must be a variable (e.g. 'loop {data::*} as {_index} and {_value}')");
+			return false;
+		}
+
+		if (referenceType == ReferenceType.BOTH) {
+			asIndex = (Variable<?>) exprs[1];
+			asValue = (Variable<?>) exprs[2];
+		} else if (referenceType == ReferenceType.VALUE) {
+			asValue = (Variable<?>) exprs[1];
+		} else {
+			asIndex = (Variable<?>) exprs[1];
+		}
 
 		loadOptionalCode(sectionNode);
 		super.setNext(this);
@@ -156,17 +189,24 @@ public class SecLoop extends LoopSection {
 			return actualNext;
 		} else { // has next, keep looping
 			Object nextIter = iter.next();
+			@SuppressWarnings("unchecked") Map.Entry<String, Object> nextIterEntry = (Map.Entry<String, Object>) nextIter;
+
 			current.put(event, nextIter); // loop-value
 			currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1); // loop-counter
-			if (asVariable != null)
-				Variables.setVariable(asVariable.getName().toString(event), nextIter, event, asVariable.isLocal()); // {var}
+			if (asValue != null)
+				Variables.setVariable(asValue.getName().toString(event), nextIterEntry.getValue(), event, asValue.isLocal()); // value var
+			if (asIndex != null)
+				Variables.setVariable(asIndex.getName().toString(event), nextIterEntry.getKey(), event, asIndex.isLocal()); // index var
 			return walk(event, true);
 		}
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return "loop " + expr.toString(event, debug);
+		return
+			"loop " + expr.toString(event, debug) +
+			(asIndex != null ? " with index as " + asIndex.toString(event, debug) : "") +
+			(asValue != null ? " with value as " + asValue.toString(event, debug) : "");
 	}
 
 	@Nullable
