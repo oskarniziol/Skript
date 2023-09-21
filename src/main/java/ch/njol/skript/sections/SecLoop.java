@@ -91,7 +91,7 @@ public class SecLoop extends LoopSection {
 	private Expression<?> expr;
 
 	@Nullable
-	private Variable<?> asExpr;
+	private Variable<?> asVariable;
 
 	private final transient Map<Event, Object> current = new WeakHashMap<>();
 	private final transient Map<Event, Iterator<?>> currentIter = new WeakHashMap<>();
@@ -129,7 +129,7 @@ public class SecLoop extends LoopSection {
 			Skript.error("Loop 'reference' must be a variable (e.g. 'loop 5 times as {_num}')");
 			return false;
 		}
-		asExpr = (Variable<?>) exprs[1];
+		asVariable = (Variable<?>) exprs[1];
 
 		loadOptionalCode(sectionNode);
 		super.setNext(this);
@@ -158,8 +158,8 @@ public class SecLoop extends LoopSection {
 			Object nextIter = iter.next();
 			current.put(event, nextIter); // loop-value
 			currentLoopCounter.put(event, (currentLoopCounter.getOrDefault(event, 0L)) + 1); // loop-counter
-			if (asExpr != null)
-				Variables.setVariable(asExpr.getName().toString(event), nextIter, event, asExpr.isLocal()); // {var}
+			if (asVariable != null)
+				Variables.setVariable(asVariable.getName().toString(event), nextIter, event, asVariable.isLocal()); // {var}
 			return walk(event, true);
 		}
 	}
