@@ -18,8 +18,6 @@
  */
 package org.skriptlang.skript.test.registration;
 
-import java.util.function.BiConsumer;
-
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.effects.base.SetEffect;
@@ -32,8 +30,8 @@ public class SetEffectTest extends SetEffect<ItemType> {
 	}
 
 	@Override
-	protected BiConsumer<ItemType, Boolean> apply() {
-		return (item, boo) -> item.setAll(boo);
+	protected void apply(ItemType item, boolean value) {
+		item.setAll(value);
 	}
 
 	@Override
