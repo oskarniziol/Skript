@@ -82,11 +82,11 @@ import java.util.WeakHashMap;
 	"",
 	"loop {data::*} as {_data}: # {_data} = loop-value",
 		"\tif {_data} > 500:",
-			"set {_pass} to true",
+			"\t\tset {_pass} to true",
 	"",
 	"loop {balances::*} as {_uuid} and {_balance}:",
 		"\tif {_balance} < 200:",
-			"\tsend \"No enough money!\" to {_uuid} parsed as a player"
+			"\t\tsend \"No enough money!\" to {_uuid} parsed as a player"
 })
 @Since("1.0, INSERT VERSION (index/value reference)")
 public class SecLoop extends LoopSection {
