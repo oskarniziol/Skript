@@ -178,14 +178,14 @@ public class SecLoop extends LoopSection {
 			Skript.error("Can't use loop index reference when there is no indices in the looped expression");
 			return false;
 		}
-		// only allow local vars, not reason for global vars to be used here, also other languages does this
+		// only allow local vars, no reason for global vars to be used here, also other languages does this
 		if (asIndex != null && !asIndex.isLocal() || asValue != null && !asValue.isLocal()) {
 			Skript.error("Loop references must be local variables, e.g. {_index} and {_value}");
 			return false;
 		}
 		// disallow using same var as index and value reference
 		if (asIndex != null && asValue != null && asIndex.getName().toString().equals(asValue.getName().toString())) {
-			Skript.error("Loop index and value reference must not use the same variable");
+			Skript.error("Loop index and value references must not use the same variable");
 			return false;
 		}
 
