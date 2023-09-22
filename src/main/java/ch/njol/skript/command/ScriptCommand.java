@@ -85,6 +85,7 @@ public class ScriptCommand implements TabExecutor {
 
 	public final static Message m_executable_by_players = new Message("commands.executable by players");
 	public final static Message m_executable_by_console = new Message("commands.executable by console");
+	private static final String DEFAULT_PREFIX = "skript";
 
 	final String name;
 	private final String label;
@@ -93,6 +94,7 @@ public class ScriptCommand implements TabExecutor {
 	private String permission;
 	private final VariableString permissionMessage;
 	private final String description;
+	private final String prefix;
 	@Nullable
 	private final Timespan cooldown;
 	private final Expression<String> cooldownMessage;
@@ -120,6 +122,7 @@ public class ScriptCommand implements TabExecutor {
 	 * @param pattern
 	 * @param arguments the list of Arguments this command takes
 	 * @param description description to display in /help
+	 * @param prefix the prefix of the command
 	 * @param usage message to display if the command was used incorrectly
 	 * @param aliases /alias1, /alias2, ...
 	 * @param permission permission or null if none
@@ -128,7 +131,7 @@ public class ScriptCommand implements TabExecutor {
 	 */
 	public ScriptCommand(
 		Script script, String name, String pattern, List<Argument<?>> arguments,
-		String description, String usage, List<String> aliases,
+		String description, @Nullable String prefix, String usage, List<String> aliases,
 		String permission, @Nullable VariableString permissionMessage, @Nullable Timespan cooldown,
 		@Nullable VariableString cooldownMessage, String cooldownBypass,
 		@Nullable VariableString cooldownStorage, int executableBy, SectionNode node
@@ -144,6 +147,25 @@ public class ScriptCommand implements TabExecutor {
 		} else {
 			this.permissionMessage = permissionMessage;
 		}
+
+		if (prefix != null) {
+			for (char c : prefix.toCharArray()) {
+				if (Character.isWhitespace(c)) {
+					Skript.warning("command /" + name + " has a whitespace in its prefix. Defaulting to '" + ScriptCommand.DEFAULT_PREFIX + "'.");
+					prefix = ScriptCommand.DEFAULT_PREFIX;
+					break;
+				}
+				// char 167 is §
+				if (c == 167) {
+					Skript.warning("command /" + name + " has a section character in its prefix. Defaulting to '" + ScriptCommand.DEFAULT_PREFIX + "'.");
+					prefix = ScriptCommand.DEFAULT_PREFIX;
+					break;
+				}
+			}
+		} else {
+			prefix = DEFAULT_PREFIX;
+		}
+		this.prefix = prefix;
 
 		this.cooldown = cooldown;
 		this.cooldownMessage = cooldownMessage == null
@@ -318,7 +340,7 @@ public class ScriptCommand implements TabExecutor {
 	private transient Command overridden = null;
 	private transient Map<String, Command> overriddenAliases = new HashMap<>();
 
-	public void register(final SimpleCommandMap commandMap, final Map<String, Command> knownCommands, final @Nullable Set<String> aliases) {
+	public void register(SimpleCommandMap commandMap, Map<String, Command> knownCommands, @Nullable Set<String> aliases) {
 		synchronized (commandMap) {
 			overriddenAliases.clear();
 			overridden = knownCommands.put(label, bukkitCommand);
@@ -336,19 +358,19 @@ public class ScriptCommand implements TabExecutor {
 					aliases.add(lowerAlias);
 			}
 			bukkitCommand.setAliases(activeAliases);
-			commandMap.register("skript", bukkitCommand);
+			commandMap.register(prefix, bukkitCommand);
 		}
 	}
 
-	public void unregister(final SimpleCommandMap commandMap, final Map<String, Command> knownCommands, final @Nullable Set<String> aliases) {
+	public void unregister(SimpleCommandMap commandMap, Map<String, Command> knownCommands, @Nullable Set<String> aliases) {
 		synchronized (commandMap) {
 			knownCommands.remove(label);
-			knownCommands.remove("skript:" + label);
+			knownCommands.remove(prefix + ":" + label);
 			if (aliases != null)
 				aliases.removeAll(activeAliases);
 			for (final String alias : activeAliases) {
 				knownCommands.remove(alias);
-				knownCommands.remove("skript:" + alias);
+				knownCommands.remove(prefix + ":" + alias);
 			}
 			activeAliases = new ArrayList<>(this.aliases);
 			bukkitCommand.unregister(commandMap);
@@ -419,6 +441,10 @@ public class ScriptCommand implements TabExecutor {
 		return name;
 	}
 
+	public String getPrefix() {
+		return prefix;
+	}
+
 	public String getLabel() {
 		return label;
 	}
@@ -448,7 +474,13 @@ public class ScriptCommand implements TabExecutor {
 		} else {
 			String name = getStorageVariableName(event);
 			assert name != null;
-			return (Date) Variables.getVariable(name, null, false);
+			Object variable = Variables.getVariable(name, null, false);
+			if (!(variable instanceof Date)) {
+				Skript.warning("Variable {" + name + "} was not a date! You may be using this variable elsewhere. " +
+						"This warning is letting you know that this variable is now overridden for the command storage.");
+				return null;
+			}
+			return (Date) variable;
 		}
 	}
 
