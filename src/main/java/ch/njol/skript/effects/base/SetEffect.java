@@ -24,7 +24,6 @@
 package ch.njol.skript.effects.base;
 
 import java.util.Arrays;
-import java.util.function.BiConsumer;
 
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -118,7 +117,7 @@ public abstract class SetEffect<T> extends Effect {
 	/**
 	 * Return a BiComsumer that will be used to apply the boolean value to the type.
 	 */
-	protected abstract BiConsumer<T, Boolean> apply();
+	protected abstract void apply(T object, boolean value);
 
 	/**
 	 * Return the property name of this SetEffect used for the {@link #toString(Event, boolean)} method.
@@ -131,8 +130,7 @@ public abstract class SetEffect<T> extends Effect {
 	protected void execute(Event event) {
 		this.event = event;
 		boolean value = make ? !negated : negated ? !this.value.getSingle(event) : this.value.getSingle(event);
-		BiConsumer<T, Boolean> consumer = apply();
-		getExpression().stream(event).forEach(expression -> consumer.accept(expression, value));
+		getExpression().stream(event).forEach(expression -> apply(expression, value));
 		this.event = null;
 	}
 
