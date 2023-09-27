@@ -94,7 +94,7 @@ public class SecLoop extends LoopSection {
 	static {
 		Skript.registerSection(SecLoop.class,
 			"loop %objects% with index as %-~object%", // index
-			"loop %objects% [with index] as %-~object%[ and|,] [with value] %-~object%", // index, value
+			"loop %objects% [with index] as %-~object%( and|,) [with value] %-~object%", // index, value
 			"loop %objects% [[with value] as %-~object%]" // value/no reference -- must be last pattern otherwise exprs[0] will include 'with index as ..'
 		);
 	}
