@@ -1,0 +1,37 @@
+test "loop references":
+	set {data::A} to 1
+	set {data::B} to 2
+	set {data::C} to 3
+
+	set {balances::aa} to 10
+	set {balances::bb} to 20
+	set {balances::cc} to 30
+
+	loop {data::*} as {_i} and {_d}:
+		if loop-counter = 1:
+			assert {_i} = "A" with "loop index reference failed ##1"
+			assert {_d} = 1 with "loop value reference failed ##1"
+		if loop-counter = 2:
+			assert {_i} = "B" with "loop index reference failed ##2"
+			assert {_d} = 2 with "loop value reference failed ##2"
+		if loop-counter = 3:
+			assert {_i} = "C" with "loop index reference failed ##3"
+			assert {_d} = 3 with "loop value reference failed ##3"
+
+		loop {balances::*} as {_uuid} and {_balance}:
+			if loop-counter-2 = 1:
+				assert {_uuid} = "aa" with "loop index reference failed ##4"
+				assert {_balance} = 10 with "loop value reference failed ##4"
+			if loop-counter-2 = 2:
+				assert {_uuid} = "bb" with "loop index reference failed ##5"
+				assert {_balance} = 20 with "loop value reference failed ##5"
+			if loop-counter-2 = 3:
+				assert {_uuid} = "cc" with "loop index reference failed ##6"
+				assert {_balance} = 30 with "loop value reference failed ##6"
+
+	delete {data::*}
+	delete {balances::*}
+
+	loop 5 times as {_n}:
+		assert {_n} != {_t} with "Non-variable loop index reference failed ##7"
+		set {_t} to {_n}
