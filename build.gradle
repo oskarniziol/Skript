@@ -379,6 +379,7 @@ task nightlyRelease(type: ShadowJar) {
 }
 
 javadoc {
+	title = 'Skript ' + project.property('version')
 	source = sourceSets.main.allJava
 
 	exclude("ch/njol/skript/conditions/**")
@@ -397,4 +398,3 @@ javadoc {
 	// currently our javadoc has a lot of errors, so we need to suppress the linter
 	options.addStringOption('Xdoclint:none', '-quiet')
 }
-
