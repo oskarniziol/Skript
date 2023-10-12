@@ -40,6 +40,7 @@ public class ScriptFunction<T> extends Function<T> {
 		super(sign);
 
 		ParserInstance parser = ParserInstance.get();
+		Functions.currentFunction = this;
 		try {
 			trigger = new Trigger(
 				script,
@@ -51,6 +52,7 @@ public class ScriptFunction<T> extends Function<T> {
 				}
 			);
 		} finally {
+			Functions.currentFunction = null;
 			parser.popReturnData();
 		}
 		trigger.setLineNumber(node.getLine());
