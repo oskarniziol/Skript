@@ -37,7 +37,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Return")
-@Description("Makes a function return a value")
+@Description("Makes a trigger (e.g. a function) return a value")
 @Examples({
 	"function double(i: number) :: number:",
 		"\treturn 2 * {_i}",
