@@ -20,7 +20,9 @@ package ch.njol.skript.lang;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.config.SectionNode;
+import ch.njol.skript.effects.EffReturn.ReturnData;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
@@ -29,7 +31,9 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.structure.Structure;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -37,7 +41,8 @@ import java.util.function.Supplier;
  * A section that can decide what it does with its contents, as code isn't parsed by default.
  * <br><br>
  * In most cases though, a section should load its code through one of the following loading methods:
- * {@link #loadCode(SectionNode)}, {@link #loadCode(SectionNode, String, Class[])}, {@link #loadOptionalCode(SectionNode)}
+ * {@link #loadCode(SectionNode)}, {@link #loadCode(SectionNode, String, Class[])}, {@link #loadOptionalCode(SectionNode)},
+ * {@link #loadReturnableCode(SectionNode, ClassInfo, boolean)}
  * <br><br>
  * Every section must override the {@link TriggerSection#walk(Event)} method. In this method, you can determine whether
  * or not the section should run. If you have stored a {@link Trigger} from {@link #loadCode(SectionNode, String, Class[])}, you
@@ -135,12 +140,14 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 		Structure previousStructure = parser.getCurrentStructure();
 		List<TriggerSection> previousSections = parser.getCurrentSections();
 		Kleenean previousDelay = parser.getHasDelayBefore();
+		Deque<ReturnData> previousReturnQueue = parser.getReturnQueue();
 
 		parser.setCurrentEvent(name, events);
 		SkriptEvent skriptEvent = new SectionSkriptEvent(name, this);
 		parser.setCurrentStructure(skriptEvent);
 		parser.setCurrentSections(new ArrayList<>());
 		parser.setHasDelayBefore(Kleenean.FALSE);
+		parser.setReturnQueue(new LinkedList<>());
 		List<TriggerItem> triggerItems = ScriptLoader.loadItems(sectionNode);
 
 		if (afterLoading != null)
@@ -151,6 +158,7 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 		parser.setCurrentStructure(previousStructure);
 		parser.setCurrentSections(previousSections);
 		parser.setHasDelayBefore(previousDelay);
+		parser.setReturnQueue(previousReturnQueue);
 
 		return new Trigger(parser.getCurrentScript(), name, skriptEvent, triggerItems);
 	}
@@ -169,6 +177,24 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 			return;
 		if (!getParser().getHasDelayBefore().isFalse())
 			getParser().setHasDelayBefore(Kleenean.UNKNOWN);
+	}
+
+	/**
+	 * Loads the code using {@link Section#loadCode(SectionNode)}.
+	 * <br>
+	 * This method also accordingly updates {@link ParserInstance#getReturnQueue()}
+	 * to include this trigger with the given return data.
+	 * <br>
+	 * This method itself does not modify {@link ParserInstance#getHasDelayBefore()}
+	 * (although the loaded code may change it), the calling code must deal with this.
+	 */
+	protected void loadReturnableCode(SectionNode sectionNode, @Nullable ClassInfo<?> returnType, boolean single) {
+		try {
+			getParser().pushReturnData(new ReturnData(this, returnType, single));
+			loadCode(sectionNode);
+		} finally {
+			getParser().popReturnData();
+		}
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

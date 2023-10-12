@@ -20,8 +20,10 @@ package ch.njol.skript.lang.parser;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.SkriptAPIException;
+import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.config.Config;
 import ch.njol.skript.config.Node;
+import ch.njol.skript.effects.EffReturn.ReturnData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser;
@@ -39,7 +41,9 @@ import org.skriptlang.skript.lang.structure.Structure;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -354,6 +358,57 @@ public final class ParserInstance {
 	 */
 	public Kleenean getHasDelayBefore() {
 		return hasDelayBefore;
+	}
+
+	// Return API
+
+	private Deque<ReturnData> returnQueue = new LinkedList<>();
+
+	public Deque<ReturnData> getReturnQueue() {
+		return returnQueue;
+	}
+
+	public void setReturnQueue(Deque<ReturnData> returnQueue) {
+		this.returnQueue = returnQueue;
+	}
+
+	/**
+	 * Retrieves the current {@link ReturnData}
+	 * @return the return data
+	 */
+	@Nullable
+	public ReturnData getCurrentReturnData() {
+		return returnQueue.peek();
+	}
+
+	/**
+	 * Pushes the current trigger onto the return queue.
+	 * <br>
+	 * <b>Note: After the trigger finished loading, {@link ParserInstance#popReturnData()} <u>MUST</u> be called</b>
+	 * @param section the current trigger
+	 * @param returnType return type
+	 * @param single whether the trigger can return multiple values or not
+	 */
+	public void pushReturnData(TriggerSection section, @Nullable ClassInfo<?> returnType, boolean single) {
+		pushReturnData(new ReturnData(section, returnType, single));
+	}
+
+	/**
+	 * Pushes the current trigger onto the return queue.
+	 * <br>
+	 * <b>Note: After the trigger finished loading, {@link ParserInstance#popReturnData()} <u>MUST</u> be called</b>
+	 * @param data the return data
+	 */
+	public void pushReturnData(ReturnData data) {
+		returnQueue.push(data);
+	}
+
+	/**
+	 * Pops the current trigger off the return queue. Should be called after the trigger has finished loading.
+	 * @see ParserInstance#pushReturnData(ReturnData)
+	 */
+	public void popReturnData() {
+		returnQueue.pop();
 	}
 
 	// Miscellaneous

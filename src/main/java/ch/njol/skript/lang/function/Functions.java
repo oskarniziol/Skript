@@ -53,9 +53,6 @@ public abstract class Functions {
 
 	private Functions() {}
 
-	@Nullable
-	public static ScriptFunction<?> currentFunction = null;
-
 	/**
 	 * Function namespaces.
 	 */
