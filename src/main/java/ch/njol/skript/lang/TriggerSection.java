@@ -104,7 +104,7 @@ public abstract class TriggerSection extends TriggerItem {
 	}
 
 	public <T> T @Nullable [] getReturnValue(Class<T> expectedType) {
-		return CollectionUtils.arrayType(expectedType).cast(expectedType);
+		return CollectionUtils.arrayType(expectedType).cast(getReturnValue());
 	}
 
 	/**
