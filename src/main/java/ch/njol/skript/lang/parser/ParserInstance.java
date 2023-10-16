@@ -362,14 +362,14 @@ public final class ParserInstance {
 
 	// Return API
 
-	private Deque<ReturnData> returnQueue = new LinkedList<>();
+	private Deque<ReturnData> returnStack = new LinkedList<>();
 
-	public Deque<ReturnData> getReturnQueue() {
-		return returnQueue;
+	public Deque<ReturnData> getReturnStack() {
+		return returnStack;
 	}
 
-	public void setReturnQueue(Deque<ReturnData> returnQueue) {
-		this.returnQueue = returnQueue;
+	public void setReturnStack(Deque<ReturnData> returnStack) {
+		this.returnStack = returnStack;
 	}
 
 	/**
@@ -378,11 +378,11 @@ public final class ParserInstance {
 	 */
 	@Nullable
 	public ReturnData getCurrentReturnData() {
-		return returnQueue.peek();
+		return returnStack.peek();
 	}
 
 	/**
-	 * Pushes the current trigger onto the return queue.
+	 * Pushes the current trigger onto the return stack.
 	 * <br>
 	 * <b>Note: After the trigger finished loading, {@link ParserInstance#popReturnData()} <u>MUST</u> be called</b>
 	 * @param section the current trigger
@@ -394,13 +394,13 @@ public final class ParserInstance {
 	}
 
 	/**
-	 * Pushes the current trigger onto the return queue.
+	 * Pushes the current trigger onto the return stack.
 	 * <br>
 	 * <b>Note: After the trigger finished loading, {@link ParserInstance#popReturnData()} <u>MUST</u> be called</b>
 	 * @param data the return data
 	 */
 	public void pushReturnData(ReturnData data) {
-		returnQueue.push(data);
+		returnStack.push(data);
 	}
 
 	/**
@@ -408,7 +408,7 @@ public final class ParserInstance {
 	 * @see ParserInstance#pushReturnData(ReturnData)
 	 */
 	public void popReturnData() {
-		returnQueue.pop();
+		returnStack.pop();
 	}
 
 	// Miscellaneous

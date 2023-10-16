@@ -140,14 +140,14 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 		Structure previousStructure = parser.getCurrentStructure();
 		List<TriggerSection> previousSections = parser.getCurrentSections();
 		Kleenean previousDelay = parser.getHasDelayBefore();
-		Deque<ReturnData> previousReturnQueue = parser.getReturnQueue();
+		Deque<ReturnData> previousReturnQueue = parser.getReturnStack();
 
 		parser.setCurrentEvent(name, events);
 		SkriptEvent skriptEvent = new SectionSkriptEvent(name, this);
 		parser.setCurrentStructure(skriptEvent);
 		parser.setCurrentSections(new ArrayList<>());
 		parser.setHasDelayBefore(Kleenean.FALSE);
-		parser.setReturnQueue(new LinkedList<>());
+		parser.setReturnStack(new LinkedList<>());
 		List<TriggerItem> triggerItems = ScriptLoader.loadItems(sectionNode);
 
 		if (afterLoading != null)
@@ -158,7 +158,7 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 		parser.setCurrentStructure(previousStructure);
 		parser.setCurrentSections(previousSections);
 		parser.setHasDelayBefore(previousDelay);
-		parser.setReturnQueue(previousReturnQueue);
+		parser.setReturnStack(previousReturnQueue);
 
 		return new Trigger(parser.getCurrentScript(), name, skriptEvent, triggerItems);
 	}
@@ -182,9 +182,9 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 	/**
 	 * Loads the code using {@link Section#loadCode(SectionNode)}.
 	 * <br>
-	 * This method also pushes the current trigger into the return queue,
+	 * This method also pushes the current trigger into the return stack,
 	 * and pops it once it's done loading.
-	 * @see ParserInstance#getReturnQueue()
+	 * @see ParserInstance#getReturnStack()
 	 * @see ParserInstance#pushReturnData(ReturnData)
 	 */
 	protected void loadReturnableCode(SectionNode sectionNode, @Nullable ClassInfo<?> returnType, boolean single) {
