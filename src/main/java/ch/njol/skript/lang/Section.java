@@ -182,11 +182,10 @@ public abstract class Section extends TriggerSection implements SyntaxElement {
 	/**
 	 * Loads the code using {@link Section#loadCode(SectionNode)}.
 	 * <br>
-	 * This method also accordingly updates {@link ParserInstance#getReturnQueue()}
-	 * to include this trigger with the given return data.
-	 * <br>
-	 * This method itself does not modify {@link ParserInstance#getHasDelayBefore()}
-	 * (although the loaded code may change it), the calling code must deal with this.
+	 * This method also pushes the current trigger into the return queue,
+	 * and pops it once it's done loading.
+	 * @see ParserInstance#getReturnQueue()
+	 * @see ParserInstance#pushReturnData(ReturnData)
 	 */
 	protected void loadReturnableCode(SectionNode sectionNode, @Nullable ClassInfo<?> returnType, boolean single) {
 		try {
