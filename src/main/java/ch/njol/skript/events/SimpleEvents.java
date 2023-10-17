@@ -736,7 +736,7 @@ public class SimpleEvents {
 							"\tbroadcast-message contains \"example\"",
 							"\tcancel event"
 				)
-				.since("INSERT VERSION");
+				.since("2.7");
 
 	}
 
