@@ -113,7 +113,11 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 		Class<?> returnType = getExpr().getReturnType();
 		if (FireworkEffect.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color[].class);
-		if (mode != ChangeMode.SET && !getExpr().isSingle())
+		if (!getExpr().isSingle())
+			return null;
+		if (Display.class.isAssignableFrom(returnType) && (mode == ChangeMode.RESET || mode == ChangeMode.DELETE || mode == ChangeMode.SET))
+			return CollectionUtils.array(Color.class);
+		if (mode != ChangeMode.SET)
 			return null;
 		if (Entity.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color.class);
@@ -121,16 +125,14 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 			return CollectionUtils.array(Color.class);
 		if (ItemType.class.isAssignableFrom(returnType))
 			return CollectionUtils.array(Color.class);
-		if (Display.class.isAssignableFrom(returnType))
-			return CollectionUtils.array(Color.class);
 		return null;
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (delta == null)
-			return;
-		Color color = (Color) delta[0];
+		Color color = null;
+		if (delta != null)
+			color = (Color) delta[0];
 		for (Object object : getExpr().getArray(event)) {
 			if (object instanceof Item || object instanceof ItemType) {
 				ItemStack stack = object instanceof Item ? ((Item) object).getItemStack() : ((ItemType) object).getRandom();
@@ -160,7 +162,20 @@ public class ExprColorOf extends PropertyExpression<Object, Color> {
 					}
 				}
 			} else if (object instanceof TextDisplay) {
-				((TextDisplay) object).setBackgroundColor(color.asBukkitColor());
+				switch (mode) {
+					case DELETE:
+					case RESET:
+						((TextDisplay) object).setDefaultBackground(true);
+						break;
+					case SET:
+						((TextDisplay) object).setBackgroundColor(color.asBukkitColor());
+						break;
+					case ADD:
+					case REMOVE:
+					case REMOVE_ALL:
+					default:
+						break;
+				}
 			} else if (object instanceof FireworkEffect) {
 				Color[] input = (Color[]) delta;
 				FireworkEffect effect = ((FireworkEffect) object);
