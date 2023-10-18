@@ -83,18 +83,19 @@ public class EffShoot extends Effect {
 	@Override
 	protected void execute(Event event) {
 		lastSpawned = null;
-		double velocity = DEFAULT_SPEED;
-		if (this.velocity != null)
-			velocity = this.velocity.getOptionalSingle(event).orElse(DEFAULT_SPEED).doubleValue();
-		Direction direction = Direction.IDENTITY;
-		if (this.direction != null)
-			direction = this.direction.getOptionalSingle(event).orElse(Direction.IDENTITY);
+		double velocity = this.velocity == null ? DEFAULT_SPEED : this.velocity.getOptionalSingle(event)
+				.orElse(DEFAULT_SPEED)
+				.doubleValue();
+
+		Direction direction = this.direction == null ? Direction.IDENTITY : this.direction.getOptionalSingle(event)
+				.orElse(Direction.IDENTITY);
+
 		for (Object shooter : shooters.getArray(event)) {
 			for (EntityData<?> entity : types.getArray(event)) {
 				if (shooter instanceof LivingEntity) {
 					Vector vector = direction.getDirection(((LivingEntity) shooter).getLocation()).multiply(velocity);
 					Class<? extends Entity> type = entity.getType();
-					if (Fireball.class.isAssignableFrom(type)) {// fireballs explode in the shooter's face by default
+					if (Fireball.class.isAssignableFrom(type)) { // fireballs explode in the shooter's face by default
 						Fireball projectile = (Fireball) ((LivingEntity) shooter).getWorld().spawn(((LivingEntity) shooter).getEyeLocation().add(vector.clone().normalize().multiply(0.5)), type);
 						projectile.setShooter((ProjectileSource) shooter);
 						projectile.setVelocity(vector);
