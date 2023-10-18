@@ -19,6 +19,7 @@
 package ch.njol.skript.test.runner;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.doc.NoDoc;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -41,7 +42,8 @@ import java.util.regex.Pattern;
 @Name("Method Exists")
 @Description("Checks if a method exists")
 @Examples("if method \"org.bukkit.Bukkit#getPluginCommand(java.lang.String)")
-@Since("INSERT VERSION")
+@Since("2.7")
+@NoDoc
 public class CondMethodExists extends PropertyCondition<String> {
 
 	private final static Pattern SIGNATURE_PATTERN = Pattern.compile("(?<class>.+)#(?<name>.+)\\((?<params>.*)\\)");
