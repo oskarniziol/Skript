@@ -35,7 +35,7 @@ public class EvtHarvest extends SkriptEvent {
 		if (Skript.classExists("org.bukkit.event.player.PlayerHarvestBlockEvent"))
 			Skript.registerEvent("Harvest", EvtHarvest.class, PlayerHarvestBlockEvent.class, "[player] [block|crop] harvest[ing] [[of] %-itemtypes%]")
 					.description("This event is called whenever a player harvests a block.",
-							"A 'harvest' is when a block drops an item (usually some sort of crop) and changes state, but is not broken in order to drop the item.")
+							"A 'harvest' is when a block drops an item (usually some sort of crop) and changes state, but is not broken in order to drop the item. You cannot modify the event-block unless cancelled, as it's not going to be present as it's being harvested.")
 					.examples("on player harvesting:",
 							"\tmessage \"You harvested %block% which drops %event-items%, using your %event-slot%!\"")
 					.requiredPlugins("Spigot 1.17+")
