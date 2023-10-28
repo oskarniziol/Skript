@@ -176,7 +176,7 @@ public class ExprMessage extends SimpleExpression<String> {
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
 		type = MessageType.values()[matchedPattern];
 		if (!getParser().isCurrentEvent(type.events)) {
-			Skript.error("The " + type.name + " message can only be used in a " + type.name + " event", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("The " + type.name + " message can only be used in a " + type.name + " event");
 			return false;
 		}
 		return true;
