@@ -76,7 +76,7 @@ public class ExprChatRecipients extends SimpleExpression<CommandSender> {
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (!(event instanceof AsyncPlayerChatEvent) || !(event instanceof BroadcastMessageEvent))
+		if (!(event instanceof AsyncPlayerChatEvent) && !(event instanceof BroadcastMessageEvent))
 			return;
 
 		CommandSender[] recipients = (CommandSender[]) delta;
