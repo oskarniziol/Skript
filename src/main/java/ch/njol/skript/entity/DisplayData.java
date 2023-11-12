@@ -131,10 +131,10 @@ public class DisplayData extends EntityData<Display> {
 			Class<?> display = types[i].c;
 			if (display == null)
 				continue;
-			if (entity == null ? display.isAssignableFrom(c) : display.isInstance(entity)) {
+			if (c.isAssignableFrom(display)) {
 				type = types[i];
-				if (entity != null) {
-					switch (types[i]) {
+				if (entity != null && display.isInstance(entity)) {
+					switch (type) {
 						case ANY:
 							break;
 						case BLOCK:
@@ -241,7 +241,7 @@ public class DisplayData extends EntityData<Display> {
 
 	@Override
 	public EntityData<?> getSuperType() {
-		return new DisplayData(type);
+		return new DisplayData(DisplayType.ANY);
 	}
 
 }
