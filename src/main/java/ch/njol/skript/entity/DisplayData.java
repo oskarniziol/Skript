@@ -131,9 +131,9 @@ public class DisplayData extends EntityData<Display> {
 			Class<?> display = types[i].c;
 			if (display == null)
 				continue;
-			if (c.isAssignableFrom(display)) {
+			if (entity == null ? c.isAssignableFrom(display) : display.isInstance(entity)) {
 				type = types[i];
-				if (entity != null && display.isInstance(entity)) {
+				if (entity != null) {
 					switch (type) {
 						case ANY:
 							break;
