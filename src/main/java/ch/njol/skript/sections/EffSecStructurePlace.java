@@ -16,87 +16,175 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.effects;
+package ch.njol.skript.sections;
 
-import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
+import org.bukkit.Location;
+import org.bukkit.block.structure.Mirror;
+import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.structure.Structure;
-import org.bukkit.structure.StructureManager;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.EffectSection;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Utils;
+import ch.njol.skript.lang.Trigger;
+import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 
-@Name("Structure Save/Unregister")
-@Description("Unregisters or saves a structure by it's namespace key. Unregister will unload if the structure was loaded vs Delete.")
-@Examples("unregister structure named \"Example\"")
-@RequiredPlugins("Spigot 1.17.1+")
+@Name("Structure Place")
+@Description({
+	"Places a structure. This can be used as an effect and as a section.",
+	"If it is used as a section, the section is run before the structure is placed in the world.",
+	"You can modify the place settings like if it should include entities and any rotation/mirror option you want.",
+	"For more info on the section settings see <a href='expressions.html#ExprStructureSectionInfo'>Structure Place Settings</a>"
+})
+@Examples({
+	"place structure \"minecraft:end_city\" at player's location without entities:",
+		"\tset integrity to 0.9",
+		"\tset pallet to -1 # -1 for random pallet",
+		"\tset pallet to -1 # random pallet",
+		"\tset rotation to counter clockwise 90",
+		"\tset mirror to none # already the default not required"
+})
 @Since("INSERT VERSION")
-public class EffStructureSaveUnregister extends Effect {
+public class EffSecStructurePlace extends EffectSection {
+
+	public class StructurePlaceEvent extends Event {
+
+		private StructureRotation rotation = StructureRotation.NONE;
+		private Mirror mirror = Mirror.NONE;
+		private final Structure structure;
+		private float integrity = 1F;
+		private boolean entities;
+		private int pallet = 0;
+
+		public StructurePlaceEvent(Structure structure, boolean entities) {
+			this.structure = structure;
+			this.entities = entities;
+		}
+
+		public Structure getStructure() {
+			return structure;
+		}
+
+		public boolean includeEntities() {
+			return entities;
+		}
+
+		public void setIncludesEntities(boolean entities) {
+			this.entities = entities;
+		}
+
+		public StructureRotation getRotation() {
+			return rotation;
+		}
+
+		public void setRotation(StructureRotation rotation) {
+			this.rotation = rotation;
+		}
+
+		public Mirror getMirror() {
+			return mirror;
+		}
+
+		public void setMirror(Mirror mirror) {
+			this.mirror = mirror;
+		}
+
+		public int getPallet() {
+			return pallet;
+		}
+
+		public void setPallet(int pallet) {
+			this.pallet = pallet;
+		}
+
+		public float getIntegrity() {
+			return integrity;
+		}
+
+		public void setIntegrity(float integrity) {
+			this.integrity = integrity;
+		}
+
+		@Override
+		@NotNull
+		public HandlerList getHandlers() {
+			throw new IllegalStateException();
+		}
+	}
 
 	static {
-		Skript.registerEffect(EffStructureSaveUnregister.class, "(:unregister|delete) structure[s] [with name|named] %strings%", "save structure %structure% [with name|named] %string%");
+		if (Skript.classExists("org.bukkit.structure.Structure"))
+			Skript.registerSection(EffSecStructurePlace.class, "place %structure% at %locations% [without :entities]");
 	}
 
 	private Expression<Structure> structure;
-	private Expression<String> names;
-	private boolean save, unregister;
+	private Expression<Location> locations;
+	private boolean entities;
+
+	@Nullable
+	private Trigger trigger;
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		names = (Expression<String>) exprs[matchedPattern];
-		unregister = parseResult.hasTag("unregister");
-		if (save = matchedPattern == 1)
-			structure = (Expression<Structure>) exprs[0];
+	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+		structure = (Expression<Structure>) exprs[0];
+		locations = (Expression<Location>) exprs[1];
+		entities = !parseResult.hasTag("entities"); // Negated
+
+		if (sectionNode != null) {
+			AtomicBoolean delayed = new AtomicBoolean(false);
+			Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse());
+			trigger = loadCode(sectionNode, "structure place", afterLoading, StructurePlaceEvent.class);
+			if (delayed.get()) {
+				Skript.error("Delays can't be used within a structure place section!");
+				return false;
+			}
+		}
 		return true;
 	}
 
 	@Override
-	protected void execute(Event event) {
-		StructureManager manager = Bukkit.getStructureManager();
-		if (save) {
-			String name = this.names.getSingle(event);
-			if (name == null)
-				return;
-			Structure structure = this.structure.getSingle(event);
-			if (structure == null)
-				return;
-			try {
-				manager.saveStructure(Utils.getNamespacedKey(name), structure);
-			} catch (IOException e) {
-				Skript.exception(e, "Failed to save structure " + name);
-			}
-		} else {
-			for (String name : names.getArray(event)) {
-				NamespacedKey key = Utils.getNamespacedKey(name);
-				if (key == null)
-					continue;
-				try {
-					manager.deleteStructure(key, unregister);
-				} catch (IOException e) {
-					Skript.exception(e, "Failed to delete structure " + name);
-				}
-			}
-			
+	@Nullable
+	protected TriggerItem walk(Event event) {
+		Structure structure = this.structure.getSingle(event);
+		if (structure == null) {
+			debug(event, false);
+			return super.walk(event, false);
 		}
+		StructurePlaceEvent details = new StructurePlaceEvent(structure, entities);
+		if (trigger != null) {
+			Object localVars = Variables.copyLocalVariables(event);
+			Variables.setLocalVariables(details, localVars);
+			TriggerItem.walk(trigger, details);
+			Variables.setLocalVariables(event, Variables.copyLocalVariables(details));
+			Variables.removeLocals(details);
+		}
+
+		for (Location location : locations.getArray(event))
+			structure.place(location, details.includeEntities(), details.getRotation(), details.getMirror(), details.getPallet(), details.getIntegrity(), new Random());
+
+		return super.walk(event, false);
 	}
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return (save ? "save" : "delete") + " structures " + names.toString(event, debug);
+		return "place structure " + structure.toString(event, debug) + " at " + locations.toString(event, debug);
 	}
 
 }
