@@ -47,7 +47,8 @@ import ch.njol.util.Kleenean;
 public class EffStructureSaveUnregister extends Effect {
 
 	static {
-		Skript.registerEffect(EffStructureSaveUnregister.class, "(:unregister|delete) structure[s] [with name|named] %strings%", "save structure %structure% [with name|named] %string%");
+		if (Skript.classExists("org.bukkit.structure.Structure"))
+			Skript.registerEffect(EffStructureSaveUnregister.class, "(:unregister|delete) structure[s] [with name|named] %strings%", "save structure %structure% [with name|named] %string%");
 	}
 
 	private Expression<Structure> structure;
