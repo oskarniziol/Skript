@@ -39,7 +39,7 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Structures")
+@Name("Structure Named")
 @Description({
 	"A structure is a utility that allows you to save a cuboid of blocks and entities.",
 	"This syntax will return an existing structure from memory/datapacks or you can also create a structure between two locations.",
