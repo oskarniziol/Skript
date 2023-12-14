@@ -39,7 +39,7 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Structure Between/Named")
+@Name("Structure Between/Name")
 @Description({
 	"A structure is a utility that allows you to save a cuboid of blocks and entities.",
 	"This syntax will return an existing structure from memory/datapacks or you can also create a structure between two locations.",
@@ -107,7 +107,7 @@ public class ExprStructure extends SimpleExpression<Structure> {
 
 	@Override
 	public boolean isSingle() {
-		return names.isSingle();
+		return names != null && names.isSingle();
 	}
 
 	@Override
