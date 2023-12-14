@@ -48,7 +48,7 @@ public class EffStructureSaveUnregister extends Effect {
 
 	static {
 		if (Skript.classExists("org.bukkit.structure.Structure"))
-			Skript.registerEffect(EffStructureSaveUnregister.class, "(:unregister|delete) structure[s] [with name|named] %strings%", "save structure %structure% [with name|named] %string%");
+			Skript.registerEffect(EffStructureSaveUnregister.class, "(:unregister|delete) structure[s] [with name|named] %strings%", "save [structure] %structure% [with name|named] %string%");
 	}
 
 	private Expression<Structure> structure;
