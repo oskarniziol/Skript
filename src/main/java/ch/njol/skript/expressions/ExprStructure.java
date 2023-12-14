@@ -107,7 +107,7 @@ public class ExprStructure extends SimpleExpression<Structure> {
 
 	@Override
 	public boolean isSingle() {
-		return names != null && names.isSingle();
+		return names == null || names.isSingle();
 	}
 
 	@Override
