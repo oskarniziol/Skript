@@ -16,52 +16,56 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package ch.njol.skript.test.runner;
+package ch.njol.skript.conditions;
 
-import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Condition;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Version;
+import ch.njol.skript.Skript;
 import ch.njol.util.Kleenean;
 
-@Name("Running Minecraft")
-@Description("Checks if current Minecraft version is given version or newer.")
-@Examples("running minecraft \"1.14\"")
-@Since("2.5")
-public class CondMinecraftVersion extends Condition {
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.LivingEntity;
+
+@Name("Is Jumping")
+@Description("Checks whether a living entity is jumping. This condition does not work on players.")
+@Examples({
+	"on spawn of zombie:",
+		"\twhile event-entity is not jumping:",
+			"\t\twait 5 ticks",
+		"\tpush event-entity upwards"
+})
+@Since("INSERT VERSION")
+@RequiredPlugins("Paper 1.15+")
+public class CondIsJumping extends PropertyCondition<LivingEntity> {
 	
 	static {
-		Skript.registerCondition(CondMinecraftVersion.class, "running [(1¦below)] minecraft %string%");
+		if (Skript.methodExists(LivingEntity.class, "isJumping"))
+			register(CondIsJumping.class, "jumping", "livingentities");
 	}
 
-	@SuppressWarnings("null")
-	private Expression<String> version;
-	
-	@SuppressWarnings({"null", "unchecked"})
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		version = (Expression<String>) exprs[0];
-		setNegated(parseResult.mark == 1);
-		return true;
+		if (HumanEntity.class.isAssignableFrom(exprs[0].getReturnType())) {
+			Skript.error("The 'is jumping' condition only works on mobs.");
+			return false;
+		}
+		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
-	
+
 	@Override
-	public boolean check(Event e) {
-		String ver = version.getSingle(e);
-		return ver != null ? Skript.isRunningMinecraft(new Version(ver)) ^ isNegated() : false;
+	public boolean check(LivingEntity livingEntity) {
+		return livingEntity.isJumping();
 	}
-	
+
 	@Override
-	public String toString(@Nullable Event e, boolean debug) {
-		return "is running minecraft " + version.toString(e, debug);
+	protected String getPropertyName() {
+		return "jumping";
 	}
-	
+
 }
