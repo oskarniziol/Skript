@@ -50,7 +50,6 @@ public class JSONGenerator extends DocumentationGenerator {
 	private static JsonArray convertToJsonArray(String @Nullable[] strings) {
 		if (strings == null)
 			return null;
-
 		JsonArray jsonArray = new JsonArray();
 		for (String string : strings)
 			jsonArray.add(new JsonPrimitive(string));
@@ -66,10 +65,9 @@ public class JSONGenerator extends DocumentationGenerator {
 	private @Nullable JsonObject generatedAnnotatedElement(Class<?> syntaxClass, String[] patterns) {
 		if (syntaxClass.getAnnotation(NoDoc.class) != null)
 			return null;
-
 		JsonObject syntaxJsonObject = new JsonObject();
-
 		syntaxJsonObject.addProperty("id", idProvider.getId(syntaxClass));
+
 		Name nameAnnotation = syntaxClass.getAnnotation(Name.class);
 		syntaxJsonObject.addProperty("name", nameAnnotation.value());
 
@@ -89,30 +87,23 @@ public class JSONGenerator extends DocumentationGenerator {
 		syntaxJsonObject.addProperty("examples", examples);
 
 		syntaxJsonObject.add("patterns", convertToJsonArray(patterns));
-
 		return syntaxJsonObject;
 	}
 
 	private JsonObject generateEventElement(SkriptEventInfo<?> eventInfo) {
 		JsonObject syntaxJsonObject = new JsonObject();
-
 		syntaxJsonObject.addProperty("id", idProvider.getId(eventInfo));
 		syntaxJsonObject.addProperty("name", eventInfo.name);
-
 		syntaxJsonObject.addProperty("since", eventInfo.getSince());
-
 		syntaxJsonObject.addProperty("description", joinStringArray(eventInfo.getDescription(), '\n'));
-
 		syntaxJsonObject.addProperty("examples", joinStringArray(eventInfo.getExamples(), '\n'));
 		syntaxJsonObject.add("patterns", convertToJsonArray(eventInfo.patterns));
-
 		return syntaxJsonObject;
 	}
 
 
 	private <T extends StructureInfo<? extends Structure>> JsonArray generateStructureElementArray(Iterator<T> infos) {
 		JsonArray syntaxArray = new JsonArray();
-
 		infos.forEachRemaining(info -> {
 			if (info instanceof SkriptEventInfo) {
 				syntaxArray.add(generateEventElement((SkriptEventInfo<?>) info));
@@ -122,66 +113,59 @@ public class JSONGenerator extends DocumentationGenerator {
 					syntaxArray.add(structureElementJsonObject);
 			}
 		});
-
 		return syntaxArray;
 	}
 
 	private <T extends SyntaxElementInfo<? extends SyntaxElement>> JsonArray generateSyntaxElementArray(Iterator<T> infos) {
 		JsonArray syntaxArray = new JsonArray();
-
 		infos.forEachRemaining(info -> {
 			JsonObject syntaxJsonObject = generatedAnnotatedElement(info.getElementClass(), info.patterns);
 			if (syntaxJsonObject != null)
 				syntaxArray.add(syntaxJsonObject);
 		});
-
 		return syntaxArray;
 	}
 
 	private @Nullable JsonObject generateClassInfoElement(ClassInfo<?> classInfo) {
 		if (!classInfo.hasDocs())
 			return null;
-
 		JsonObject syntaxJsonObject = new JsonObject();
-
 		syntaxJsonObject.addProperty("id", idProvider.getId(classInfo));
 		syntaxJsonObject.addProperty("name", classInfo.getDocName());
 		syntaxJsonObject.addProperty("since", classInfo.getSince());
-
 		syntaxJsonObject.addProperty("description", joinStringArray(classInfo.getDescription(), '\n'));
-
 		syntaxJsonObject.addProperty("examples", joinStringArray(classInfo.getExamples(), '\n'));
 		syntaxJsonObject.add("patterns", convertToJsonArray(classInfo.getUsage()));
-
 		return syntaxJsonObject;
 	}
 
 
 	private JsonArray generateClassInfoArray(Iterator<ClassInfo<?>> classInfos) {
 		JsonArray syntaxArray = new JsonArray();
-
 		classInfos.forEachRemaining(classInfo -> {
 			JsonObject classInfoElement = generateClassInfoElement(classInfo);
 			if (classInfoElement != null)
 				syntaxArray.add(classInfoElement);
 		});
-
 		return syntaxArray;
 	}
 
 	private JsonObject generateFunctionElement(JavaFunction<?> function) {
 		JsonObject functionJsonObject = new JsonObject();
-
 		functionJsonObject.addProperty("id", idProvider.getId(function));
 		functionJsonObject.addProperty("name", function.getName());
 		functionJsonObject.addProperty("since", function.getSince());
-
 		functionJsonObject.addProperty("description", joinStringArray(function.getDescription(), '\n'));
 		functionJsonObject.addProperty("examples", joinStringArray(function.getExamples(), '\n'));
 
-		String functionSignature = function.getSignature().toString(false, false);
-		functionJsonObject.add("patterns", convertToJsonArray(new String[] { functionSignature }));
+		ClassInfo<?> returnType = function.getReturnType();
+		if (returnType != null) {
+			functionJsonObject.addProperty("return-type", returnType.getDocName());
+			functionJsonObject.addProperty("returned-classinfo-id", idProvider.getId(returnType));
+		}
 
+		String functionSignature = function.getSignature().toString(true, false);
+		functionJsonObject.add("patterns", convertToJsonArray(new String[] { functionSignature }));
 		return functionJsonObject;
 	}
 
@@ -189,6 +173,15 @@ public class JSONGenerator extends DocumentationGenerator {
 		JsonArray syntaxArray = new JsonArray();
 		functions.forEachRemaining(function -> syntaxArray.add(generateFunctionElement(function)));
 		return syntaxArray;
+	}
+
+	private void saveDocs(Path outputPath, JsonObject jsonDocs) {
+		try {
+			Files.writeString(outputPath, jsonDocs.toString());
+		} catch (IOException exception) {
+			//noinspection ThrowableNotThrown
+			Skript.exception(exception, "An error occurred while trying to generate JSON documentation");
+		}
 	}
 
 	@Override
@@ -209,13 +202,8 @@ public class JSONGenerator extends DocumentationGenerator {
 
 		jsonDocs.add("functions", generateFunctionArray(Functions.getJavaFunctions().iterator()));
 
-		Path jsonOutputPath = outputDir.toPath().resolve("docs.json");
-		try {
-			Files.writeString(jsonOutputPath, jsonDocs.toString());
-		} catch (IOException exception) {
-			//noinspection ThrowableNotThrown
-			Skript.exception(exception, "An error occurred while trying to generate JSON documentation");
-		}
+		saveDocs(outputDir.toPath().resolve("docs.json"), jsonDocs);
+
 	}
 
 }

@@ -184,5 +184,4 @@ public class Signature<T> {
 		return signatureBuilder.toString();
 	}
 
-
 }
