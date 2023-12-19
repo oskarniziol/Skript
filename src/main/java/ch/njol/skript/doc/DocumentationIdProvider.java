@@ -33,7 +33,7 @@ public class DocumentationIdProvider {
 
 	private String addCollisionSuffix(String id) {
 		Integer collisionCount = idCollisionCounter.get(id);
-		idCollisionCounter.merge(id, 1, Integer::sum);
+		idCollisionCounter.merge(id, 2, Integer::sum);
 		if (collisionCount == null) {
 			return id;
 		}
