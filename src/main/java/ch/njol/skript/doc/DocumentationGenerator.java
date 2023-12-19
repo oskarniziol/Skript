@@ -20,13 +20,15 @@ package ch.njol.skript.doc;
 
 import java.io.File;
 
-public abstract class Generator {
+public abstract class DocumentationGenerator {
 
 	protected File templateDir;
 	protected File outputDir;
 
-	public Generator(File templateDir, File outputDir) {
+	protected DocumentationIdProvider idProvider;
 
+	public DocumentationGenerator(File templateDir, File outputDir, DocumentationIdProvider idProvider) {
+		this.idProvider = idProvider;
 		this.templateDir = templateDir;
 		this.outputDir = outputDir;
 	}

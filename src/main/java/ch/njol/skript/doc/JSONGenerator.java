@@ -20,7 +20,6 @@ package ch.njol.skript.doc;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptEventInfo;
 import ch.njol.skript.lang.SyntaxElement;
 import ch.njol.skript.lang.SyntaxElementInfo;
@@ -42,10 +41,10 @@ import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public class JSONGenerator extends Generator {
+public class JSONGenerator extends DocumentationGenerator {
 
-	public JSONGenerator(File templateDir, File outputDir) {
-		super(templateDir, outputDir);
+	public JSONGenerator(File templateDir, File outputDir, DocumentationIdProvider idProvider) {
+		super(templateDir, outputDir, idProvider);
 	}
 
 	private static JsonArray convertToJsonArray(String @Nullable[] strings) {
@@ -64,13 +63,13 @@ public class JSONGenerator extends Generator {
 		return Joiner.on(joiner).join(strings);
 	}
 
-	private static @Nullable JsonObject generatedAnnotatedElement(Class<?> syntaxClass, String[] patterns) {
+	private @Nullable JsonObject generatedAnnotatedElement(Class<?> syntaxClass, String[] patterns) {
 		if (syntaxClass.getAnnotation(NoDoc.class) != null)
 			return null;
 
 		JsonObject syntaxJsonObject = new JsonObject();
 
-		// TODO: conditionJson.addProperty("id");
+		syntaxJsonObject.addProperty("id", idProvider.getId(syntaxClass));
 		Name nameAnnotation = syntaxClass.getAnnotation(Name.class);
 		syntaxJsonObject.addProperty("name", nameAnnotation.value());
 
@@ -94,10 +93,10 @@ public class JSONGenerator extends Generator {
 		return syntaxJsonObject;
 	}
 
-	private static JsonObject generateEventElement(SkriptEventInfo<?> eventInfo) {
+	private JsonObject generateEventElement(SkriptEventInfo<?> eventInfo) {
 		JsonObject syntaxJsonObject = new JsonObject();
 
-		// TODO: conditionJson.addProperty("id");
+		syntaxJsonObject.addProperty("id", idProvider.getId(eventInfo));
 		syntaxJsonObject.addProperty("name", eventInfo.name);
 
 		syntaxJsonObject.addProperty("since", eventInfo.getSince());
@@ -111,7 +110,7 @@ public class JSONGenerator extends Generator {
 	}
 
 
-	private static <T extends StructureInfo<? extends Structure>> JsonArray generateStructureElementArray(Iterator<T> infos) {
+	private <T extends StructureInfo<? extends Structure>> JsonArray generateStructureElementArray(Iterator<T> infos) {
 		JsonArray syntaxArray = new JsonArray();
 
 		infos.forEachRemaining(info -> {
@@ -127,7 +126,7 @@ public class JSONGenerator extends Generator {
 		return syntaxArray;
 	}
 
-	private static <T extends SyntaxElementInfo<? extends SyntaxElement>> JsonArray generateSyntaxElementArray(Iterator<T> infos) {
+	private <T extends SyntaxElementInfo<? extends SyntaxElement>> JsonArray generateSyntaxElementArray(Iterator<T> infos) {
 		JsonArray syntaxArray = new JsonArray();
 
 		infos.forEachRemaining(info -> {
@@ -139,17 +138,13 @@ public class JSONGenerator extends Generator {
 		return syntaxArray;
 	}
 
-	private static @Nullable JsonObject generateClassInfoElement(ClassInfo<?> classInfo) {
+	private @Nullable JsonObject generateClassInfoElement(ClassInfo<?> classInfo) {
 		if (!classInfo.hasDocs())
 			return null;
 
 		JsonObject syntaxJsonObject = new JsonObject();
 
-		String id = classInfo.getCodeName();
-		if (classInfo.getDocumentationID() != null)
-			id = classInfo.getDocumentationID();
-
-		syntaxJsonObject.addProperty("id", id);
+		syntaxJsonObject.addProperty("id", idProvider.getId(classInfo));
 		syntaxJsonObject.addProperty("name", classInfo.getDocName());
 		syntaxJsonObject.addProperty("since", classInfo.getSince());
 
@@ -162,7 +157,7 @@ public class JSONGenerator extends Generator {
 	}
 
 
-	private static JsonArray generateClassInfoArray(Iterator<ClassInfo<?>> classInfos) {
+	private JsonArray generateClassInfoArray(Iterator<ClassInfo<?>> classInfos) {
 		JsonArray syntaxArray = new JsonArray();
 
 		classInfos.forEachRemaining(classInfo -> {
@@ -174,10 +169,10 @@ public class JSONGenerator extends Generator {
 		return syntaxArray;
 	}
 
-	private static JsonObject generateFunctionElement(JavaFunction<?> function) {
+	private JsonObject generateFunctionElement(JavaFunction<?> function) {
 		JsonObject functionJsonObject = new JsonObject();
 
-		functionJsonObject.addProperty("id", function.getName());
+		functionJsonObject.addProperty("id", idProvider.getId(function));
 		functionJsonObject.addProperty("name", function.getName());
 		functionJsonObject.addProperty("since", function.getSince());
 
@@ -190,7 +185,7 @@ public class JSONGenerator extends Generator {
 		return functionJsonObject;
 	}
 
-	private static JsonArray generateFunctionArray(Iterator<JavaFunction<?>> functions) {
+	private JsonArray generateFunctionArray(Iterator<JavaFunction<?>> functions) {
 		JsonArray syntaxArray = new JsonArray();
 		functions.forEachRemaining(function -> syntaxArray.add(generateFunctionElement(function)));
 		return syntaxArray;

@@ -30,12 +30,10 @@ import ch.njol.skript.lang.SkriptEventInfo;
 import ch.njol.skript.lang.SyntaxElementInfo;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.JavaFunction;
-import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.registrations.Classes;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.annotation.Nullable;
 import org.skriptlang.skript.lang.entry.EntryData;
 import org.skriptlang.skript.lang.entry.EntryValidator;
@@ -59,7 +57,7 @@ import java.util.stream.Collectors;
  * pages by combining data from annotations and templates.
  * 
  */
-public class HTMLGenerator extends Generator {
+public class HTMLGenerator extends DocumentationGenerator {
 
 	private static final String SKRIPT_VERSION = Skript.getVersion().toString().replaceAll("-(dev|alpha|beta)\\d*", ""); // Filter branches
 	private static final Pattern NEW_TAG_PATTERN = Pattern.compile(SKRIPT_VERSION + "(?!\\.)"); // (?!\\.) to avoid matching 2.6 in 2.6.1 etc.
@@ -67,8 +65,8 @@ public class HTMLGenerator extends Generator {
 
 	private final String skeleton;
 
-	public HTMLGenerator(File templateDir, File outputDir) {
-		super(templateDir, outputDir);
+	public HTMLGenerator(File templateDir, File outputDir, DocumentationIdProvider idGenerator) {
+		super(templateDir, outputDir, idGenerator);
 		this.skeleton = readFile(new File(this.templateDir + "/template.html")); // Skeleton which contains every other page
 	}
 
@@ -468,15 +466,7 @@ public class HTMLGenerator extends Generator {
 				.replace("\\", "\\\\").replace("\"", "\\\"").replace("\t", "    "));
 
 		// Documentation ID
-		DocumentationId docId = c.getAnnotation(DocumentationId.class);
-		String ID = docId != null ? (docId != null ? docId.value() : null) : info.c.getSimpleName();
-		// Fix duplicated IDs
-		if (page != null) {
-			if (page.contains("href=\"#" + ID + "\"")) {
-				ID = ID + "-" + (StringUtils.countMatches(page, "href=\"#" + ID + "\"") + 1);
-			}
-		}
-		desc = desc.replace("${element.id}", ID);
+		desc = desc.replace("${element.id}", idProvider.getId(c));
 
 		// Events
 		Events events = c.getAnnotation(Events.class);
@@ -601,14 +591,7 @@ public class HTMLGenerator extends Generator {
 		desc = desc.replace("${element.keywords}", keywords == null ? "" : Joiner.on(", ").join(keywords));
 
 		// Documentation ID
-		String ID = info.getDocumentationID() != null ? info.getDocumentationID() : info.getId();
-		// Fix duplicated IDs
-		if (page != null) {
-			if (page.contains("href=\"#" + ID + "\"")) {
-				ID = ID + "-" + (StringUtils.countMatches(page, "href=\"#" + ID + "\"") + 1);
-			}
-		}
-		desc = desc.replace("${element.id}", ID);
+		desc = desc.replace("${element.id}", idProvider.getId(c));
 
 		// Events
 		Events events = c.getAnnotation(Events.class);
@@ -708,14 +691,7 @@ public class HTMLGenerator extends Generator {
 		desc = desc.replace("${element.keywords}", keywords == null ? "" : Joiner.on(", ").join(keywords.value()));
 
 		// Documentation ID
-		String ID = info.getDocumentationID() != null ? info.getDocumentationID() : info.getCodeName();
-		// Fix duplicated IDs
-		if (page != null) {
-			if (page.contains("href=\"#" + ID + "\"")) {
-				ID = ID + "-" + (StringUtils.countMatches(page, "href=\"#" + ID + "\"") + 1);
-			}
-		}
-		desc = desc.replace("${element.id}", ID);
+		desc = desc.replace("${element.id}", idProvider.getId(info));
 
 		// Events
 		Events events = c.getAnnotation(Events.class);
@@ -817,7 +793,7 @@ public class HTMLGenerator extends Generator {
 		desc = desc.replace("${element.keywords}", keywords == null ? "" : Joiner.on(", ").join(keywords));
 
 		// Documentation ID
-		desc = desc.replace("${element.id}", info.getName());
+		desc = desc.replace("${element.id}", idProvider.getId(info));
 
 		// Events
 		desc = handleIf(desc, "${if events}", false); // Functions do not require events nor plugins (at time writing this)
