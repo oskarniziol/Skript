@@ -51,7 +51,7 @@ public class DocumentationIdProvider {
 	}
 
 	public String getId(Function<?> function) {
-		return function.getName();
+		return addCollisionSuffix(function.getName());
 	}
 
 	public String getId(ClassInfo<?> classInfo) {
