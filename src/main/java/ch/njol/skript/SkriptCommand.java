@@ -406,9 +406,8 @@ public class SkriptCommand implements CommandExecutor {
 				}
 				File outputDir = Documentation.getDocsOutputDirectory();
 				outputDir.mkdirs();
-				DocumentationIdProvider idProvider = new DocumentationIdProvider();
-				HTMLGenerator htmlGenerator = new HTMLGenerator(templateDir, outputDir, idProvider);
-				JSONGenerator jsonGenerator = new JSONGenerator(templateDir, outputDir, idProvider);
+				HTMLGenerator htmlGenerator = new HTMLGenerator(templateDir, outputDir, new DocumentationIdProvider());
+				JSONGenerator jsonGenerator = new JSONGenerator(templateDir, outputDir, new DocumentationIdProvider());
 				Skript.info(sender, "Generating docs...");
 				htmlGenerator.generate(); // Try to generate docs... hopefully
 				jsonGenerator.generate();

@@ -27,7 +27,6 @@ import java.util.Map;
 
 public class DocumentationIdProvider {
 
-	private Map<Object, String> generatedIds = new HashMap<>();
 	private Map<String, Integer> idCollisionCounter = new HashMap<>();
 
 
@@ -41,13 +40,11 @@ public class DocumentationIdProvider {
 	}
 
 	public String getId(Class<?> clazz) {
-		return generatedIds.computeIfAbsent(clazz, k -> {
-			DocumentationId documentationIdAnnotation = clazz.getAnnotation(DocumentationId.class);
-			if (documentationIdAnnotation == null) {
-				return addCollisionSuffix(clazz.getSimpleName());
-			}
-			return addCollisionSuffix(documentationIdAnnotation.value());
-		});
+		DocumentationId documentationIdAnnotation = clazz.getAnnotation(DocumentationId.class);
+		if (documentationIdAnnotation == null) {
+			return addCollisionSuffix(clazz.getSimpleName());
+		}
+		return addCollisionSuffix(documentationIdAnnotation.value());
 	}
 
 	public String getId(Function<?> function) {
@@ -55,23 +52,19 @@ public class DocumentationIdProvider {
 	}
 
 	public String getId(ClassInfo<?> classInfo) {
-		return generatedIds.computeIfAbsent(classInfo, k -> {
-			String explicitlyDefinedId = classInfo.getDocumentationID();
-			if (explicitlyDefinedId != null) {
-				return addCollisionSuffix(explicitlyDefinedId);
-			}
-			return addCollisionSuffix(classInfo.getCodeName());
-		});
+		String explicitlyDefinedId = classInfo.getDocumentationID();
+		if (explicitlyDefinedId != null) {
+			return addCollisionSuffix(explicitlyDefinedId);
+		}
+		return addCollisionSuffix(classInfo.getCodeName());
 	}
 
 	public String getId(SkriptEventInfo<?> eventInfo) {
-		return generatedIds.computeIfAbsent(eventInfo, k -> {
-			String explicitlyDefinedId = eventInfo.getDocumentationID();
-			if (explicitlyDefinedId != null) {
-				return addCollisionSuffix(explicitlyDefinedId);
-			}
-			return addCollisionSuffix(eventInfo.getId());
-		});
+		String explicitlyDefinedId = eventInfo.getDocumentationID();
+		if (explicitlyDefinedId != null) {
+			return addCollisionSuffix(explicitlyDefinedId);
+		}
+		return addCollisionSuffix(eventInfo.getId());
 	}
 
 }

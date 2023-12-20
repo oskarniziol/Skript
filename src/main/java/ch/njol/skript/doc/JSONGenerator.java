@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -56,35 +57,37 @@ public class JSONGenerator extends DocumentationGenerator {
 		return jsonArray;
 	}
 
-	private static @Nullable String joinStringArray(String @Nullable[] strings, char joiner) {
-		if (strings == null)
-			return null;
-		return Joiner.on(joiner).join(strings);
+	private static JsonArray convertArrayToJsonArray(String[] strings) {
+		JsonArray jsonArray = new JsonArray();
+		for (String string : strings) {
+			jsonArray.add(string);
+		}
+		return jsonArray;
 	}
 
 	private @Nullable JsonObject generatedAnnotatedElement(Class<?> syntaxClass, String[] patterns) {
-		if (syntaxClass.getAnnotation(NoDoc.class) != null)
+		Name nameAnnotation = syntaxClass.getAnnotation(Name.class);
+		if (nameAnnotation == null || syntaxClass.getAnnotation(NoDoc.class) != null)
 			return null;
 		JsonObject syntaxJsonObject = new JsonObject();
 		syntaxJsonObject.addProperty("id", idProvider.getId(syntaxClass));
-
-		Name nameAnnotation = syntaxClass.getAnnotation(Name.class);
 		syntaxJsonObject.addProperty("name", nameAnnotation.value());
 
 		Since sinceAnnotation = syntaxClass.getAnnotation(Since.class);
 		syntaxJsonObject.addProperty("since", sinceAnnotation.value());
 
 		Description descriptionAnnotation = syntaxClass.getAnnotation(Description.class);
-		String description = null;
 		if (descriptionAnnotation != null)
-			description = joinStringArray(descriptionAnnotation.value(), '\n');
-		syntaxJsonObject.addProperty("description", description);
+			syntaxJsonObject.add("description", convertArrayToJsonArray(descriptionAnnotation.value()));
+		else
+			syntaxJsonObject.add("description", new JsonArray());
 
 		Examples examplesAnnotation = syntaxClass.getAnnotation(Examples.class);
-		String examples = null;
 		if (examplesAnnotation != null)
-			examples = joinStringArray(examplesAnnotation.value(), '\n');
-		syntaxJsonObject.addProperty("examples", examples);
+			syntaxJsonObject.add("examples", convertToJsonArray(examplesAnnotation.value()));
+		else
+			syntaxJsonObject.add("examples", new JsonArray());
+
 
 		syntaxJsonObject.add("patterns", convertToJsonArray(patterns));
 		return syntaxJsonObject;
@@ -95,8 +98,8 @@ public class JSONGenerator extends DocumentationGenerator {
 		syntaxJsonObject.addProperty("id", idProvider.getId(eventInfo));
 		syntaxJsonObject.addProperty("name", eventInfo.name);
 		syntaxJsonObject.addProperty("since", eventInfo.getSince());
-		syntaxJsonObject.addProperty("description", joinStringArray(eventInfo.getDescription(), '\n'));
-		syntaxJsonObject.addProperty("examples", joinStringArray(eventInfo.getExamples(), '\n'));
+		syntaxJsonObject.add("description", convertArrayToJsonArray(eventInfo.getDescription()));
+		syntaxJsonObject.add("examples", convertArrayToJsonArray(eventInfo.getExamples()));
 		syntaxJsonObject.add("patterns", convertToJsonArray(eventInfo.patterns));
 		return syntaxJsonObject;
 	}
@@ -133,12 +136,11 @@ public class JSONGenerator extends DocumentationGenerator {
 		syntaxJsonObject.addProperty("id", idProvider.getId(classInfo));
 		syntaxJsonObject.addProperty("name", classInfo.getDocName());
 		syntaxJsonObject.addProperty("since", classInfo.getSince());
-		syntaxJsonObject.addProperty("description", joinStringArray(classInfo.getDescription(), '\n'));
-		syntaxJsonObject.addProperty("examples", joinStringArray(classInfo.getExamples(), '\n'));
+		syntaxJsonObject.add("description", convertToJsonArray(classInfo.getDescription()));
+		syntaxJsonObject.add("examples", convertToJsonArray(classInfo.getExamples()));
 		syntaxJsonObject.add("patterns", convertToJsonArray(classInfo.getUsage()));
 		return syntaxJsonObject;
 	}
-
 
 	private JsonArray generateClassInfoArray(Iterator<ClassInfo<?>> classInfos) {
 		JsonArray syntaxArray = new JsonArray();
@@ -155,13 +157,12 @@ public class JSONGenerator extends DocumentationGenerator {
 		functionJsonObject.addProperty("id", idProvider.getId(function));
 		functionJsonObject.addProperty("name", function.getName());
 		functionJsonObject.addProperty("since", function.getSince());
-		functionJsonObject.addProperty("description", joinStringArray(function.getDescription(), '\n'));
-		functionJsonObject.addProperty("examples", joinStringArray(function.getExamples(), '\n'));
+		functionJsonObject.add("description", convertToJsonArray(function.getDescription()));
+		functionJsonObject.add("examples", convertToJsonArray(function.getExamples()));
 
 		ClassInfo<?> returnType = function.getReturnType();
 		if (returnType != null) {
 			functionJsonObject.addProperty("return-type", returnType.getDocName());
-			functionJsonObject.addProperty("returned-classinfo-id", idProvider.getId(returnType));
 		}
 
 		String functionSignature = function.getSignature().toString(true, false);
