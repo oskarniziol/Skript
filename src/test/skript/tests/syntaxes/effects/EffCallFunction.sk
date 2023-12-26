@@ -22,7 +22,6 @@ test "call functions":
 	then:
 		assert false is true with "Failed to call global function with multiple return without arguments"
 
-	broadcast "TEST:1"
 	call function "EffCallFunction_does_not_exist"
 	assert last returned values are not set with "Returned values are set after calling a non-existent function"
 

@@ -82,9 +82,10 @@ public class EffCallFunction extends Effect {
 		Object[][] arguments = createArgumentArray(functionArguments, event);
 		for (String functionName : functionNames.getArray(event)) {
 			Function<?> functionToExecute = getFunction(functionName, parentScript);
-			Bukkit.getConsoleSender().sendMessage("TEST:Calling " + functionToExecute);
-			if (functionToExecute != null)
+			if (functionToExecute != null) {
 				lastReturnValue = functionToExecute.execute(arguments);
+				functionToExecute.resetReturnValue();
+			}
 		}
 	}
 
@@ -124,11 +125,7 @@ public class EffCallFunction extends Effect {
 	@Nullable
 	private Function<?> getFunction(String functionName, @Nullable String parentScript) {
 		if (requireLocalFunction == Kleenean.TRUE) {
-			Function<?> matchingFunction = Functions.getLocalFunction(functionName, parentScript);
-			if (matchingFunction != null && matchingFunction.getSignature().isLocal()) {
-				return matchingFunction;
-			}
-			return null;
+			return Functions.getLocalFunction(functionName, parentScript);
 		} else if (requireLocalFunction == Kleenean.FALSE) {
 			return Functions.getGlobalFunction(functionName);
 		}

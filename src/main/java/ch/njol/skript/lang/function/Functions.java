@@ -271,7 +271,9 @@ public abstract class Functions {
 		namespace = getScriptNamespace(script);
 		if (namespace != null)
 			function = namespace.getFunction(name);
-		return function;
+		if (function != null && function.getSignature().isLocal())
+			return function;
+		return null;
 	}
 
 	/**
