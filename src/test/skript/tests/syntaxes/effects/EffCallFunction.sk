@@ -1,0 +1,49 @@
+function EffCallFunction_global_single_return() :: integer:
+	return 1
+
+function EffCallFunction_global_multiple_return() :: integers:
+	return 2 and 3
+
+local function EffCallFunction_local_single_return() :: integer:
+	return 4
+
+local function EffCallFunction_local_multiple_return() :: integers:
+	return 5 and 6
+
+test "call functions":
+	call function "EffCallFunction_global_single_return"
+	assert last returned values is 1 with "Failed to call global function with single return without arguments"
+
+	call function "EffCallFunction_global_multiple_return"
+	set {_returned::*} to last returned values
+	if any:
+		{_returned::1} is not 2
+		{_returned::2} is not 3
+	then:
+		assert false is true with "Failed to call global function with multiple return without arguments"
+
+	broadcast "TEST:1"
+	call function "EffCallFunction_does_not_exist"
+	assert last returned values are not set with "Returned values are set after calling a non-existent function"
+
+	call global function "EffCallFunction_local_single_return"
+	assert last returned values are not set with "Called local function when global function was specifically requested"
+
+	call local function "EffCallFunction_global_single_return" from script "EffCallFunction.sk"
+	assert last returned values are not set with "Called global function when local function was specifically requested"
+
+	call local function "EffCallFunction_local_single_return" from "EffCallFunction.sk"
+	assert last returned values is 4 with "Failed to call local function with single return without arguments"
+
+	call local function "EffCallFunction_local_multiple_return" from "EffCallFunction.sk"
+	set {_returned::*} to last returned values
+	if any:
+		{_returned::1} is not 5
+		{_returned::2} is not 6
+	then:
+		assert false is true with "Failed to call local function with multiple return without arguments"
+
+
+#test "returned values return type":
+#	call function "EffCallFunction_global_single_return"
+#	assert
