@@ -56,7 +56,7 @@ import ch.njol.util.coll.CollectionUtils;
 public class ExprVehicle extends PropertyExpression<Entity, Entity> {
 
 	static {
-		registerDefault(ExprPassengers.class, Entity.class, "vehicle[:s]", "entities");
+		registerDefault(ExprVehicle.class, Entity.class, "vehicle[:s]", "entities");
 	}
 
 	private boolean plural;
