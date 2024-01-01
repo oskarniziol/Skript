@@ -27,8 +27,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pig;
-import org.junit.After;
-import org.junit.Before;
 
 import ch.njol.skript.Skript;
 
@@ -76,9 +74,10 @@ public abstract class SkriptJUnitTest {
 		SkriptJUnitTest.delay = delay;
 	}
 
-	@Before
-	@After
-	public final void cleanup() {
+	/**
+	 * Override this method if your JUnit test requires block modification with delay over 1 tick.
+	 */
+	public void cleanup() {
 		getTestWorld().getEntities().forEach(Entity::remove);
 		setBlock(Material.AIR);
 	}
