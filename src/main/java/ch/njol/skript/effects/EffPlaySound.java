@@ -66,7 +66,7 @@ import java.util.regex.Pattern;
 	"play sound \"block.note_block.pling\" # It is block.note.pling in 1.12.2",
 	"play sound \"entity.experience_orb.pickup\" with volume 0.5 to the player",
 	"play sound \"custom.music.1\" in jukebox category at {speakerBlock}",
-	"play sound \"BLOCK_AMETHYST_BLOCK_RESONATE\" with seed 1 on target entity for the player"
+	"play sound \"BLOCK_AMETHYST_BLOCK_RESONATE\" with seed 1 on target entity for the player #1.20.1+"
 })
 @RequiredPlugins("Paper 1.19.4+ or Adventure API 4.12.0+ (sound seed)")
 @Since("2.2-dev28, 2.4 (sound categories), INSERT VERSION (sound seed & entity emitter)")
