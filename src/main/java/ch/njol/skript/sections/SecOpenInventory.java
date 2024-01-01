@@ -50,7 +50,7 @@ import ch.njol.util.Kleenean;
 	"The section then allows to modify the event-inventory."
 })
 @Examples({
-	"new chest inventory:",
+	"show chest inventory to player:",
 		"\tset slot 1 of event-inventory to stone named \"example\"",
 		"open event-inventory to all players"
 })
