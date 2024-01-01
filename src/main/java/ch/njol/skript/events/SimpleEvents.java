@@ -762,7 +762,7 @@ public class SimpleEvents {
 				.since("INSERT VERSION");
 
 		Skript.registerEvent("Server Broadcast", SimpleEvent.class, BroadcastMessageEvent.class, "[server] broadcast")
-				.description("Called when the server broadcasts messages.")
+				.description("Called when the server broadcasts messages. Does not get called when using Skript's <a href='effects.html#EffBroadcast'>broadcast</a> effect.")
 				.examples(
 						"on server broadcast:",
 							"\tbroadcast-message contains \"example\"",
