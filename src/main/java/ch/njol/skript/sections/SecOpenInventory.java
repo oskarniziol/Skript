@@ -76,7 +76,7 @@ public class SecOpenInventory extends Section {
 	}
 
 	static {
-		Skript.registerSection(SecOpenInventory.class, "[show|open|create] %inventory/inventorytype%");
+		Skript.registerSection(SecOpenInventory.class, "[show|open|create] %inventory/inventorytype%  [to %players%]");
 	}
 
 	@Nullable
