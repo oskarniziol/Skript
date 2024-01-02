@@ -26,7 +26,6 @@ import ch.njol.skript.lang.SyntaxElementInfo;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.registrations.Classes;
-import com.google.common.base.Joiner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -38,7 +37,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -134,7 +132,7 @@ public class JSONGenerator extends DocumentationGenerator {
 			return null;
 		JsonObject syntaxJsonObject = new JsonObject();
 		syntaxJsonObject.addProperty("id", idProvider.getId(classInfo));
-		syntaxJsonObject.addProperty("name", classInfo.getDocName());
+		syntaxJsonObject.addProperty("name", getClassInfoName(classInfo));
 		syntaxJsonObject.addProperty("since", classInfo.getSince());
 		syntaxJsonObject.add("description", convertToJsonArray(classInfo.getDescription()));
 		syntaxJsonObject.add("examples", convertToJsonArray(classInfo.getExamples()));
@@ -152,6 +150,14 @@ public class JSONGenerator extends DocumentationGenerator {
 		return syntaxArray;
 	}
 
+	private String getClassInfoName(ClassInfo<?> classInfo) {
+		String docName = classInfo.getDocName();
+		if (docName != null) {
+			return docName;
+		}
+		return classInfo.getCodeName();
+	}
+
 	private JsonObject generateFunctionElement(JavaFunction<?> function) {
 		JsonObject functionJsonObject = new JsonObject();
 		functionJsonObject.addProperty("id", idProvider.getId(function));
@@ -162,10 +168,10 @@ public class JSONGenerator extends DocumentationGenerator {
 
 		ClassInfo<?> returnType = function.getReturnType();
 		if (returnType != null) {
-			functionJsonObject.addProperty("return-type", returnType.getDocName());
+			functionJsonObject.addProperty("return-type", getClassInfoName(returnType));
 		}
 
-		String functionSignature = function.getSignature().toString(true, false);
+		String functionSignature = function.getSignature().toString(false, false);
 		functionJsonObject.add("patterns", convertToJsonArray(new String[] { functionSignature }));
 		return functionJsonObject;
 	}
@@ -197,14 +203,13 @@ public class JSONGenerator extends DocumentationGenerator {
 		jsonDocs.add("classes", generateClassInfoArray(Classes.getClassInfos().iterator()));
 
 		Stream<StructureInfo<? extends Structure>> structuresExcludingEvents = Skript.getStructures().stream()
-				.filter(structureInfo -> !(structureInfo instanceof SkriptEventInfo));
+			.filter(structureInfo -> !(structureInfo instanceof SkriptEventInfo));
 		jsonDocs.add("structures", generateStructureElementArray(structuresExcludingEvents.iterator()));
 		jsonDocs.add("sections", generateSyntaxElementArray(Skript.getSections().iterator()));
 
 		jsonDocs.add("functions", generateFunctionArray(Functions.getJavaFunctions().iterator()));
 
 		saveDocs(outputDir.toPath().resolve("docs.json"), jsonDocs);
-
 	}
 
 }
