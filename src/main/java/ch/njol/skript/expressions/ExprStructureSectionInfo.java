@@ -119,7 +119,7 @@ public class ExprStructureSectionInfo extends SimpleExpression<Object> {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (!getParser().isCurrentSection(EffSecStructurePlace.class)) {
+		if (!getParser().isCurrentEvent(StructurePlaceEvent.class)) {
 			Skript.error(parseResult.expr + " can only be used in a structure place section!");
 			return false;
 		}
