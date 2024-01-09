@@ -57,7 +57,11 @@ public interface AdventureSoundReceiver<T, E> {
 				sound = sound.toLowerCase(Locale.ENGLISH);
 				if (!EffPlaySound.KEY_PATTERN.matcher(sound).matches())
 					continue;
-				key = NamespacedKey.fromString(sound);
+				try {
+					key = NamespacedKey.fromString(sound);
+				} catch (IllegalArgumentException argument) {
+					// The user input invalid characters
+				}
 			}
 
 			if (key == null)
