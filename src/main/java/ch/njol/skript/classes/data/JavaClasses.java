@@ -27,7 +27,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Cloner;
-import ch.njol.skript.classes.NumberArithmetic;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.expressions.base.EventValueExpression;
@@ -130,7 +129,7 @@ public class JavaClasses {
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-				}).math(Number.class, new NumberArithmetic()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(Long.class, "long")
 				.user("int(eger)?s?")
@@ -189,7 +188,7 @@ public class JavaClasses {
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-				}).math(Number.class, new NumberArithmetic()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(Integer.class, "integer")
 				.name(ClassInfo.NO_DOC)
@@ -246,7 +245,7 @@ public class JavaClasses {
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-				}).math(Number.class, new NumberArithmetic()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(Double.class, "double")
 				.name(ClassInfo.NO_DOC)
@@ -308,7 +307,7 @@ public class JavaClasses {
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-				}).math(Number.class, new NumberArithmetic()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(Float.class, "float")
 				.name(ClassInfo.NO_DOC)
@@ -369,7 +368,7 @@ public class JavaClasses {
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-				}).math(Number.class, new NumberArithmetic()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(Boolean.class, "boolean")
 				.user("booleans?")
@@ -491,7 +490,7 @@ public class JavaClasses {
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-				}).math(Number.class, new NumberArithmetic()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(Byte.class, "byte")
 				.name(ClassInfo.NO_DOC)
@@ -548,7 +547,7 @@ public class JavaClasses {
 					public boolean mustSyncDeserialization() {
 						return false;
 					}
-				}).math(Number.class, new NumberArithmetic()));
+				}));
 		
 		Classes.registerClass(new ClassInfo<>(String.class, "string")
 				.user("(text|string)s?")
