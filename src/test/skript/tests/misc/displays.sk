@@ -4,14 +4,15 @@ test "spawn displays" when running minecraft "1.19.4":
 		set {_display} to event-display
 	assert billboard of display within {_display} is "fixed" parsed as billboard with "default billboard was not fixed"
 	set billboard of display within {_display} to "center" parsed as billboard
-	assert billboard of display within {_display} is "center" parsed as billboard with "failed to set billboard to center"
+	assert billboard of display within {_display} is center with "failed to set billboard to center"
 	clear all entities
-	spawn block display at spawn of world "world"
-	set block data of last spawned block display to grass_block[snowy=true]
-	assert block data of last spawned block display is grass_block[snowy=true] with "failed to compare block display block data"
+	spawn a block display at spawn of world "world"
+		set block data of event-block display to grass_block[snowy=true]
+		set {_display} to event-display
+	assert block data of display within {_display} is grass_block[snowy=true] with "failed to compare block display block data"
 	spawn an item display of a diamond sword of sharpness at spawn of world "world":
-		assert item transform of event-display is "none" parsed as item display transforms with "item transform was not none"
-		set item transform of display to "head" parsed as item display transforms
-		assert item transform of display is "head" parsed as item display transforms with "failed to set item transform to head"
+		assert item transform of event-display is none with "item transform was not none"
+		set item transform of event-display to head transform
+		assert item transform of event-display is head with "failed to set item transform to head"
 		assert item of event-item display is a diamond sword of sharpness with "failed to compare against the item of the display %item of display%"
 	clear all entities
