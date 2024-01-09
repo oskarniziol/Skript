@@ -49,7 +49,7 @@ import ch.njol.util.Kleenean;
 public class EffHideEntity extends Effect {
 
 	static {
-		if (Skript.isRunningMinecraft(1, 19))
+		if (Skript.isRunningMinecraft(1, 19, 4))
 			Skript.registerEffect(EffHideEntity.class,
 					"hide %entities% from %players%",
 					"show %entities% to %players%");
