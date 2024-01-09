@@ -6,7 +6,7 @@ test "spawn displays" when running minecraft "1.19.4":
 	set billboard of display within {_display} to "center" parsed as billboard
 	assert billboard of display within {_display} is center with "failed to set billboard to center"
 	clear all entities
-	spawn a block display at spawn of world "world"
+	spawn a block display at spawn of world "world":
 		set block data of event-block display to grass_block[snowy=true]
 		set {_display} to event-display
 	assert block data of display within {_display} is grass_block[snowy=true] with "failed to compare block display block data"
