@@ -27,6 +27,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -43,13 +44,15 @@ import ch.njol.util.Kleenean;
 	"spawn a block display at location infront of player:",
 		"\thide event-entity from all players where [player input is not {_player}]"
 })
+@RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
 public class EffHideEntity extends Effect {
 
 	static {
-		Skript.registerEffect(EffHideEntity.class,
-				"hide %entities% from %players%",
-				"show %entities% to %players%");
+		if (Skript.isRunningMinecraft(1, 19))
+			Skript.registerEffect(EffHideEntity.class,
+					"hide %entities% from %players%",
+					"show %entities% to %players%");
 	}
 
 	private Expression<Entity> entities;
