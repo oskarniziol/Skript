@@ -16,7 +16,7 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays.item;
+package org.skriptlang.skript.elements.displays.item;
 
 import org.bukkit.entity.Display;
 import org.bukkit.entity.ItemDisplay;

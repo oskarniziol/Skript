@@ -16,9 +16,10 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays;
+package org.skriptlang.skript.elements.displays.text;
 
 import org.bukkit.entity.Display;
+import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,39 +30,28 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Display Height/Width")
+@Name("Text Display Opacity")
 @Description({
-	"Returns or changes the height or width of <a href='classes.html#display'>displays</a>.",
-	"The rendering culling bounding box spans horizontally width/2 from entity position, "+
-	"and the part beyond will be culled.",
-	"If set to 0, no culling will occur on both the vertical and horizontal directions. Default is 0.0."
+	"Returns or changes the opacity of <a href='classes.html#display'>text displays</a>.",
+	"Values are between -127 and 127. The value of 127 represents it being completely opaque."
 })
-@Examples("set height of the last spawned text display to 2.5")
+@Examples("set the opacity of the last spawned text display to -1 # Reset")
 @Since("INSERT VERSION")
-public class ExprDisplayHeightWidth extends SimplePropertyExpression<Display, Float> {
+public class ExprTextDisplayOpacity extends SimplePropertyExpression<Display, Byte> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayHeightWidth.class, Float.class, "display (:height|width)", "displays");
-	}
-
-	private boolean height;
-
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		height = parseResult.hasTag("height");
-		return super.init(exprs, matchedPattern, isDelayed, parseResult);
+			registerDefault(ExprTextDisplayOpacity.class, Byte.class, "[display] opacity", "displays");
 	}
 
 	@Override
 	@Nullable
-	public Float convert(Display display) {
-		return height ? display.getDisplayHeight() : display.getDisplayWidth();
+	public Byte convert(Display display) {
+		if (!(display instanceof TextDisplay))
+			return null;
+		return ((TextDisplay) display).getTextOpacity();
 	}
 
 	@Nullable
@@ -82,45 +72,42 @@ public class ExprDisplayHeightWidth extends SimplePropertyExpression<Display, Fl
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		Display[] displays = getExpr().getArray(event);
-		float change = delta == null ? 0F : ((Number) delta[0]).floatValue();
-		change = Math.max(0F, change);
+		byte change = delta == null ? -1 : ((Number) delta[0]).byteValue();
+		change = (byte) Math.max(-127, change);
 		switch (mode) {
 			case REMOVE_ALL:
 			case REMOVE:
-				change = -change;
+				change = (byte) -change;
 			case ADD:
 				for (Display display : displays) {
-					if (height) {
-						float value = Math.max(0F, display.getDisplayHeight() + change);
-						display.setDisplayHeight(value);
-					} else {
-						float value = Math.max(0F, display.getDisplayWidth() + change);
-						display.setDisplayWidth(value);
-					}
+					if (!(display instanceof TextDisplay))
+						continue;
+					TextDisplay textDisplay = (TextDisplay) display;
+					byte value = (byte) Math.min(127, textDisplay.getTextOpacity() + change);
+					value = (byte) Math.max(-127, value);
+					textDisplay.setTextOpacity(value);
 				}
 				break;
 			case DELETE:
 			case RESET:
 			case SET:
 				for (Display display : displays) {
-					if (height) {
-						display.setDisplayHeight(change);
-					} else {
-						display.setDisplayWidth(change);
-					}
+					if (!(display instanceof TextDisplay))
+						continue;
+					((TextDisplay) display).setTextOpacity(change);
 				}
 				break;
 		}
 	}
 
 	@Override
-	public Class<? extends Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Byte> getReturnType() {
+		return Byte.class;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return height ? "height" : "width";
+		return "opacity";
 	}
 
 }

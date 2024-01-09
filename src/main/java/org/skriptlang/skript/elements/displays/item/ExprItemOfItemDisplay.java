@@ -16,11 +16,12 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays;
+package org.skriptlang.skript.elements.displays.item;
 
 import org.bukkit.entity.Display;
-import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import ch.njol.skript.Skript;
@@ -32,63 +33,59 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Display Billboard")
-@Description({
-	"Returns or changes the <a href='classes.html#billboard'>billboard</a> setting of <a href='classes.html#display'>displays</a>.",
-	"This describes the axes/points around which the display can pivot.",
-	"Displays spawn with the default setting as 'fixed'. Resetting this expression will also set it to 'fixed'."
-})
-@Examples("set billboard of the last spawned text display to center")
+@Name("Item Display Item")
+@Description("Returns or changes the <a href='classes.html#itemstack'>itemstack</a> of <a href='classes.html#display'>item displays</a>.")
+@Examples("set the display item of the last spawned item display to a diamond sword")
 @Since("INSERT VERSION")
-public class ExprDisplayBillboard extends SimplePropertyExpression<Display, Billboard> {
+public class ExprItemOfItemDisplay extends SimplePropertyExpression<Display, ItemStack> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayBillboard.class, Billboard.class, "billboard[s]", "displays");
+			registerDefault(ExprItemOfItemDisplay.class, ItemStack.class, "display item[stack]", "displays");
 	}
 
 	@Override
 	@Nullable
-	public Billboard convert(Display display) {
-		return display.getBillboard();
+	public ItemStack convert(Display display) {
+		if (!(display instanceof ItemDisplay))
+			return null;
+		return ((ItemDisplay) display).getItemStack();
 	}
 
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		switch (mode) {
 			case ADD:
-			case DELETE:
+			case RESET:
 			case REMOVE:
 			case REMOVE_ALL:
 				break;
-			case RESET:
+			case DELETE:
 				return CollectionUtils.array();
 			case SET:
-				return CollectionUtils.array(Billboard.class);
+				return CollectionUtils.array(ItemStack.class);
 		}
 		return null;
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (mode == ChangeMode.RESET) {
-			for (Display display : getExpr().getArray(event))
-				display.setBillboard(Billboard.FIXED);
-			return;
+		ItemStack item = mode == ChangeMode.DELETE ? null : (ItemStack) delta[0];
+		for (Display display : getExpr().getArray(event)) {
+			if (!(display instanceof ItemDisplay))
+				continue;
+			((ItemDisplay) display).setItemStack(item);
 		}
-		Billboard billboard = (Billboard) delta[0];
-		for (Display display : getExpr().getArray(event))
-			display.setBillboard(billboard);
 	}
 
 	@Override
-	public Class<? extends Billboard> getReturnType() {
-		return Billboard.class;
+	public Class<? extends ItemStack> getReturnType() {
+		return ItemStack.class;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return "billboard";
+		return "display item";
 	}
 
 }

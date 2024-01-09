@@ -17,7 +17,7 @@
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
 @NonNullByDefault({DefaultLocation.PARAMETER, DefaultLocation.RETURN_TYPE, DefaultLocation.FIELD})
-package org.skriptlang.skript.elements.expressions.displays.item;
+package org.skriptlang.skript.elements.displays.text;
 
 import org.eclipse.jdt.annotation.DefaultLocation;
 import org.eclipse.jdt.annotation.NonNullByDefault;

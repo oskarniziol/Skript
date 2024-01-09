@@ -16,11 +16,10 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays.text;
+package org.skriptlang.skript.elements.displays.text;
 
 import org.bukkit.entity.Display;
 import org.bukkit.entity.TextDisplay;
-import org.bukkit.entity.TextDisplay.TextAlignment;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,59 +32,68 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Text Display Alignment")
-@Description("Returns or changes the <a href='classes.html#textalignment'>alignment</a> setting of <a href='classes.html#display'>text displays</a>.")
-@Examples("set text alignment of the last spawned text display to left")
+@Name("Text Display Line Width")
+@Description("Returns or changes the line width of <a href='classes.html#display'>text displays</a>. Default is 200.")
+@Examples("set the line width of the last spawned text display to 300")
 @Since("INSERT VERSION")
-public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, TextAlignment> {
+public class ExprTextDisplayLineWidth extends SimplePropertyExpression<Display, Integer> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprTextDisplayAlignment.class, TextAlignment.class, "text alignment[s]", "displays");
+			registerDefault(ExprTextDisplayLineWidth.class, Integer.class, "line width", "displays");
 	}
 
 	@Override
 	@Nullable
-	public TextAlignment convert(Display display) {
+	public Integer convert(Display display) {
 		if (!(display instanceof TextDisplay))
 			return null;
-		return ((TextDisplay) display).getAlignment();
+		return ((TextDisplay) display).getLineWidth();
 	}
 
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		switch (mode) {
-			case ADD:
-			case DELETE:
-			case REMOVE:
-			case REMOVE_ALL:
-				break;
-			case RESET:
-				return CollectionUtils.array();
-			case SET:
-				return CollectionUtils.array(TextAlignment.class);
-		}
-		return null;
+		return CollectionUtils.array(Number.class);
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		TextAlignment alignment = mode == ChangeMode.RESET ? TextAlignment.CENTER : (TextAlignment) delta[0];
-		for (Display display : getExpr().getArray(event)) {
-			if (!(display instanceof TextDisplay))
-				continue;
-			((TextDisplay)display).setAlignment(alignment);
+		Display[] displays = getExpr().getArray(event);
+		int change = delta == null ? 200 : ((Number) delta[0]).intValue();
+		change = Math.max(0, change);
+		switch (mode) {
+			case REMOVE_ALL:
+			case REMOVE:
+				change = -change;
+			case ADD:
+				for (Display display : displays) {
+					if (!(display instanceof TextDisplay))
+						continue;
+					TextDisplay textDisplay = (TextDisplay) display;
+					int value = Math.max(0, textDisplay.getLineWidth() + change);
+					textDisplay.setLineWidth(value);
+				}
+				break;
+			case DELETE:
+			case RESET:
+			case SET:
+				for (Display display : displays) {
+					if (!(display instanceof TextDisplay))
+						continue;
+					((TextDisplay) display).setLineWidth(change);
+				}
+				break;
 		}
 	}
 
 	@Override
-	public Class<? extends TextAlignment> getReturnType() {
-		return TextAlignment.class;
+	public Class<? extends Integer> getReturnType() {
+		return Integer.class;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return "text alignment";
+		return "line width";
 	}
 
 }

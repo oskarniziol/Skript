@@ -16,9 +16,10 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays;
+package org.skriptlang.skript.elements.displays.expressions;
 
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Display.Billboard;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,62 +30,65 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.util.Color;
-import ch.njol.skript.util.ColorRGB;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Display Glow Color Override")
+@Name("Display Billboard")
 @Description({
-	"Returns or changes the glowing color override of <a href='classes.html#display'>displays</a>.",
-	"This overrides whatever color is already set for the scoreboard team of the displays."
+	"Returns or changes the <a href='classes.html#billboard'>billboard</a> setting of <a href='classes.html#display'>displays</a>.",
+	"This describes the axes/points around which the display can pivot.",
+	"Displays spawn with the default setting as 'fixed'. Resetting this expression will also set it to 'fixed'."
 })
-@Examples("set glow color override of the last spawned text display to blue")
+@Examples("set billboard of the last spawned text display to center")
 @Since("INSERT VERSION")
-public class ExprDisplayGlowOverride extends SimplePropertyExpression<Display, Color> {
+public class ExprDisplayBillboard extends SimplePropertyExpression<Display, Billboard> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayGlowOverride.class, Color.class, "glow[ing] colo[u]r[s] [override[s]]", "displays");
+			registerDefault(ExprDisplayBillboard.class, Billboard.class, "billboard[s]", "displays");
 	}
 
 	@Override
 	@Nullable
-	public Color convert(Display display) {
-		if (display.getGlowColorOverride() == null)
-			return null;
-		return ColorRGB.fromBukkitColor(display.getGlowColorOverride());
+	public Billboard convert(Display display) {
+		return display.getBillboard();
 	}
 
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.DELETE)
-			return CollectionUtils.array(Color.class);
+		switch (mode) {
+			case ADD:
+			case DELETE:
+			case REMOVE:
+			case REMOVE_ALL:
+				break;
+			case RESET:
+				return CollectionUtils.array();
+			case SET:
+				return CollectionUtils.array(Billboard.class);
+		}
 		return null;
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		Display[] displays = getExpr().getArray(event);
-		if (mode != ChangeMode.SET) {
-			for (Display display : displays)
-				display.setGlowColorOverride(null);
+		if (mode == ChangeMode.RESET) {
+			for (Display display : getExpr().getArray(event))
+				display.setBillboard(Billboard.FIXED);
 			return;
 		}
-		if (delta == null)
-			return;
-		Color color = (Color) delta[0];
-		for (Display display : displays)
-			display.setGlowColorOverride(color.asBukkitColor());
+		Billboard billboard = (Billboard) delta[0];
+		for (Display display : getExpr().getArray(event))
+			display.setBillboard(billboard);
 	}
 
 	@Override
-	public Class<? extends Color> getReturnType() {
-		return Color.class;
+	public Class<? extends Billboard> getReturnType() {
+		return Billboard.class;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return "glow color override";
+		return "billboard";
 	}
 
 }

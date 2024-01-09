@@ -16,7 +16,7 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.displays;
+package org.skriptlang.skript.elements.displays.expressions;
 
 import org.bukkit.entity.Display;
 import org.bukkit.event.Event;
@@ -29,34 +29,26 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Display Shadow Radius/Strength")
-@Description("Returns or changes the shadow radius/strength of <a href='classes.html#display'>displays</a>.")
-@Examples("set shadow radius of the last spawned text display to 1.75")
+@Name("Display View Range")
+@Description({
+	"Returns or changes the view range of <a href='classes.html#display'>displays</a>.",
+	"Default value is 1.0. This value is then multiplied by 64 and the player's entity view distance setting to determine the actual range."
+})
+@Examples("set view range of the last spawned text display to 2.7")
 @Since("INSERT VERSION")
-public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> {
+public class ExprDisplayViewRange extends SimplePropertyExpression<Display, Float> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayShadow.class, Float.class, "shadow (:radius|strength)", "displays");
-	}
-
-	private boolean radius;
-
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		radius = parseResult.hasTag("radius");
-		return super.init(exprs, matchedPattern, isDelayed, parseResult);
+			registerDefault(ExprDisplayViewRange.class, Float.class, "[display] view (range|radius)", "displays");
 	}
 
 	@Override
 	@Nullable
 	public Float convert(Display display) {
-		return radius ? display.getShadowRadius() : display.getShadowStrength();
+		return display.getViewRange();
 	}
 
 	@Nullable
@@ -75,33 +67,18 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> 
 				change = -change;
 			case ADD:
 				for (Display display : displays) {
-					if (radius) {
-						float value = Math.max(0F, display.getShadowRadius() + change);
-						display.setShadowRadius(value);
-					} else {
-						float value = Math.max(0F, display.getShadowStrength() + change);
-						display.setShadowStrength(value);
-					}
+					float value = Math.max(0F, display.getViewRange() + change);
+					display.setViewRange(value);
 				}
 				break;
 			case DELETE:
 			case RESET:
-				for (Display display : displays) {
-					if (radius) {
-						display.setShadowRadius(0F);
-					} else {
-						display.setShadowStrength(0F);
-					}
-				}
+				for (Display display : displays)
+					display.setViewRange(1.0F);
 				break;
 			case SET:
-				for (Display display : displays) {
-					if (radius) {
-						display.setShadowRadius(change);
-					} else {
-						display.setShadowStrength(change);
-					}
-				}
+				for (Display display : displays)
+					display.setViewRange(change);
 				break;
 		}
 	}
@@ -113,7 +90,7 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> 
 
 	@Override
 	protected String getPropertyName() {
-		return radius ? "radius" : "strength";
+		return  "view range";
 	}
 
 }

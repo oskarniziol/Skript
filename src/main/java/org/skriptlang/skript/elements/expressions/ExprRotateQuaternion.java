@@ -16,7 +16,7 @@
  *
  * Copyright Peter Güttinger, SkriptLang team and contributors
  */
-package org.skriptlang.skript.elements.expressions.quaternions;
+package org.skriptlang.skript.elements.expressions;
 
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
