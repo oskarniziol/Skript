@@ -239,7 +239,7 @@ public class EffPlaySound extends Effect {
 					if (!KEY_PATTERN.matcher(sound).matches())
 						continue;
 					try {
-						key = NamespacedKey.minecraft(sound);
+						key = NamespacedKey.fromString(sound);
 					} catch (IllegalArgumentException argument) {
 						// The user input invalid characters
 					}
