@@ -33,15 +33,15 @@ import java.util.Set;
 
 public class MinosoftClientManager implements ClientManager {
 
-	private Path minsoftJarPath;
-	private Set<Process> minsoftProcesses = new HashSet<>();
+	private Path minosoftJarPath;
+	private Set<Process> minosoftProcesses = new HashSet<>();
 
 	public MinosoftClientManager() {
-		this.minsoftJarPath = findMinsoftJar();
+		this.minosoftJarPath = findMinosoftJar();
 	}
 
 	@Nullable
-	private Path findMinsoftJar() {
+	private Path findMinosoftJar() {
 		Path skriptDataFolder = Skript.getInstance().getDataFolder().toPath();
 		if (SystemUtils.IS_OS_WINDOWS) {
 			return skriptDataFolder.resolve("minosoft").resolve("minosoft-windows.jar").toAbsolutePath();
@@ -53,21 +53,22 @@ public class MinosoftClientManager implements ClientManager {
 
 	@Override
 	public boolean isAvailable() {
-		return minsoftJarPath != null && Files.exists(minsoftJarPath);
+		return minosoftJarPath != null && Files.exists(minosoftJarPath);
 	}
 
 	@Override
 	public void launchClient(String username, String serverAddress, String serverPort) throws ClientLaunchException {
 		Path javaPath = Paths.get(System.getProperty("java.home"), "bin", "java").toAbsolutePath().normalize();
-		ProcessBuilder minosoftProcessBuilder = new ProcessBuilder(javaPath.toString(), "-jar", minsoftJarPath.toString(), "--headless");
+		ProcessBuilder minosoftProcessBuilder = new ProcessBuilder(javaPath.toString(), "-jar", minosoftJarPath.toString(), "--headless");
+		minosoftProcessBuilder.inheritIO();
 		try {
-			Process minsoftProcess = minosoftProcessBuilder.start();
-			BufferedWriter minsoftCommandWriter = new BufferedWriter(new OutputStreamWriter(minsoftProcess.getOutputStream()));
-			minsoftCommandWriter.write("account add offline " + username + '\n');
-			minsoftCommandWriter.write("account select " + username + '\n');
-			minsoftCommandWriter.write("connect " + serverAddress + ":" + serverPort + '\n');
-			minsoftCommandWriter.close();
-			minsoftProcesses.add(minsoftProcess);
+			Process minosoftProcess = minosoftProcessBuilder.start();
+			BufferedWriter minosoftCommandWriter = new BufferedWriter(new OutputStreamWriter(minosoftProcess.getOutputStream()));
+			minosoftCommandWriter.write("account add offline " + username + '\n');
+			minosoftCommandWriter.write("account select " + username + '\n');
+			minosoftCommandWriter.write("connect " + serverAddress + ":" + serverPort + '\n');
+			minosoftCommandWriter.close();
+			minosoftProcesses.add(minosoftProcess);
 		} catch (IOException exception) {
 			throw new ClientLaunchException(exception);
 		}
@@ -75,12 +76,12 @@ public class MinosoftClientManager implements ClientManager {
 
 	@Override
 	public int getClientCount() {
-		return minsoftProcesses.size();
+		return minosoftProcesses.size();
 	}
 
 	@Override
 	public void killClients() {
-		minsoftProcesses.forEach(Process::destroyForcibly);
+		minosoftProcesses.forEach(Process::destroyForcibly);
 	}
 
 }
