@@ -19,7 +19,6 @@
 package ch.njol.skript.test.runner.clients;
 
 import ch.njol.skript.Skript;
-import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.BufferedWriter;
@@ -29,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 public class MinosoftClientManager implements ClientManager {
@@ -43,9 +43,10 @@ public class MinosoftClientManager implements ClientManager {
 	@Nullable
 	private Path findMinosoftJar() {
 		Path skriptDataFolder = Skript.getInstance().getDataFolder().toPath();
-		if (SystemUtils.IS_OS_WINDOWS) {
+		String osName = System.getProperty("os.name", "unknown").toLowerCase(Locale.ENGLISH);
+		if (osName.contains("windows")) {
 			return skriptDataFolder.resolve("minosoft").resolve("minosoft-windows.jar").toAbsolutePath();
-		} else if (SystemUtils.IS_OS_LINUX) {
+		} else if (osName.contains("linux")) {
 			return skriptDataFolder.resolve("minosoft").resolve("minosoft-linux.jar").toAbsolutePath();
 		}
 		return null; // todo: support macs
@@ -60,7 +61,6 @@ public class MinosoftClientManager implements ClientManager {
 	public void launchClient(String username, String serverAddress, String serverPort) throws ClientLaunchException {
 		Path javaPath = Paths.get(System.getProperty("java.home"), "bin", "java").toAbsolutePath().normalize();
 		ProcessBuilder minosoftProcessBuilder = new ProcessBuilder(javaPath.toString(), "-jar", minosoftJarPath.toString(), "--headless");
-		minosoftProcessBuilder.inheritIO();
 		try {
 			Process minosoftProcess = minosoftProcessBuilder.start();
 			BufferedWriter minosoftCommandWriter = new BufferedWriter(new OutputStreamWriter(minosoftProcess.getOutputStream()));
