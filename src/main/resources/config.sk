@@ -57,7 +57,7 @@ release channel: @release-channel@
 # Initial value of this depends on the Skript version you first installed; it was '@release-channel@'.
 
 enable effect commands: false
-effect command token: !
+effect command token: \
 # If 'enable effect commands' is set to true, chat messages starting with the 'effect command token' will be interpreted as effects and executed.
 # The token can be longer than a single character, but it should not start with '/' as that starts a command.
 # A player needs the permission "skript.effectcommands" to use such commands,
