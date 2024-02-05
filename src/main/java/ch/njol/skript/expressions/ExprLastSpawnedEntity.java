@@ -82,7 +82,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Object> {
 
 	static {
 		Skript.registerExpression(ExprLastSpawnedEntity.class, Object.class, ExpressionType.SIMPLE,
-				"[the] [last:last[ly]] (0:spawned|1:shot) %*entitydata%", // Last has a tag so 'shot projectile' can be used in EntityShootBowEvent and differentiate.
+				"[the] [last:last[ly]] (0:spawned|1:shot) %*entitydata% [:item]", // Last has a tag so 'shot projectile' can be used in EntityShootBowEvent and differentiate.
 				"[the] [last[ly]] dropped (2:item)",
 				"[the] [last[ly]] (created|struck) (3:lightning)",
 				"[the] [last[ly]] (launched|deployed) (4:firework)"
@@ -91,7 +91,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Object> {
 
 	@SuppressWarnings("NotNullFieldNotInitialized")
 	private EntityData<?> type;
-	private boolean shootBowEvent;
+	private boolean shootBowEvent, item;
 	private int from;
 
 	@Override
@@ -106,6 +106,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Object> {
 			type = EntityData.fromClass(Firework.class);
 		} else {
 			shootBowEvent = !parseResult.hasTag("last") && getParser().isCurrentEvent(EntityShootBowEvent.class);
+			item = parseResult.hasTag("item");
 			type = ((Literal<EntityData<?>>) exprs[0]).getSingle();
 		}
 		return true;
@@ -115,10 +116,14 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Object> {
 	@Nullable
 	@SuppressWarnings("deprecation")
 	protected Object[] get(Event event) {
-		if (shootBowEvent && event instanceof EntityShootBowEvent && (PAPER_METHOD || CONSUMABLE_METHOD)) {
-			if (CONSUMABLE_METHOD)
-				return new ItemStack[] {((EntityShootBowEvent) event).getConsumable()};
-			return new ItemStack[] {((EntityShootBowEvent) event).getArrowItem()};
+		if (shootBowEvent && event instanceof EntityShootBowEvent) {
+			if (item && (PAPER_METHOD || CONSUMABLE_METHOD)) {
+				if (CONSUMABLE_METHOD)
+					return new ItemStack[] {((EntityShootBowEvent) event).getConsumable()};
+				return new ItemStack[] {((EntityShootBowEvent) event).getArrowItem()};
+			} else if (!item) {
+				return new Entity[] {((EntityShootBowEvent) event).getProjectile()};
+			}
 		}
 		Entity en;
 		switch (from) {
@@ -154,7 +159,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Object> {
 	@Override
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (mode == ChangeMode.SET && shootBowEvent)
+		if (mode == ChangeMode.SET && shootBowEvent && !item)
 			return new Class[] {Entity.class, EntityData.class};
 		return super.acceptChange(mode);
 	}
@@ -192,7 +197,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Object> {
 	@Override
 	public Class<? extends Object> getReturnType() {
 		if (shootBowEvent)
-			return ItemStack.class;
+			return item ? ItemStack.class : Entity.class;
 		return type.getType();
 	}
 
