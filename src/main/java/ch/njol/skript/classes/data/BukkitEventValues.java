@@ -97,6 +97,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityResurrectEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
@@ -1795,6 +1796,38 @@ public final class BukkitEventValues {
 			@Nullable
 			public TransformReason get(EntityTransformEvent event) {
 				return event.getTransformReason();
+			}
+		}, EventValues.TIME_NOW);
+		// EntityShootBowEvent
+		EventValues.registerEventValue(EntityShootBowEvent.class, ItemStack.class, new Getter<ItemStack, EntityShootBowEvent>() {
+			@Override
+			@Nullable
+			public ItemStack get(EntityShootBowEvent event) {
+				return event.getBow();
+			}
+		}, EventValues.TIME_NOW);
+		EventValues.registerEventValue(EntityShootBowEvent.class, Float.class, new Getter<Float, EntityShootBowEvent>() {
+			@Override
+			@Nullable
+			public Float get(EntityShootBowEvent event) {
+				return event.getForce();
+			}
+		}, EventValues.TIME_NOW);
+		EventValues.registerEventValue(EntityShootBowEvent.class, LivingEntity.class, new Getter<LivingEntity, EntityShootBowEvent>() {
+			@Override
+			@Nullable
+			public LivingEntity get(EntityShootBowEvent event) {
+				return event.getEntity();
+			}
+		}, EventValues.TIME_NOW);
+		EventValues.registerEventValue(EntityShootBowEvent.class, Projectile.class, new Getter<Projectile, EntityShootBowEvent>() {
+			@Override
+			@Nullable
+			public Projectile get(EntityShootBowEvent event) {
+				Entity projectile = event.getProjectile();
+				if (projectile instanceof Projectile)
+					return (Projectile) event.getProjectile();
+				return null;
 			}
 		}, EventValues.TIME_NOW);
 	}
