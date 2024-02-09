@@ -55,22 +55,22 @@ public interface Localizer {
 	}
 
 	/**
-	 * The path to the directory containing language files for this localizer.
+	 * The path to the directory containing language files for this Localizer.
 	 * When searching for language files on the jar, this will be used as the path.
 	 * When searching for language files on the disk, this will be used along with {@link #dataFileDirectory()}.
 	 * That is, it is expected that the path <code>dataFileDirectory() + languageFileDirectory()</code> would
-	 *  lead to this localizer's language files on the disk.
+	 *  lead to this Localizer's language files on the disk.
 	 * @return A string representing the path to the directory.
-	 *  Null if this localizer does not store any language files.
+	 *  Null if this Localizer does not store any language files.
 	 */
 	@Nullable
 	String languageFileDirectory();
 
 	/**
-	 * The path to the directory on disk containing data files for this localizer.
+	 * The path to the directory on disk containing data files for this Localizer.
 	 *  For example, this may include language files that have been saved to enable user customization.
 	 * @return A string representing the path to the directory.
-	 *  Null if this localizer does not store any data files.
+	 *  Null if this Localizer does not store any data files.
 	 */
 	@Nullable
 	String dataFileDirectory();

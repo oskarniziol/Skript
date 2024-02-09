@@ -211,9 +211,10 @@ public class Language {
 			return;
 		}
 
+		Class<?> source = addon instanceof ch.njol.skript.SkriptAddon ? ((ch.njol.skript.SkriptAddon) addon).plugin.getClass() : addon.getClass();
 		try (
-			InputStream defaultIs = addon.getClass().getResourceAsStream("/" + languageFileDirectory + "/default.lang");
-			InputStream englishIs = addon.getClass().getResourceAsStream("/" + languageFileDirectory + "/english.lang")
+			InputStream defaultIs = source.getResourceAsStream("/" + languageFileDirectory + "/default.lang");
+			InputStream englishIs = source.getResourceAsStream("/" + languageFileDirectory + "/english.lang")
 		) {
 
 			InputStream defaultLangIs = defaultIs;
@@ -281,9 +282,10 @@ public class Language {
 			return false;
 		}
 
+		Class<?> source = addon instanceof ch.njol.skript.SkriptAddon ? ((ch.njol.skript.SkriptAddon) addon).plugin.getClass() : addon.getClass();
 		// Backwards addon compatibility
 		if (name.equals("english")) {
-			try (InputStream is = addon.getClass().getResourceAsStream("/" + languageFileDirectory + "/default.lang")) {
+			try (InputStream is = source.getResourceAsStream("/" + languageFileDirectory + "/default.lang")) {
 				if (is == null) {
 					return true;
 				}
@@ -293,7 +295,7 @@ public class Language {
 		}
 
 		HashMap<String, String> l;
-		try (InputStream is = addon.getClass().getResourceAsStream("/" + languageFileDirectory + "/" + name + ".lang")) {
+		try (InputStream is = source.getResourceAsStream("/" + languageFileDirectory + "/" + name + ".lang")) {
 			l = load(is, name, tryUpdate);
 		} catch (IOException e) {
 			throw new RuntimeException(e);

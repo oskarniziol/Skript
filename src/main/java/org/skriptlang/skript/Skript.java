@@ -85,7 +85,7 @@ public interface Skript extends SkriptAddon {
 	 * {@inheritDoc}
 	 */
 	@Override
-	@NotNull // Skript will always have a localizer
+	@NotNull // Skript will always have a Localizer
 	Localizer localizer();
 
 }
