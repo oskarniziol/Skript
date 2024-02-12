@@ -42,11 +42,11 @@ public class DefaultClasses {
 	public static ClassInfo<String> STRING = getClassInfo(String.class);
 
 	// Bukkit
-  public static ClassInfo<OfflinePlayer> OFFLINE_PLAYER = getClassInfo(OfflinePlayer.class);
+        public static ClassInfo<OfflinePlayer> OFFLINE_PLAYER = getClassInfo(OfflinePlayer.class);
 	public static ClassInfo<Location> LOCATION = getClassInfo(Location.class);
 	public static ClassInfo<Vector> VECTOR = getClassInfo(Vector.class);
 	public static ClassInfo<Player> PLAYER = getClassInfo(Player.class);
-  public static ClassInfo<World> WORLD = getClassInfo(World.class);
+        public static ClassInfo<World> WORLD = getClassInfo(World.class);
 
 	// Skript
 	public static ClassInfo<Color> COLOR = getClassInfo(Color.class);

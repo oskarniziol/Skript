@@ -57,9 +57,10 @@ public class ExprBlockData extends SimplePropertyExpression<Object, BlockData> {
 	public BlockData convert(Object object) {
 		if (object instanceof Block)
 			return ((Block) object).getBlockData();
-		if (!(object instanceof BlockDisplay))
-			return null;
-		return ((BlockDisplay) object).getBlock();
+		if (object instanceof BlockDisplay)
+		        return ((BlockDisplay) object).getBlock();
+		return null;
+		
 	}
 
 	@Nullable

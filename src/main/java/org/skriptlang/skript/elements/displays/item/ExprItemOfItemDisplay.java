@@ -72,9 +72,8 @@ public class ExprItemOfItemDisplay extends SimplePropertyExpression<Display, Ite
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		ItemStack item = mode == ChangeMode.DELETE ? null : (ItemStack) delta[0];
 		for (Display display : getExpr().getArray(event)) {
-			if (!(display instanceof ItemDisplay))
-				continue;
-			((ItemDisplay) display).setItemStack(item);
+			if (display instanceof ItemDisplay)
+				((ItemDisplay) display).setItemStack(item);
 		}
 	}
 

@@ -54,7 +54,7 @@ public class DisplayEntitySlot extends Slot {
 
 	@Override
 	public boolean isSameSlot(Slot other) {
-		if (other instanceof DisplayEntitySlot) // Same item frame
+		if (other instanceof DisplayEntitySlot) // Same display
 			return ((DisplayEntitySlot) other).display.equals(display);
 		return false;
 	}

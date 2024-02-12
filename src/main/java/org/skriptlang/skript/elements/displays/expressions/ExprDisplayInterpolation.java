@@ -61,7 +61,7 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, 
 	@Override
 	@Nullable
 	public Timespan convert(Display display) {
-		return Timespan.fromTicks_i(delay ? display.getInterpolationDelay() : display.getInterpolationDuration());
+		return Timespan.fromTicks(delay ? display.getInterpolationDelay() : display.getInterpolationDuration());
 	}
 
 	@Nullable
@@ -72,7 +72,7 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		Display[] displays = getExpr().getArray(event);
-		int ticks = (int) (delta == null ? 0 : (delta[0] instanceof Number ? ((Number) delta[0]).intValue() : ((Timespan) delta[0]).getTicks_i()));
+		int ticks = (int) (delta == null ? 0 : (delta[0] instanceof Number ? ((Number) delta[0]).intValue() : ((Timespan) delta[0]).getTicks()));
 		ticks = Math.max(0, ticks);
 		switch (mode) {
 			case REMOVE_ALL:
