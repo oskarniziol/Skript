@@ -1526,7 +1526,7 @@ public class BukkitClasses {
 					.user("sign ?sides?")
 					.name("Sign Sides")
 					.description("Represents a side of a sign.")
-					.requiredPlugins("Spigot 1.20+")
+					.requiredPlugins("Spigot 1.20+"));
 
 	}
 
