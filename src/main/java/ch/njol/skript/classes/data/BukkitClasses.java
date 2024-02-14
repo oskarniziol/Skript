@@ -1585,12 +1585,12 @@ public class BukkitClasses {
 
 						@Override
 						public String toString(DamageType type, int flags) {
-							return type.getKey();
+							return Classes.toString(type.getKey());
 						}
 
 						@Override
 						public String toVariableNameString(DamageType type) {
-							return "damage type:" + type.getKey();
+							return "damage type: " + Classes.toString(type.getKey());
 						}
 					}));
 		}
