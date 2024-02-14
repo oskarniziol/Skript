@@ -59,7 +59,7 @@ import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 			"\t\theal the player",
 		"\tset line 3 to \"%player%\""
 })
-@Since("1.3, INSERT VERSION (all lines, back side, multiple blocks, and Skript's ChatFormat (hex, font, etc))")
+@Since("1.3, INSERT VERSION (all lines, back side, multiple blocks, Skript's ChatFormat (hex, font, etc))")
 @RequiredPlugins({
 	"Paper 1.16+ or Adventure API installed to use Skript ChatFormat",
 	"Spigot 1.20+ required to use the sign side"
