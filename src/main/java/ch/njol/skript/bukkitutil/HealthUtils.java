@@ -109,7 +109,7 @@ public class HealthUtils {
 	}
 	
 	public static void setDamageCause(Damageable e, DamageCause cause) {
-		e.setLastDamageCause(new EntityDamageEvent(e, cause, 0));
+		//e.setLastDamageCause(new EntityDamageEvent(e, cause, 0));
 	}
 	
 }

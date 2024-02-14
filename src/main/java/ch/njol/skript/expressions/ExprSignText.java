@@ -25,20 +25,23 @@ import java.util.stream.Stream;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
+import org.bukkit.block.sign.SignSide;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.SignChangeEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import com.google.common.collect.Lists;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.bukkitutil.AdventureSetSignLine;
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -66,9 +69,13 @@ import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 })
 public class ExprSignText extends SimpleExpression<String> {
 
+	@Nullable
+	private static BungeeComponentSerializer serializer;
 	private static final boolean RUNNING_1_20 = Skript.isRunningMinecraft(1, 20);
 
 	static {
+		if (Skript.isRunningMinecraft(1, 19, 4))
+			serializer = BungeeComponentSerializer.get();
 		String addition = RUNNING_1_20 ? "[[on [the] (front|:back) side] of [sign[s]] %blocks%]" : "[of [sign[s]] %blocks%]";
 		Skript.registerExpression(ExprSignText.class, String.class, ExpressionType.PROPERTY,
 				"[all [[of] the]|the] lines " + addition,
@@ -79,31 +86,26 @@ public class ExprSignText extends SimpleExpression<String> {
 	}
 
 	@Nullable
-	private static BungeeComponentSerializer serializer;
-
-	@Nullable
 	private Expression<Number> line;
 	private Expression<Block> blocks;
-	private boolean lines;
+	private boolean multipleLines;
 
 	@Nullable
-	private Side side; // Only nullable due to older versions than 1.20.
+	private Side side; // Nullable due to versions before 1.20.
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		if (Skript.classExists("net.kyori.adventure.text.Component"))
-			serializer = BungeeComponentSerializer.get();
 		if (matchedPattern == 2) {
 			line = (Expression<Number>) exprs[0];
 		} else if (matchedPattern == 3) {
 			line = new SimpleLiteral<>(parseResult.mark, false);
 		} else {
-			lines = true;
+			multipleLines = true;
 		}
 		if (RUNNING_1_20)
 			side = parseResult.hasTag("back") ? Side.BACK : Side.FRONT;
-		blocks = (Expression<Block>) exprs[matchedPattern <= 1 ? 0 : 1];
+		blocks = (Expression<Block>) exprs[matchedPattern != 2 ? 0 : 1];
 		return true;
 	}
 
@@ -111,15 +113,15 @@ public class ExprSignText extends SimpleExpression<String> {
 	@Nullable
 	protected String[] get(Event event) {
 		int line = 0;
-		if (this.line == null && !lines) {
+		if (this.line == null && !multipleLines) {
 			return new String[0];
-		} else if (!lines) {
-			line = this.line.getOptionalSingle(event).orElse(1).intValue() - 1;
+		} else if (!multipleLines) {
+			line = this.line.getOptionalSingle(event).orElse(-1).intValue() - 1;
 			if (line < 0 || line > 3)
 				return new String[0];
 		}
-		if (getTime() >= 0 && event instanceof SignChangeEvent && !Delay.isDelayed(event)) {
-			if (lines)
+		if (getTime() >= 0 && event instanceof SignChangeEvent && blocks.check(event, block -> block.equals(((SignChangeEvent) event).getBlock()))) {
+			if (multipleLines)
 				return ((SignChangeEvent) event).getLines();
 			return new String[] {((SignChangeEvent) event).getLine(line)};
 		}
@@ -130,11 +132,11 @@ public class ExprSignText extends SimpleExpression<String> {
 				.map(Sign.class::cast)
 				.flatMap(sign -> {
 					if (RUNNING_1_20) {
-						if (lines)
+						if (multipleLines)
 							return Arrays.stream(sign.getSide(side).getLines());
 						return Stream.of(sign.getSide(side).getLine(finalLine));
 					}
-					if (lines)
+					if (multipleLines)
 						return Arrays.stream(sign.getLines());
 					return Stream.of(sign.getLine(finalLine));
 				})
@@ -149,11 +151,11 @@ public class ExprSignText extends SimpleExpression<String> {
 			case REMOVE:
 			case REMOVE_ALL:
 			case DELETE:
+			case RESET:
 				acceptsMany = false;
 			case SET:
 			case ADD:
 				return CollectionUtils.array(acceptsMany ? String[].class : String.class);
-			case RESET:
 			default:
 				return null;
 		}
@@ -162,63 +164,20 @@ public class ExprSignText extends SimpleExpression<String> {
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		int line = 0;
-		if (this.line == null && !lines) {
+		if (this.line == null && !multipleLines) {
 			return;
-		} else if (!lines) {
-			line = this.line.getOptionalSingle(event).orElse(1).intValue() - 1;
+		} else if (!multipleLines) {
+			line = this.line.getOptionalSingle(event).orElse(-1).intValue() - 1;
 			if (line < 0 || line > 3)
 				return;
 		}
-		if (getTime() >= 0 && event instanceof SignChangeEvent && blocks.check(event, block -> block.equals(((SignChangeEvent) event).getBlock())) && !Delay.isDelayed(event)) {
+		if (getTime() >= 0 && event instanceof SignChangeEvent && blocks.check(event, block -> block.equals(((SignChangeEvent) event).getBlock()))) {
 			String[] stringDelta = delta == null ? null : Arrays.copyOf(delta, delta.length, String[].class);
 			SignChangeEvent changeEvent = (SignChangeEvent) event;
-			switch (mode) {
-				case ADD:
-					assert stringDelta != null;
-					if (lines) {
-						List<String> list = Lists.newArrayList(changeEvent.getLines());
-						for (String string : stringDelta)
-							list.add(string);
-
-						stringDelta = list.toArray(new String[0]);
-					} else {
-						for (int i = 0; i < stringDelta.length; i++) {
-							String value = stringDelta.length > i ? (String) delta[i] : "";
-							stringDelta[i] = value + stringDelta[i];
-						}
-					}
-					//$FALL-THROUGH$
-				case REMOVE:
-				case REMOVE_ALL:
-					assert stringDelta != null;
-					stringDelta = ExprLore.handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
-					//$FALL-THROUGH$
-				case DELETE:
-					stringDelta = CollectionUtils.array("", "", "", "");
-				case SET:
-					// We need to ensure that it's clearing values without calling setLine twice.
-					if (mode == ChangeMode.SET) {
-						for (int i = 0; i < 4; i++)
-							stringDelta[i] = stringDelta.length > i ? (String) stringDelta[i] : "";
-					}
-					assert stringDelta != null;
-					if (lines) {
-						for (int i = 0; i < 4; i++) {
-							String value = stringDelta.length > i ? (String) stringDelta[i] : "";
-							if (serializer != null) {
-								changeEvent.line(i, serializer.deserialize(BungeeConverter.convert(ChatMessages.parseToArray(value))));
-								continue;
-							}
-							changeEvent.setLine(i, value);
-						}
-						break;
-					}
-					changeEvent.setLine(line, (String) delta[0]);
-					break;
-				default:
-					break;
-			}
-			return;
+			AdventureSetSignLine<Integer, String> ADVENTURE_SET_LINE = null;
+			if (serializer != null)
+				ADVENTURE_SET_LINE = changeEvent::line;
+			change(mode, changeEvent::getLines, changeEvent::getLine, changeEvent::setLine, ADVENTURE_SET_LINE, line, stringDelta);
 		}
 		int finalLine = line;
 		blocks.stream(event)
@@ -226,68 +185,81 @@ public class ExprSignText extends SimpleExpression<String> {
 				.filter(Sign.class::isInstance)
 				.map(Sign.class::cast)
 				.forEach(sign -> {
-					String[] stringDelta = delta == null ? null : Arrays.copyOf(delta, delta.length, String[].class);
-					switch (mode) {
-						case ADD:
-							assert stringDelta != null;
-							if (lines) {
-								List<String> list = Lists.newArrayList(sign.getLines());
-								for (String string : stringDelta)
-									list.add(string);
-
-								stringDelta = list.toArray(new String[0]);
-							} else {
-								for (int i = 0; i < stringDelta.length; i++) {
-									String value = stringDelta.length > i ? (String) delta[i] : "";
-									stringDelta[i] = value + stringDelta[i];
-								}
-							}
-							//$FALL-THROUGH$
-						case REMOVE:
-						case REMOVE_ALL:
-							assert stringDelta != null;
-							stringDelta = ExprLore.handleRemove(StringUtils.join(stringDelta, "\n"), stringDelta[0], mode == ChangeMode.REMOVE_ALL).split("\n");
-							//$FALL-THROUGH$
-						case DELETE:
-							stringDelta = CollectionUtils.array("", "", "", "");
-						case SET:
-							// We need to ensure that it's clearing values without calling setLine twice.
-							if (mode == ChangeMode.SET) {
-								for (int i = 0; i < 4; i++)
-									stringDelta[i] = stringDelta.length > i ? (String) stringDelta[i] : "";
-							}
-							assert stringDelta != null;
-							if (RUNNING_1_20) {
-								if (lines) {
-									for (int i = 0; i < 4; i++) {
-										String value = stringDelta.length > i ? (String) stringDelta[i] : "";
-										if (serializer != null) {
-											sign.getSide(side).line(i, serializer.deserialize(BungeeConverter.convert(ChatMessages.parseToArray(value))));
-											continue;
-										}
-										sign.setLine(i, value);
-									}
-								}
-								sign.setLine(finalLine, (String) delta[0]);
-								break;
-							}
-							if (lines) {
-								for (int i = 0; i < 4; i++) {
-									String value = stringDelta.length > i ? (String) stringDelta[i] : "";
-									if (serializer != null) {
-										sign.line(i, serializer.deserialize(BungeeConverter.convert(ChatMessages.parseToArray(value))));
-										continue;
-									}
-									sign.setLine(i, value);
-								}
-							}
-							sign.setLine(finalLine, (String) delta[0]);
-							break;
-						default:
-							break;
+					String[] strings = delta == null ? null : Arrays.copyOf(delta, delta.length, String[].class);
+					AdventureSetSignLine<Integer, String> ADVENTURE_SET_LINE = null;
+					if (serializer != null)
+						ADVENTURE_SET_LINE = sign::line;
+					if (RUNNING_1_20) {
+						SignSide side = sign.getSide(this.side);
+						if (serializer != null)
+							ADVENTURE_SET_LINE = side::line;
+						change(mode, side::getLines, side::getLine, side::setLine, ADVENTURE_SET_LINE, finalLine, strings);
+					} else {
+						change(mode, sign::getLines, sign::getLine, sign::setLine, ADVENTURE_SET_LINE, finalLine, strings);
 					}
 					sign.update(true, false);
 				});
+	}
+
+	/**
+	 * Functional interface method to allow for getLines, getLines(int), setLine(int, String), line(int Component) on Sign, SignChangeEvent and SignSide
+	 */
+	private void change(ChangeMode mode, GetSignLines GET_LINES, GetSignLine<Integer> GET_LINE, SetSignLine<Integer, String> SET_LINE, @Nullable AdventureSetSignLine<Integer, String> ADVENTURE_SET_LINE, int line, String... strings) {
+		switch (mode) {
+			case ADD:
+				List<String> list = Lists.newArrayList(GetSignLines.getLines(GET_LINES));
+				if (multipleLines) {
+					int last = -1; // Last white space character.
+					for (int i = 3; i >= 0; i--) {
+						if (list.get(i).trim().isEmpty()) {
+							last = i;
+						} else {
+							break;
+						}
+					}
+					if (last < 0)
+						return;
+					int index = 0;
+					for (int i = last; i < 4; i++) {
+						if (index > strings.length - 1)
+							continue;
+						list.set(last, strings[index++]);
+					}
+
+					strings = list.toArray(new String[0]);
+					change(ChangeMode.SET, GET_LINES, GET_LINE, SET_LINE, ADVENTURE_SET_LINE, line, strings);
+				} else {
+//					list.set(line, GetSignLine.getLine(GET_LINE, line) + StringUtils.join(strings));
+//					strings = list.toArray(new String[0]);
+//					multipleLines = true;
+					change(ChangeMode.SET, GET_LINES, GET_LINE, SET_LINE, ADVENTURE_SET_LINE, line, GetSignLine.getLine(GET_LINE, line) + StringUtils.join(strings));
+				}
+				break;
+			case RESET:
+			case DELETE:
+				change(ChangeMode.SET, GET_LINES, GET_LINE, SET_LINE, ADVENTURE_SET_LINE, line, CollectionUtils.array("", "", "", ""));
+				break;
+			case REMOVE:
+			case REMOVE_ALL:
+				strings = ChangerUtils.handleStringRemove(StringUtils.join(strings, "\n"), strings[0], mode == ChangeMode.REMOVE_ALL).split("\n");
+				//$FALL-THROUGH$
+			case SET:
+				if (multipleLines) {
+					for (int i = 0; i < 4; i++) {
+						String value = strings.length > i ? (String) strings[i] : "";
+						if (serializer != null && ADVENTURE_SET_LINE != null) {
+							AdventureSetSignLine.line(ADVENTURE_SET_LINE, i, serializer.deserialize(BungeeConverter.convert(ChatMessages.parseToArray(value))));
+							continue;
+						}
+						SetSignLine.setLine(SET_LINE, i, value);
+					}
+					break;
+				}
+				SetSignLine.setLine(SET_LINE, line, (String) strings[0]);
+				break;
+			default:
+				break;
+		}
 	}
 
 	@Override
@@ -297,7 +269,7 @@ public class ExprSignText extends SimpleExpression<String> {
 
 	@Override
 	public boolean isSingle() {
-		return !lines;
+		return !multipleLines;
 	}
 
 	@Override
@@ -310,6 +282,36 @@ public class ExprSignText extends SimpleExpression<String> {
 		if (line == null)
 			return "lines of " + blocks.toString(event, debug);
 		return "line " + line.toString(event, debug) + " of " + blocks.toString(event, debug);
+	}
+
+	@FunctionalInterface
+	private interface SetSignLine<T, S> {
+
+		void setLine(int line, @NotNull String value);
+
+		static void setLine(SetSignLine<Integer, String> setLineMethod, int line, String value) {
+			setLineMethod.setLine(line, value);
+		}
+	}
+
+	@FunctionalInterface
+	private interface GetSignLine<T> {
+
+		String getLine(int line);
+
+		static String getLine(GetSignLine<Integer> getLineMethod, int line) {
+			return getLineMethod.getLine(line);
+		}
+	}
+
+	@FunctionalInterface
+	private interface GetSignLines {
+
+		String[] getLines();
+
+		static String[] getLines(GetSignLines getLinesMethod) {
+			return getLinesMethod.getLines();
+		}
 	}
 
 }
