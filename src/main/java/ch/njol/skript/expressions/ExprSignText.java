@@ -229,9 +229,6 @@ public class ExprSignText extends SimpleExpression<String> {
 					strings = list.toArray(new String[0]);
 					change(ChangeMode.SET, GET_LINES, GET_LINE, SET_LINE, ADVENTURE_SET_LINE, line, strings);
 				} else {
-//					list.set(line, GetSignLine.getLine(GET_LINE, line) + StringUtils.join(strings));
-//					strings = list.toArray(new String[0]);
-//					multipleLines = true;
 					change(ChangeMode.SET, GET_LINES, GET_LINE, SET_LINE, ADVENTURE_SET_LINE, line, GetSignLine.getLine(GET_LINE, line) + StringUtils.join(strings));
 				}
 				break;
