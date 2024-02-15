@@ -238,21 +238,6 @@ public class ExprLore extends SimpleExpression<String> {
 		}
 	}
 
-	/**
-	 * Handles removing string. The 'all' boolean is for if the ChangeMode is REMOVE_ALL
-	 * 
-	 * @param input The String to modify.
-	 * @param toRemove The value to remove from the input string.
-	 * @param all If the ChangeMode is REMOVE_ALL or not
-	 * @return Input formatted with the replacement.
-	 * @deprecated Use {@link ChangerUtils#handleStringRemove(String, String, boolean)}
-	 */
-	@Deprecated
-	@ScheduledForRemoval
-	public static String handleRemove(String input, String toRemove, boolean all) {
-		return ChangerUtils.handleStringRemove(input, toRemove, all);
-	}
-
 	@Override
 	public boolean isSingle() {
 		return lineNumber != null;
