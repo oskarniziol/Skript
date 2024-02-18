@@ -1,0 +1,5 @@
+test "watchdog stopped":
+  set {_start} to now
+  while difference between {_start} and now is less than 5 minutes:
+    continue loop
+  assert true is false with "watchdog was stopped!"
