@@ -2,7 +2,7 @@
 # in order to test certain things like whether or not Watchdog has been
 # successfully disabled in the test environment
 #
-#test "timeout test system":
-#  while true is true:
-#    continue loop
-#  assert true is false with "reached end of an infinite loop"
+test "timeout test system":
+  while true is true:
+    continue loop
+  assert true is false with "reached end of an infinite loop"

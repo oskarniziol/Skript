@@ -668,15 +668,16 @@ public final class Skript extends JavaPlugin implements Listener {
 							return;
 						} else {
 							info("Loading all tests from " + TestMode.TEST_DIR);
-							try {
-								/* not a great thing to do, but it's ok because this will never run on a "real" server
-								   we just want to avoid watchdog killing the test runner if the tests take too long
-								   to run */
-								WatchdogUtils.stopWatchdog();
-							} catch (IllegalAccessException | ClassNotFoundException | NoSuchMethodException |
-                                     InvocationTargetException exception) {
-								Skript.exception(exception, "Unable to stop watchdog");
-							}
+
+//							try {
+//								/* not a great thing to do, but it's ok because this will never run on a "real" server
+//								   we just want to avoid watchdog killing the test runner if the tests take too long
+//								   to run */
+//								WatchdogUtils.stopWatchdog();
+//							} catch (IllegalAccessException | ClassNotFoundException | NoSuchMethodException |
+//                                     InvocationTargetException exception) {
+//								Skript.exception(exception, "Unable to stop watchdog");
+//							}
 
 							// Treat parse errors as fatal testing failure
 							CountingLogHandler errorCounter = new CountingLogHandler(Level.SEVERE);
