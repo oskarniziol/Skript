@@ -1,5 +1,5 @@
 
-test "5804-is-burning":
+test "burning":
 	spawn a pig at event-location
 	set {_pig} to the last spawned pig
 	assert "burning" parsed as damage cause is burning with "burning damage cause compare"
