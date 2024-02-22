@@ -74,45 +74,58 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 		 * Indicates that the condition is in a form of <code>something has/have something</code>,
 		 * also possibly in the negated form
 		 */
-		HAVE
+		HAVE,
+
+		/**
+		 * Indicates that the condition is in a form of <code>something will/be something</code>,
+		 * also possibly in the negated form
+		 */
+		WILL
 	}
 
 	private Expression<? extends T> expr;
 
 	/**
-	 * @param c the class to register
+	 * @param condition the class to register
 	 * @param property the property name, for example <i>fly</i> in <i>players can fly</i>
 	 * @param type must be plural, for example <i>players</i> in <i>players can fly</i>
 	 */
-	public static void register(final Class<? extends Condition> c, final String property, final String type) {
-		register(c, PropertyType.BE, property, type);
+
+	public static void register(Class<? extends Condition> condition, String property, String type) {
+		register(condition, PropertyType.BE, property, type);
 	}
 
 	/**
-	 * @param c the class to register
+	 * @param condition the class to register
 	 * @param propertyType the property type, see {@link PropertyType}
 	 * @param property the property name, for example <i>fly</i> in <i>players can fly</i>
 	 * @param type must be plural, for example <i>players</i> in <i>players can fly</i>
 	 */
-	public static void register(final Class<? extends Condition> c, final PropertyType propertyType, final String property, final String type) {
-		if (type.contains("%")) {
+
+	public static void register(Class<? extends Condition> condition, PropertyType propertyType, String property, String type) {
+		if (type.contains("%"))
 			throw new SkriptAPIException("The type argument must not contain any '%'s");
-		}
+
 		switch (propertyType) {
 			case BE:
-				Skript.registerCondition(c, ConditionType.PROPERTY,
+				Skript.registerCondition(condition, ConditionType.PROPERTY,
 						"%" + type + "% (is|are) " + property,
 						"%" + type + "% (isn't|is not|aren't|are not) " + property);
 				break;
 			case CAN:
-				Skript.registerCondition(c, ConditionType.PROPERTY,
+				Skript.registerCondition(condition, ConditionType.PROPERTY,
 						"%" + type + "% can " + property,
 						"%" + type + "% (can't|cannot|can not) " + property);
 				break;
 			case HAVE:
-				Skript.registerCondition(c, ConditionType.PROPERTY,
+				Skript.registerCondition(condition, ConditionType.PROPERTY,
 						"%" + type + "% (has|have) " + property,
 						"%" + type + "% (doesn't|does not|do not|don't) have " + property);
+				break;
+			case WILL:
+				Skript.registerCondition(condition,
+						"%" + type + "% will " + property,
+						"%" + type + "% (will (not|neither)|won't) " + property);
 				break;
 			default:
 				assert false;
@@ -121,8 +134,8 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		expr = (Expression<? extends T>) exprs[0];
+	public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+		expr = (Expression<? extends T>) expressions[0];
 		setNegated(matchedPattern == 1);
 		return true;
 	}
@@ -133,7 +146,7 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	}
 
 	@Override
-	public abstract boolean check(T t);
+	public abstract boolean check(T value);
 
 	protected abstract String getPropertyName();
 
@@ -144,7 +157,7 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	/**
 	 * Sets the expression this condition checks a property of. No reference to the expression should be kept.
 	 *
-	 * @param expr
+	 * @param expr The expression property of this property condition.
 	 */
 	protected final void setExpr(Expression<? extends T> expr) {
 		this.expr = expr;
@@ -163,13 +176,16 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 			case CAN:
 				return expr.toString(event, debug) + (condition.isNegated() ? " can't " : " can ") + property;
 			case HAVE:
-				if (expr.isSingle())
+				if (expr.isSingle()) {
 					return expr.toString(event, debug) + (condition.isNegated() ? " doesn't have " : " has ") + property;
-				else
+				} else {
 					return expr.toString(event, debug) + (condition.isNegated() ? " don't have " : " have ") + property;
+				}
+			case WILL:
+				return expr.toString(event, debug) + (condition.isNegated() ? " won't " : " will ") + "be " + property;
 			default:
 				assert false;
-				throw new AssertionError();
+				return null;
 		}
 	}
 
