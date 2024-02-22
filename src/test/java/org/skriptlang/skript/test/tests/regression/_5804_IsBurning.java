@@ -18,12 +18,11 @@
  */
 package org.skriptlang.skript.test.tests.regression;
 
+import ch.njol.skript.test.runner.SkriptJUnitTest;
+
 import org.bukkit.entity.Pig;
 import org.junit.Before;
 import org.junit.Test;
-
-import ch.njol.skript.test.runner.SkriptJUnitTest;
-import net.kyori.adventure.text.Component;
 
 /**
  * JUnit test to ensure that CondIsBurning goes before CondCompare.
@@ -38,9 +37,10 @@ public class _5804_IsBurning extends SkriptJUnitTest {
 	}
 
 	@Before
+	@SuppressWarnings("deprecation")
 	public void spawnPig() {
 		piggy = spawnTestPig();
-		piggy.customName(Component.text("_5804_IsBurning"));
+		piggy.setCustomName("_5804_IsBurning");
 	}
 
 	@Test
