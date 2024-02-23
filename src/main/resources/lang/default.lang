@@ -2088,7 +2088,6 @@ types:
 	billboard: billboard¦s @a
 	textalignment: text alignment¦s @a
 	itemdisplaytransform: item display transform¦s @an
-	quaternion: quaternion¦s @a
 
 	# Skript
 	weathertype: weather type¦s @a
@@ -2112,3 +2111,7 @@ types:
 	# Hooks
 	money: money
 	region: region¦s
+
+	# Other
+	quaternion: quaternion¦s @a
+	axisangle: axisangle¦s @a

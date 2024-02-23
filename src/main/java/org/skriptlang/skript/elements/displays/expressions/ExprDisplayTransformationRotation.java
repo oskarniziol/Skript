@@ -22,6 +22,7 @@ import org.bukkit.entity.Display;
 import org.bukkit.event.Event;
 import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.Nullable;
+import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
 import ch.njol.skript.Skript;
@@ -42,7 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
         "Returns or changes the transformation rotation of <a href='classes.html#display'>displays</a>.",
         "The left rotation is applied first, with the right rotation then being applied based on the rotated axis."
 })
-@Examples("set left transformation rotation of last spawned block display to quaternionf(1, 0, 0, 0) # reset block display")
+@Examples("set left transformation rotation of last spawned block display to quaternion(1, 0, 0, 0) # reset block display")
 @RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
 public class ExprDisplayTransformationRotation extends SimplePropertyExpression<Display, Quaternionf> {
@@ -70,7 +71,7 @@ public class ExprDisplayTransformationRotation extends SimplePropertyExpression<
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.SET)
-			return CollectionUtils.array(Quaternionf.class);
+			return CollectionUtils.array(Quaternionf.class, AxisAngle4f.class);
 		if (mode == ChangeMode.RESET)
 			return CollectionUtils.array();
 		return null;
@@ -78,11 +79,17 @@ public class ExprDisplayTransformationRotation extends SimplePropertyExpression<
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+		Object object = delta[0];
 		Quaternionf quaternion = null;
 		if (mode == ChangeMode.RESET)
 			quaternion = new Quaternionf(1, 0, 0, 0);
-		if (delta != null)
-			quaternion = (Quaternionf) delta[0];
+		if (delta != null) {
+			if (object instanceof Quaternionf) {
+				quaternion = (Quaternionf) delta[0];
+			} else if (object instanceof AxisAngle4f) {
+				quaternion = new Quaternionf((AxisAngle4f) delta[0]);
+			}
+		}
 		if (quaternion == null)
 			return;
 		for (Display display : getExpr().getArray(event)) {

@@ -21,6 +21,7 @@ package ch.njol.skript.classes.data;
 import java.util.regex.Pattern;
 
 import org.eclipse.jdt.annotation.Nullable;
+import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
 import ch.njol.skript.Skript;
@@ -637,7 +638,7 @@ public class JavaClasses {
 			Classes.registerClass(new ClassInfo<>(Quaternionf.class, "quaternion")
 					.user("quaternionf?s?")
 					.name("Quaternion")
-					.description("Quaternions are used for representing four dimensions where all four numbers are real.")
+					.description("Quaternions are used for representing x y z while having w representing the scale. All four numbers are real.")
 					.since("INSERT VERSION")
 					.parser(new Parser<Quaternionf>() {
 						public boolean canParse(ParseContext context) {
@@ -660,8 +661,43 @@ public class JavaClasses {
 						public Quaternionf clone(Quaternionf quaternion) {
 							try {
 								// Implements cloneable, but doesn't return a Quaternionf.
-								// org.joml improperly override. Returns Object.
+								// org.joml improper override. Returns Object.
 								return (Quaternionf) quaternion.clone();
+							} catch (CloneNotSupportedException e) {
+								return null;
+							}
+						}
+					}));
+
+		if (Skript.classExists("org.joml.AxisAngle4f"))
+			Classes.registerClass(new ClassInfo<>(AxisAngle4f.class, "axisangle")
+					.user("axis ?angle(4f)?s?")
+					.name("Axis Angle")
+					.description("Represents a 3D rotation of a given radians about an axis represented as an unit 3D vector.")
+					.since("INSERT VERSION")
+					.parser(new Parser<AxisAngle4f>() {
+						public boolean canParse(ParseContext context) {
+							return false;
+						}
+
+						@Override
+						public String toString(AxisAngle4f axisangle, int flags) {
+							return "angle:" + Skript.toString(axisangle.angle) + ", x:" + Skript.toString(axisangle.x) + ", y:" + Skript.toString(axisangle.y) + ", z:" + Skript.toString(axisangle.z);
+						}
+
+						@Override
+						public String toVariableNameString(AxisAngle4f axisangle) {
+							return  axisangle.angle + "," + axisangle.x + "," + axisangle.y + "," + axisangle.z;
+						}
+					})
+					.defaultExpression(new EventValueExpression<>(AxisAngle4f.class))
+					.cloner(new Cloner<AxisAngle4f>() {
+						@Override
+						public AxisAngle4f clone(AxisAngle4f axisangle) {
+							try {
+								// Implements cloneable, but doesn't return a AxisAngle4f.
+								// org.joml improper override. Returns Object.
+								return (AxisAngle4f) axisangle.clone();
 							} catch (CloneNotSupportedException e) {
 								return null;
 							}

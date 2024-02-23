@@ -21,6 +21,7 @@ package ch.njol.skript.expressions;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
+import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 
 import java.util.Locale;
@@ -44,10 +45,10 @@ import ch.njol.util.coll.CollectionUtils;
  * Ported by Sashie from skript-vectors with bi0qaw's permission.
  * @author bi0qaw
  */
-@Name("Vector/Quaternion - XYZ Component")
+@Name("Vector/Quaternion/AxisAngle - XYZ Component")
 @Description({
-	"Gets or changes the x, y or z component of <a href='classes.html#vector'>vectors</a>/<a href='classes.html#quaternion'>quaternions</a>.",
-	"You cannot use w of vector. W is for quaternions only."
+	"Gets or changes the x, y or z component of <a href='classes.html#vector'>vectors</a>/<a href='classes.html#quaternion'>quaternions</a>/<a href='classes.html#axisangle'>axis angles</a>.",
+	"You cannot use w of vector. W/ANGLE is for quaternions/axis angles only."
 })
 @Examples({
 	"set {_v} to vector 1, 2, 3",
@@ -68,8 +69,8 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 	static {
 		String types = "vectors";
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			types += "/quaternions";
-		register(ExprXYZComponent.class, Number.class, "[vector|quaternion] (:w|:x|:y|:z) [component[s]]", types);
+			types += "/quaternions/axisangle";
+		register(ExprXYZComponent.class, Number.class, "[vector|quaternion] (w:(w|angle)|:x|:y|:z) [component[s]]", types);
 	}
 
 	private enum AXIS {
@@ -94,7 +95,7 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 				return null;
 			Vector vector = (Vector) object;
 			return axis == AXIS.X ? vector.getX() : (axis == AXIS.Y ? vector.getY() : vector.getZ());
-		} else {
+		} else if (object instanceof Quaternionf) {
 			Quaternionf quaternion = (Quaternionf) object;
 			switch (axis) {
 				case W:
@@ -108,12 +109,27 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 				default:
 					return null;
 			}
+		} else if (object instanceof AxisAngle4f) {
+			AxisAngle4f axisAngle = (AxisAngle4f) object;
+			switch (axis) {
+				case W:
+					return axisAngle.angle;
+				case X:
+					return axisAngle.x;
+				case Y:
+					return axisAngle.y;
+				case Z:
+					return axisAngle.z;
+				default:
+					return null;
+			}
 		}
+		return null;
 	}
 
 	@Override
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		if (getExpr().getReturnType().equals(Quaternionf.class)) {
+		if (getExpr().getReturnType().equals(Quaternionf.class) || getExpr().getReturnType().equals(AxisAngle4f.class)) {
 			if ((mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE))
 				return new Class[] {Number.class};
 		}
@@ -159,7 +175,7 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 					default:
 						assert false;
 				}
-			} else {
+			} else if (object instanceof Quaternionf) {
 				float value = ((Number) delta[0]).floatValue();
 				Quaternionf quaternion = (Quaternionf) object;
 				switch (mode) {
@@ -191,6 +207,44 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 						}
 						if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, Quaternionf.class))
 							getExpr().change(event, new Quaternionf[] {quaternion}, ChangeMode.SET);
+						break;
+					case DELETE:
+					case REMOVE_ALL:
+					case RESET:
+						assert false;
+				}
+			} else if (object instanceof AxisAngle4f) {
+				float value = ((Number) delta[0]).floatValue();
+				AxisAngle4f axisAngle = (AxisAngle4f) object;
+				switch (mode) {
+					case REMOVE:
+						value = -value;
+						//$FALL-THROUGH$
+					case ADD:
+						if (axis == AXIS.W) {
+							axisAngle.set(axisAngle.angle + value, axisAngle.x, axisAngle.y, axisAngle.z);
+						} else if (axis == AXIS.X) {
+							axisAngle.set(axisAngle.angle, axisAngle.x + value, axisAngle.y, axisAngle.z);
+						} else if (axis == AXIS.Y) {
+							axisAngle.set(axisAngle.angle, axisAngle.x, axisAngle.y + value, axisAngle.z);
+						} else if (axis == AXIS.Z) {
+							axisAngle.set(axisAngle.angle, axisAngle.x, axisAngle.y, axisAngle.z + value);
+						}
+						if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, AxisAngle4f.class))
+							getExpr().change(event, new AxisAngle4f[] {axisAngle}, ChangeMode.SET);
+						break;
+					case SET:
+						if (axis == AXIS.W) {
+							axisAngle.set(value, axisAngle.x, axisAngle.y, axisAngle.z);
+						} else if (axis == AXIS.X) {
+							axisAngle.set(axisAngle.angle, value, axisAngle.y, axisAngle.z);
+						} else if (axis == AXIS.Y) {
+							axisAngle.set(axisAngle.angle, axisAngle.x, value, axisAngle.z);
+						} else if (axis == AXIS.Z) {
+							axisAngle.set(axisAngle.angle, axisAngle.x, axisAngle.y, value);
+						}
+						if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, AxisAngle4f.class))
+							getExpr().change(event, new AxisAngle4f[] {axisAngle}, ChangeMode.SET);
 						break;
 					case DELETE:
 					case REMOVE_ALL:
