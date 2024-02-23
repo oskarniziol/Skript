@@ -85,9 +85,9 @@ public class ExprDisplayTransformationRotation extends SimplePropertyExpression<
 			quaternion = new Quaternionf(1, 0, 0, 0);
 		if (delta != null) {
 			if (object instanceof Quaternionf) {
-				quaternion = (Quaternionf) delta[0];
+				quaternion = (Quaternionf) object;
 			} else if (object instanceof AxisAngle4f) {
-				quaternion = new Quaternionf((AxisAngle4f) delta[0]);
+				quaternion = new Quaternionf((AxisAngle4f) object);
 			}
 		}
 		if (quaternion == null)
