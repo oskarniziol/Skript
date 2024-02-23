@@ -32,6 +32,7 @@ import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
@@ -60,6 +61,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"set z component of {_v} to 3",
 	"send \"%x component of {_v}%, %y component of {_v}%, %z component of {_v}%\""
 })
+@RequiredPlugins("Spigot 1.19.4+ for Quaternions")
 @Since("2.2-dev28, INSERT VERSION (Quaternions)")
 public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 
@@ -127,7 +129,7 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 		for (Object object : getExpr().getArray(event)) {
 			if (object instanceof Vector) {
 				if (axis == AXIS.W)
-					return;
+					continue;
 				Vector vector = (Vector) object;
 				double value = ((Number) delta[0]).doubleValue();
 				switch (mode) {
