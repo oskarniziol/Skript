@@ -18,18 +18,12 @@
  */
 package org.skriptlang.skript.elements.displays.expressions;
 
-import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
-import org.bukkit.util.Transformation;
-import org.bukkit.util.Vector;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
@@ -37,15 +31,24 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
+import org.bukkit.entity.Display;
+import org.bukkit.event.Event;
+import org.bukkit.util.Transformation;
+import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+import org.skriptlang.skript.lang.util.JomlBukkitUtils;
+
 @Name("Display Transformation Scale/Translation")
 @Description("Returns or changes the transformation scale or translation of <a href='classes.html#display'>displays</a>.")
 @Examples("set transformation translation of display to vector from -0.5, -0.5, -0.5 # Center the display in the same position as a block")
+@RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
 public class ExprDisplayTransformationScaleTranslation extends SimplePropertyExpression<Display, Vector> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			register(ExprDisplayTransformationScaleTranslation.class, Vector.class, "transformation (:scale|translation)", "displays");
+			register(ExprDisplayTransformationScaleTranslation.class, Vector.class, "[transformation] (:scale|translation)", "displays");
 	}
 
 	private boolean scale;
@@ -60,23 +63,28 @@ public class ExprDisplayTransformationScaleTranslation extends SimplePropertyExp
 	@Nullable
 	public Vector convert(Display display) {
 		Transformation transformation = display.getTransformation();
-		return toBukkitVector(scale ? transformation.getScale() : transformation.getTranslation());
+		return JomlBukkitUtils.toBukkitVector(scale ? transformation.getScale() : transformation.getTranslation());
 	}
 
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
 		if (mode == ChangeMode.SET)
 			return CollectionUtils.array(Vector.class);
+		if (mode == ChangeMode.RESET)
+			return CollectionUtils.array();
 		return null;
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		Display[] displays = getExpr().getArray(event);
-		if (delta == null)
+		Vector3f vector = null;
+		if (mode == ChangeMode.RESET)
+			vector = new Vector3f(1F, 1F, 1F);
+		if (delta != null)
+			vector = JomlBukkitUtils.toVector((Vector) delta[0]);
+		if (vector == null)
 			return;
-		Vector3f vector = toVector((Vector) delta[0]);
-		for (Display display : displays) {
+		for (Display display : getExpr().getArray(event)) {
 			Transformation transformation = display.getTransformation();
 			Transformation change;
 			if (scale) {
@@ -86,14 +94,6 @@ public class ExprDisplayTransformationScaleTranslation extends SimplePropertyExp
 			}
 			display.setTransformation(change);
 		}
-	}
-
-	private Vector toBukkitVector(Vector3f vector) {
-		return new Vector(vector.x, vector.y, vector.z);
-	}
-
-	private Vector3f toVector(Vector vector) {
-		return new Vector3f((float)vector.getX(), (float)vector.getY(), (float)vector.getZ());
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
@@ -42,6 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"Setting to 0 seconds will make it immediate."
 })
 @Examples("set interpolation delay of the last spawned text display to 2 ticks")
+@RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
 public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, Timespan> {
 
@@ -73,7 +75,6 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, 
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		Display[] displays = getExpr().getArray(event);
 		int ticks = (int) (delta == null ? 0 : (delta[0] instanceof Number ? ((Number) delta[0]).intValue() : ((Timespan) delta[0]).getTicks()));
-		ticks = Math.max(0, ticks);
 		switch (mode) {
 			case REMOVE_ALL:
 			case REMOVE:
@@ -100,6 +101,7 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, 
 				}
 				break;
 			case SET:
+				ticks = Math.max(0, ticks);
 				for (Display display : displays) {
 					if (delay) {
 						display.setInterpolationDelay(ticks);

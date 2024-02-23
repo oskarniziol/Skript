@@ -28,6 +28,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
@@ -38,6 +39,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"Values are between -127 and 127. The value of 127 represents it being completely opaque."
 })
 @Examples("set the opacity of the last spawned text display to -1 # Reset")
+@RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
 public class ExprTextDisplayOpacity extends SimplePropertyExpression<Display, Byte> {
 

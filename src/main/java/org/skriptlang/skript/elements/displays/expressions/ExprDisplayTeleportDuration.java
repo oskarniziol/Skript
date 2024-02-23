@@ -18,10 +18,6 @@
  */
 package org.skriptlang.skript.elements.displays.expressions;
 
-import org.bukkit.entity.Display;
-import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -30,69 +26,80 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.util.Timespan;
 import ch.njol.util.coll.CollectionUtils;
 
-@Name("Display View Range")
+import org.bukkit.entity.Display;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
+
+@Name("Display Teleport Delay/Duration")
 @Description({
-	"Returns or changes the view range of <a href='classes.html#display'>displays</a>.",
-	"Default value is 1.0. This value is then multiplied by 64 and the player's entity view distance setting to determine the actual range."
+	"The teleport duration of displays is the amount of time it takes to get between locations.",
+	"0 means that updates are applied immediately.",
+	"1 means that the display entity will move from current position to the updated one over one tick.",
+	"Higher values spread the movement over multiple ticks. Max of 59 ticks."
 })
-@Examples("set view range of the last spawned text display to 2.9")
-@RequiredPlugins("Spigot 1.19.4+")
+@Examples({
+	"set teleport delay of the last spawned text display to 2 ticks",
+	"wait 2 ticks",
+	"message \"display entity has arived at location\""
+})
+@RequiredPlugins("Spigot 1.20.4+")
 @Since("INSERT VERSION")
-public class ExprDisplayViewRange extends SimplePropertyExpression<Display, Float> {
+public class ExprDisplayTeleportDuration extends SimplePropertyExpression<Display, Timespan> {
 
 	static {
-		if (Skript.isRunningMinecraft(1, 19, 4))
-			registerDefault(ExprDisplayViewRange.class, Float.class, "[display] view (range|radius)", "displays");
+		if (Skript.isRunningMinecraft(1, 20, 4))
+			registerDefault(ExprDisplayTeleportDuration.class, Timespan.class, "teleport duration[s]", "displays");
 	}
 
 	@Override
 	@Nullable
-	public Float convert(Display display) {
-		return display.getViewRange();
+	public Timespan convert(Display display) {
+		return Timespan.fromTicks(display.getTeleportDuration());
 	}
 
 	@Nullable
 	public Class<?>[] acceptChange(ChangeMode mode) {
-		return CollectionUtils.array(Number.class);
+		return CollectionUtils.array(Timespan.class, Number.class);
 	}
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
 		Display[] displays = getExpr().getArray(event);
-		float change = delta == null ? 0F : (int) ((Number) delta[0]).floatValue();
-		change = Math.max(0F, change);
+		int ticks = (int) (delta == null ? 0 : (delta[0] instanceof Number ? ((Number) delta[0]).intValue() : ((Timespan) delta[0]).getTicks()));
 		switch (mode) {
 			case REMOVE_ALL:
 			case REMOVE:
-				change = -change;
+				ticks = -ticks;
 			case ADD:
 				for (Display display : displays) {
-					float value = Math.max(0F, display.getViewRange() + change);
-					display.setViewRange(value);
+					int value = Math.max(0, Math.min(59, display.getTeleportDuration() + ticks));
+					display.setTeleportDuration(value);
 				}
 				break;
 			case DELETE:
 			case RESET:
 				for (Display display : displays)
-					display.setViewRange(1.0F);
+					display.setTeleportDuration(0);
 				break;
 			case SET:
+				ticks = Math.max(0, Math.min(59, ticks));
 				for (Display display : displays)
-					display.setViewRange(change);
+					display.setTeleportDuration(ticks);
 				break;
 		}
 	}
 
 	@Override
-	public Class<? extends Float> getReturnType() {
-		return Float.class;
+	public Class<? extends Timespan> getReturnType() {
+		return Timespan.class;
 	}
 
 	@Override
 	protected String getPropertyName() {
-		return  "view range";
+		return "teleport duration";
 	}
 
 }

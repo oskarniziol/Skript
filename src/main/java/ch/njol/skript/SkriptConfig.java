@@ -23,7 +23,6 @@ import ch.njol.skript.config.EnumParser;
 import ch.njol.skript.config.Option;
 import ch.njol.skript.config.OptionSection;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.entity.DisplayData;
 import ch.njol.skript.hooks.Hook;
 import ch.njol.skript.hooks.VaultHook;
 import ch.njol.skript.hooks.regions.GriefPreventionHook;

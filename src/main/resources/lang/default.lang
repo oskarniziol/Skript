@@ -1953,6 +1953,7 @@ moon phases:
 	waxing_crescent: waxing crescent
 	waxing_gibbous: waxing gibbous
 
+# -- Quit Reasons --
 quit reasons:
 	disconnected: disconnected, quit
 	erroneous_state: erroneous, erroneous state
@@ -1981,9 +1982,9 @@ billboards:
 
 # -- Text Display Alignments --
 text alignments:
-	center: center, middle
-	left: left
-	right: right
+	center: center, middle, centered text, centered, center aligned
+	left: left, left aligned
+	right: right, right aligned
 
 # -- Item Display Transforms --
 item display transforms:

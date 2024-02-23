@@ -23,11 +23,13 @@ import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.skriptlang.skript.lang.util.JomlBukkitUtils;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -35,23 +37,25 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 
-@Name("Rotate Quaternion")
+@Name("Rotate Quaternion/Vector")
 @Description({
-	"Rotates a Quaternion around an axis or a vector and by a set amount of degrees.",
-	"When you use a vector, the values will be used to rotate the x, y and z."
+	"Rotates a Quaternion around an axis a set amount of degrees or rotated by a vector.",
+	"When you use a vector, the values will be used to rotate the x, y and z.",
+	"Vector numbers will get converted from a double down to a float."
 })
-@Examples("rotate {_quaternion} around vector from 1, 0, 0 at player by 90 degrees")
+@Examples("set {_new} to {_quaternion} rotated by vector(1, 0, 0)")
+@RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
-public class ExprRotateQuaternion extends SimpleExpression<Quaternionf> {
+public class ExprRotateQuaternion extends SimpleExpression<Object> {
 
 	static {
 		if (Skript.isRunningMinecraft(1, 19, 4))
-			Skript.registerExpression(ExprRotateQuaternion.class, Quaternionf.class, ExpressionType.SIMPLE,
-					"%quaternions% rotated (around|on) [the] (:x|:y|:z)-axis by %number% [degrees|radians]",
+			Skript.registerExpression(ExprRotateQuaternion.class, Object.class, ExpressionType.SIMPLE,
+					"%quaternions/vectors% rotated (around|on) [the] (:x|:y|:z)-axis by %number% [degrees|radians]",
 					"%quaternions% rotated by %vector%");
 	}
 
-	private Expression<Quaternionf> quaternions;
+	private Expression<?> objects;
 
 	@Nullable
 	private Expression<Number> degrees;
@@ -65,7 +69,7 @@ public class ExprRotateQuaternion extends SimpleExpression<Quaternionf> {
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		quaternions = (Expression<Quaternionf>) exprs[0];
+		objects = exprs[0];
 		if (parseResult.tags.size() > 0) {
 			axis = parseResult.tags.get(0);
 			degrees = (Expression<Number>) exprs[1];
@@ -76,36 +80,59 @@ public class ExprRotateQuaternion extends SimpleExpression<Quaternionf> {
 	}
 
 	@Override
-	protected Quaternionf @Nullable [] get(Event event) {
+	@Nullable
+	protected Object[] get(Event event) {
 		if (vector == null && axis != null) {
 			float degrees = this.degrees.getOptionalSingle(event).orElse(0).floatValue();
 			switch (axis) {
 				case "x":
-					return quaternions.stream(event)
-							.map(quaternion -> quaternion.rotateX(degrees))
-							.toArray(Quaternionf[]::new);
+					return objects.stream(event)
+							.map(object -> {
+								if (object instanceof Quaternionf) {
+									return ((Quaternionf) object).rotateX(degrees);
+								} else if (object instanceof Vector3f) {
+									return JomlBukkitUtils.toVector(((Vector) object)).rotateX(degrees);
+								}
+								return null;
+							})
+							.toArray();
 				case "y":
-					return quaternions.stream(event)
-							.map(quaternion -> quaternion.rotateY(degrees))
-							.toArray(Quaternionf[]::new);
+					return objects.stream(event)
+							.map(object -> {
+								if (object instanceof Quaternionf) {
+									return ((Quaternionf) object).rotateY(degrees);
+								} else if (object instanceof Vector3f) {
+									return JomlBukkitUtils.toVector(((Vector) object)).rotateY(degrees);
+								}
+								return null;
+							})
+							.toArray();
 				case "z":
-					return quaternions.stream(event)
-							.map(quaternion -> quaternion.rotateZ(degrees))
-							.toArray(Quaternionf[]::new);
+					return objects.stream(event)
+							.map(object -> {
+								if (object instanceof Quaternionf) {
+									return ((Quaternionf) object).rotateZ(degrees);
+								} else if (object instanceof Vector3f) {
+									return JomlBukkitUtils.toVector(((Vector) object)).rotateZ(degrees);
+								}
+								return null;
+							})
+							.toArray();
 		}
 		}
 		Vector vector = this.vector.getSingle(event);
 		if (vector == null)
 			return new Quaternionf[0];
 		Vector3f vector3f = new Vector3f((float) vector.getX(), (float) vector.getY(), (float) vector.getZ());
-		return quaternions.stream(event)
+		return objects.stream(event)
+				.map(Quaternionf.class::cast)
 				.map(quaternion -> quaternion.rotateZYX(vector3f.x(), vector3f.y(), vector3f.x()))
 				.toArray(Quaternionf[]::new);
 	}
 
 	@Override
 	public boolean isSingle() {
-		return quaternions.isSingle();
+		return objects.isSingle();
 	}
 
 	@Override
@@ -116,10 +143,10 @@ public class ExprRotateQuaternion extends SimpleExpression<Quaternionf> {
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
 		if (vector == null)
-			return quaternions.toString(event, debug) +
+			return objects.toString(event, debug) +
 					" rotated around the " + axis + "-axis " +
 					" by " + degrees.toString(event, debug) + " degrees";
-		return quaternions.toString(event, debug) +
+		return objects.toString(event, debug) +
 				" rotated by " + vector.toString(event, debug);
 	}
 

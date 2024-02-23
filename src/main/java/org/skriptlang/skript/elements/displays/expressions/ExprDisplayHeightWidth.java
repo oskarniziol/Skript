@@ -27,6 +27,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
@@ -42,6 +43,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"If set to 0, no culling will occur on both the vertical and horizontal directions. Default is 0.0."
 })
 @Examples("set height of the last spawned text display to 2.5")
+@RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
 public class ExprDisplayHeightWidth extends SimplePropertyExpression<Display, Float> {
 

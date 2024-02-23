@@ -27,6 +27,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Color;
@@ -39,6 +40,7 @@ import ch.njol.util.coll.CollectionUtils;
 	"This overrides whatever color is already set for the scoreboard team of the displays."
 })
 @Examples("set glow color override of the last spawned text display to blue")
+@RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
 public class ExprDisplayGlowOverride extends SimplePropertyExpression<Display, Color> {
 

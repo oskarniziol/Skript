@@ -55,13 +55,13 @@ public class DisplayData extends EntityData<Display> {
 		TEXT("org.bukkit.entity.TextDisplay", "text display");
 
 		@Nullable
-		private Class<? extends Display> c;
+		private Class<? extends Display> displaySubClass;
 		private final String codeName;
 		
 		@SuppressWarnings("unchecked")
 		DisplayType(String className, String codeName) {
 			try {
-				this.c = (Class<? extends Display>) Class.forName(className);
+				this.displaySubClass = (Class<? extends Display>) Class.forName(className);
 			} catch (ClassNotFoundException e) {}
 			this.codeName = codeName;
 		}
@@ -75,7 +75,7 @@ public class DisplayData extends EntityData<Display> {
 		static {
 			List<String> cn = new ArrayList<>();
 			for (DisplayType t : values()) {
-				if (t.c != null)
+				if (t.displaySubClass != null)
 					cn.add(t.codeName);
 			}
 			codeNames = cn.toArray(new String[0]);
@@ -104,22 +104,22 @@ public class DisplayData extends EntityData<Display> {
 	@SuppressWarnings("unchecked")
 	protected boolean init(Literal<?>[] exprs, int matchedPattern, ParseResult parseResult) {
 		type = DisplayType.values()[matchedPattern];
-		if (exprs.length > 0 && exprs[0] != null) {
-			if (type == DisplayType.BLOCK && exprs[0] != null) {
-				Object object = ((Literal<Object>) exprs[0]).getSingle();
-				if (object instanceof ItemType) {
-					Material material = ((ItemType) object).getMaterial();
-					if (!material.isBlock()) {
-						Skript.error("A block display must be a block item. " + Classes.toString(material) + " is not a block. If you want to spawn an item, use an 'item display'");
-						return false;
-					}
-					blockData = Bukkit.createBlockData(material);
-				} else {
-					blockData = (BlockData) object;
+		if (exprs.length == 0 || exprs[0] == null)
+			return true;
+		if (type == DisplayType.BLOCK) {
+			Object object = ((Literal<Object>) exprs[0]).getSingle();
+			if (object instanceof ItemType) {
+				Material material = ((ItemType) object).getMaterial();
+				if (!material.isBlock()) {
+					Skript.error("A block display must be a block item. " + Classes.toString(material) + " is not a block. If you want to spawn an item, use an 'item display'");
+					return false;
 				}
-			} else if (type == DisplayType.ITEM) {
-				item = ((Literal<ItemType>) exprs[0]).getSingle().getRandom();
+				blockData = Bukkit.createBlockData(material);
+			} else {
+				blockData = (BlockData) object;
 			}
+		} else if (type == DisplayType.ITEM) {
+			item = ((Literal<ItemType>) exprs[0]).getSingle().getRandom();
 		}
 		return true;
 	}
@@ -128,7 +128,7 @@ public class DisplayData extends EntityData<Display> {
 	protected boolean init(@Nullable Class<? extends Display> c, @Nullable Display entity) {
 		DisplayType[] types = DisplayType.values();
 		for (int i = types.length - 1; i >= 0; i--) {
-			Class<?> display = types[i].c;
+			Class<?> display = types[i].displaySubClass;
 			if (display == null)
 				continue;
 			if (entity == null ? c.isAssignableFrom(display) : display.isInstance(entity)) {
@@ -211,12 +211,12 @@ public class DisplayData extends EntityData<Display> {
 			default:
 				break;
 		}
-		return type.c != null && type.c.isInstance(entity);
+		return type.displaySubClass != null && type.displaySubClass.isInstance(entity);
 	}
 
 	@Override
 	public Class<? extends Display> getType() {
-		return type.c != null ? type.c : Display.class;
+		return type.displaySubClass != null ? type.displaySubClass : Display.class;
 	}
 
 	@Override

@@ -29,6 +29,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
@@ -36,6 +37,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Text Display Alignment")
 @Description("Returns or changes the <a href='classes.html#textalignment'>alignment</a> setting of <a href='classes.html#display'>text displays</a>.")
 @Examples("set text alignment of the last spawned text display to left")
+@RequiredPlugins("Spigot 1.19.4+")
 @Since("INSERT VERSION")
 public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, TextAlignment> {
 

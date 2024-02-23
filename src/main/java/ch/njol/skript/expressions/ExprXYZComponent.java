@@ -23,6 +23,8 @@ import org.bukkit.util.Vector;
 import org.eclipse.jdt.annotation.Nullable;
 import org.joml.Quaternionf;
 
+import java.util.Locale;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -65,36 +67,41 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 		String types = "vectors";
 		if (Skript.isRunningMinecraft(1, 19, 4))
 			types += "/quaternions";
-		register(ExprXYZComponent.class, Number.class, "[vector|quaternion] (0¦w|1¦x|2¦y|3¦z) [component[s]]", types);
+		register(ExprXYZComponent.class, Number.class, "[vector|quaternion] (:w|:x|:y|:z) [component[s]]", types);
 	}
 
-	private final static Character[] axes = new Character[] {'w', 'x', 'y', 'z'};
+	private enum AXIS {
+		W,
+		X,
+		Y,
+		Z;
+	}
 
-	private int axis;
+	private AXIS axis;
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		axis = parseResult.mark;
+		axis = AXIS.valueOf(parseResult.tags.get(0).toUpperCase(Locale.ENGLISH));
 		return super.init(exprs, matchedPattern, isDelayed, parseResult);
 	}
 
 	@Override
 	public Number convert(Object object) {
 		if (object instanceof Vector) {
-			if (axis == 0)
+			if (axis == AXIS.W)
 				return null;
 			Vector vector = (Vector) object;
-			return axis == 1 ? vector.getX() : (axis == 2 ? vector.getY() : vector.getZ());
+			return axis == AXIS.X ? vector.getX() : (axis == AXIS.Y ? vector.getY() : vector.getZ());
 		} else {
 			Quaternionf quaternion = (Quaternionf) object;
 			switch (axis) {
-				case 0:
+				case W:
 					return quaternion.w();
-				case 1:
+				case X:
 					return quaternion.x();
-				case 2:
+				case Y:
 					return quaternion.y();
-				case 3:
+				case Z:
 					return quaternion.z();
 				default:
 					return null;
@@ -119,7 +126,7 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 		assert delta != null;
 		for (Object object : getExpr().getArray(event)) {
 			if (object instanceof Vector) {
-				if (axis == 0)
+				if (axis == AXIS.W)
 					return;
 				Vector vector = (Vector) object;
 				double value = ((Number) delta[0]).doubleValue();
@@ -128,9 +135,9 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 						value = -value;
 						//$FALL-THROUGH$
 					case ADD:
-						if (axis == 1) {
+						if (axis == AXIS.X) {
 							vector.setX(vector.getX() + value);
-						} else if (axis == 2) {
+						} else if (axis == AXIS.Y) {
 							vector.setY(vector.getY() + value);
 						} else {
 							vector.setZ(vector.getZ() + value);
@@ -138,9 +145,9 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 						getExpr().change(event, new Vector[] {vector}, ChangeMode.SET);
 						break;
 					case SET:
-						if (axis == 1) {
+						if (axis == AXIS.X) {
 							vector.setX(value);
-						} else if (axis == 2) {
+						} else if (axis == AXIS.Y) {
 							vector.setY(value);
 						} else {
 							vector.setZ(value);
@@ -158,26 +165,26 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 						value = -value;
 						//$FALL-THROUGH$
 					case ADD:
-						if (axis == 0) {
+						if (axis == AXIS.W) {
 							quaternion.set(quaternion.w() + value, quaternion.x(), quaternion.y(), quaternion.z());
-						} else if (axis == 1) {
+						} else if (axis == AXIS.X) {
 							quaternion.set(quaternion.w(), quaternion.x() + value, quaternion.y(), quaternion.z());
-						} else if (axis == 2) {
+						} else if (axis == AXIS.Y) {
 							quaternion.set(quaternion.w(), quaternion.x(), quaternion.y() + value, quaternion.z());
-						} else if (axis == 3) {
+						} else if (axis == AXIS.Z) {
 							quaternion.set(quaternion.w(), quaternion.x(), quaternion.y(), quaternion.z() + value);
 						}
 						if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, Quaternionf.class))
 							getExpr().change(event, new Quaternionf[] {quaternion}, ChangeMode.SET);
 						break;
 					case SET:
-						if (axis == 0) {
+						if (axis == AXIS.W) {
 							quaternion.set(value, quaternion.x(), quaternion.y(), quaternion.z());
-						} else if (axis == 1) {
+						} else if (axis == AXIS.X) {
 							quaternion.set(quaternion.w(), value, quaternion.y(), quaternion.z());
-						} else if (axis == 2) {
+						} else if (axis == AXIS.Y) {
 							quaternion.set(quaternion.w(), quaternion.x(), value, quaternion.z());
-						} else if (axis == 3) {
+						} else if (axis == AXIS.Z) {
 							quaternion.set(quaternion.w(), quaternion.x(), quaternion.y(), value);
 						}
 						if (ChangerUtils.acceptsChange(getExpr(), ChangeMode.SET, Quaternionf.class))
@@ -199,7 +206,7 @@ public class ExprXYZComponent extends SimplePropertyExpression<Object, Number> {
 
 	@Override
 	protected String getPropertyName() {
-		return axes[axis] + " component";
+		return axis.name().toLowerCase(Locale.ENGLISH) + " component";
 	}
 
 }
