@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A class to hold metadata about {@link org.bukkit.Effect}s before playing.
  */
-public class PlayerEffect {
+public class GameEffect {
 	/**
 	 * The {@link Effect} that this object represents
 	 */
@@ -18,7 +18,7 @@ public class PlayerEffect {
 	@Nullable
 	private Object data;
 
-	PlayerEffect(Effect effect) {
+	GameEffect(Effect effect) {
 		this.effect = effect;
 	}
 

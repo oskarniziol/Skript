@@ -7,7 +7,7 @@ import ch.njol.skript.lang.Effect;
 public class EffPlayEffect extends Effect {
 	static {
 		Skript.registerEffect(EffPlayEffect.class,
-				"[:force] (play|show|draw) [%number% [of]] %particles/player effects% (on|%directions%) %entities/locations% [(to %players%|in [a] (radius|range) of %number%)]",
-				"(play|show|draw) [%number% [of]] %particles/player effects/entity effects% (on|at) %entities%)");
+				"[:force] (play|show|draw) [%number% [of]] %particles/game effects% (on|%directions%) %entities/locations% [(to %players%|in [a] (radius|range) of %number%)]",
+				"(play|show|draw) [%number% [of]] %particles/game effects/entity effects% (on|at) %entities%)");
 	}
 }
