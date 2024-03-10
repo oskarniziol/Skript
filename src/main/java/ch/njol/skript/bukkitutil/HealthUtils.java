@@ -28,11 +28,17 @@ import java.lang.reflect.Method;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.damage.DamageSource;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Damageable;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.jetbrains.annotations.ApiStatus.ScheduledForRemoval;
 import org.jetbrains.annotations.Nullable;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class HealthUtils {
 
@@ -126,7 +132,7 @@ public class HealthUtils {
 	public static boolean DAMAGE_SOURCE;
 
 	@Nullable
-	private static Constructor<EntityDamageEvent> DAMAGE_EVENT_CONSTRUCTOR;
+	private static final Constructor<EntityDamageEvent> DAMAGE_EVENT_CONSTRUCTOR;
 
 	static {
 		if (!DAMAGE_SOURCE) {
@@ -153,7 +159,9 @@ public class HealthUtils {
 			return;
 		try {
 			entity.setLastDamageCause(DAMAGE_EVENT_CONSTRUCTOR.newInstance(entity, cause, 0));
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			Skript.exception(e, "Failed to set last damage cause");
+    }
 	}
 
 }
