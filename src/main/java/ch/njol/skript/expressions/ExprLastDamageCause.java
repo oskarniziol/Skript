@@ -44,12 +44,12 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Last Damage Cause/Type")
 @Description({
 	"Cause of last damage done to an entity.",
-	"Damage type is more accurate including data pack types and only available in 1.20.4+"
+	"Using 'damage type' is more accurate as it includes data pack types, but it is only available on versions 1.20.4 and newer."
 })
 @Examples({
 	"set last damage cause of event-entity to fire tick"
 })
-@RequiredPlugins("Spigot 1.20.4+ damage type")
+@RequiredPlugins("Spigot 1.20.4+ for damage type")
 @Since("2.2-Fixes-V10")
 public class ExprLastDamageCause extends PropertyExpression<LivingEntity, Object> {
 
