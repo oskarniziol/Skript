@@ -777,6 +777,14 @@ public abstract class Utils {
 		return lastIndex;
 	}
 
+	public static boolean isInteger(Number... numbers) {
+		for (Number number : numbers) {
+			if (Double.class.isAssignableFrom(number.getClass()) || Float.class.isAssignableFrom(number.getClass()))
+				return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Returns a namespaced key. If the key contains a collon, it'll lookup a Minecraft key.
 	 * Otherwise will return a key registered under Skript.
