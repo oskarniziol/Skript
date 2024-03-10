@@ -59,7 +59,7 @@ public class EvtEntityShootBow extends SkriptEvent {
 
 	@Override
 	public String toString(@Nullable Event event, boolean debug) {
-		return (entityDatas == null ? "entity " : entityDatas.toString(event, debug)) + " shoot bow";
+		return (entityDatas == null ? "entity " : entityDatas.toString(event, debug)) + " shooting a bow";
 	}
 
 }
