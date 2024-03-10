@@ -107,9 +107,7 @@ public class ExprShooter extends SimpleExpression<Entity> {
 
 	@Override
 	public boolean isSingle() {
-		if (projectiles == null)
-			return true;
-		return projectiles.isSingle();
+		return projectiles == null || projectiles.isSingle();
 	}
 
 	@Override
