@@ -34,7 +34,7 @@ public class EvtEntityShootBow extends SkriptEvent {
 	static {
 		Skript.registerEvent("Entity Shoot Bow", EvtEntityShootBow.class, EntityShootBowEvent.class, "[entity|%*-entitydatas%] shoot[ing [a]] bow")
 				.description("Called when a living entity shoots a bow.")
-				.examples("on skeleton shoot bow:",
+				.examples("on skeleton shooting a bow:",
 						"\tset the projectile to a primed tnt")
 				.since("INSERT VERSION");
 	}
