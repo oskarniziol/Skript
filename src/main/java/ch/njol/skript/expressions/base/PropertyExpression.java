@@ -45,26 +45,26 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 	/**
 	 * Registers an expression as {@link ExpressionType#PROPERTY} with the two default property patterns "property of %types%" and "%types%'[s] property"
 	 * 
-	 * @param c the PropertyExpression class being registered.
+	 * @param expressionClass the PropertyExpression class being registered.
 	 * @param type the main expression type the property is based off of.
 	 * @param property the name of the property.
 	 * @param fromType should be plural to support multiple objects but doesn't have to be.
 	 */
-	public static <T> void register(Class<? extends Expression<T>> c, Class<T> type, String property, String fromType) {
-		Skript.registerExpression(c, type, ExpressionType.PROPERTY, "[the] " + property + " of %" + fromType + "%", "%" + fromType + "%'[s] " + property);
+	public static <T> void register(Class<? extends Expression<T>> expressionClass, Class<T> type, String property, String fromType) {
+		Skript.registerExpression(expressionClass, type, ExpressionType.PROPERTY, "[the] " + property + " of %" + fromType + "%", "%" + fromType + "%'[s] " + property);
 	}
 
 	/**
 	 * Registers an expression as {@link ExpressionType#PROPERTY} with the two default property patterns "property [of %types%]" and "%types%'[s] property"
 	 * This method also makes the expression type optional to force a default expression on the property expression.
 	 * 
-	 * @param c the PropertyExpression class being registered.
+	 * @param expressionClass the PropertyExpression class being registered.
 	 * @param type the main expression type the property is based off of.
 	 * @param property the name of the property.
 	 * @param fromType should be plural to support multiple objects but doesn't have to be.
 	 */
-	public static <T> void registerDefault(Class<? extends Expression<T>> c, Class<T> type, String property, String fromType) {
-		Skript.registerExpression(c, type, ExpressionType.PROPERTY, "[the] " + property + " [of %" + fromType + "%]", "%" + fromType + "%'[s] " + property);
+	public static <T> void registerDefault(Class<? extends Expression<T>> expressionClass, Class<T> type, String property, String fromType) {
+		Skript.registerExpression(expressionClass, type, ExpressionType.PROPERTY, "[the] " + property + " [of %" + fromType + "%]", "%" + fromType + "%'[s] " + property);
 	}
 
 	@Nullable
@@ -112,14 +112,15 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 	 * @return An array containing the converted values
 	 * @throws ArrayStoreException if the converter returned invalid values
 	 */
-	protected T[] get(final F[] source, final Converter<? super F, ? extends T> converter) {
+	@SuppressWarnings("deprecation") // for backwards compatibility
+	protected T[] get(final F[] source, final ch.njol.skript.classes.Converter<? super F, ? extends T> converter) {
 		assert source != null;
 		assert converter != null;
-		return Converters.convertUnsafe(source, getReturnType(), converter);
+		return ch.njol.skript.registrations.Converters.convertUnsafe(source, getReturnType(), converter);
 	}
 
 	@Override
-	public final boolean isSingle() {
+	public boolean isSingle() {
 		return expr.isSingle();
 	}
 

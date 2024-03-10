@@ -9,7 +9,7 @@ none: <none>
 # -- Skript --
 skript:
 	copyright: ~ created by & © Peter Güttinger aka Njol ~
-	prefix: <gray>[<gold>Skript<gray>] # not used
+	prefix: <gray>[<gold>Skript<gray>] <reset>
 	quotes error: クオーテーション(")の使い方が正しくありません。 クオーテーションをテキストに対して使用したい場合 "このように" ２つの "" で囲ってください。
 	brackets error: セクションが正しく閉じられていません。 カッコの配置か量を見直してみてください。
 	invalid reload: Skriptの再読み込みは Bukkit側の '/reload' もしくは Skript側の '/skript reload' でのみ再読み込みが可能です。
@@ -68,7 +68,7 @@ skript command:
 		aliases: エイリアス
 		script: <gold>%s<reset>
 		scripts in folder: <gold>%s<reset>フォルダ内の全てのスクリプト
-		x scripts in folder: <gold>%1$s<reset>フォルダ内の<gold>%2$s<reset>個のスクリプト
+		x scripts in folder: <gold>%1$s<lime>フォルダ内の<gold>%2$s<reset>個のスクリプト
 		empty folder: 有効化されたスクリプトが<gold>%s<reset>フォルダ内にありませんでした。
 	enable:
 		all:

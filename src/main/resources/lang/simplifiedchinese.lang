@@ -9,7 +9,7 @@ none: <none>
 # -- Skript --
 skript:
 	copyright: ~ created by & © Peter Güttinger aka Njol ~
-	prefix: <gray>[<gold>Skript<gray>] # not used
+	prefix: <gray>[<gold>Skript<gray>] <reset>
 	quotes error: 无效的引号使用（"）。如果你想在"引号文本"中使用引号，双写它们（""）。
 	brackets error: 括号的数量或位置无效。请确保每一个左括号都有一个相应的右括号。
 	invalid reload: Skript只能通过Bukkit的“/reload”或Skript的“/skript reload”命令来重新加载。
@@ -45,7 +45,7 @@ skript command:
 			changes: 列出自当前版本以来的所有变化
 			download: 下载最新的版本
 		info: 打印一个带有Skript的别名和文档链接的信息
-		gen-docs: 使用插件文件夹中的doc-templates生成文档
+		gen-docs: 使用插件文件夹中的docs/templates生成文档
 		test: 用于运行内部的Skript测试
 
 	invalid script: 无法在scripts文件夹中找到脚本<grey>“<gold>%s<grey>”<red>！
