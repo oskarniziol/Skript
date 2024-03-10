@@ -18,13 +18,6 @@
  */
 package ch.njol.skript.expressions;
 
-import java.util.Locale;
-
-import org.bukkit.event.Event;
-import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -42,6 +35,11 @@ import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityShootBowEvent;
+import org.bukkit.inventory.ItemStack;
+import org.eclipse.jdt.annotation.Nullable;
+
 @Name("Shoot Properties")
 @Description("All the shooting properties of an <a href='events.html#entity_shoot_event'>entity shoot event</a>.")
 @Examples({
@@ -57,7 +55,11 @@ public class ExprShootProperties extends SimpleExpression<Object> {
 
 	static {
 		Skript.registerExpression(ExprShootProperties.class, Object.class, ExpressionType.SIMPLE,
-				"[the] (bow:shooting bow|consumable:bow consumable|force:([shot] (arrow|projectile) force|force of the (arrow|projectile))|hand:shooting hand|consume:([should] [bow] consume item))"
+				"[the] bow consumable",
+				"[the] shooting hand",
+				"should [the bow] consume item",
+				"[the] shooting bow",
+				"[the] ([shot] (arrow|projectile) force|force of the (arrow|projectile))"
 		);
 	}
 
@@ -84,13 +86,13 @@ public class ExprShootProperties extends SimpleExpression<Object> {
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-		pattern = Pattern.valueOf(parseResult.tags.get(0).toUpperCase(Locale.ENGLISH));
 		if (!getParser().isCurrentEvent(EntityShootBowEvent.class)) {
 			// Shouldn't conflict with any other pattern, if it does in the future, adjust this error to not happen for the conflicting pattern.
 			// Skript will continue to find the correct pattern as long as no error happens, because it ends the loop when an error happens.
 			Skript.error("'" + parseResult.expr + "' can only be used within an 'on entity shoot bow' event.");
 			return false;
 		}
+		pattern = Pattern.values()[matchedPattern];
 		return true;
 	}
 

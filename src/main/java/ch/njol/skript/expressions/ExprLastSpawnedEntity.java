@@ -117,12 +117,12 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Object> {
 	@SuppressWarnings("deprecation")
 	protected Object[] get(Event event) {
 		if (shootBowEvent && event instanceof EntityShootBowEvent) {
-			if (item && (PAPER_METHOD || CONSUMABLE_METHOD)) {
+			if (!item) {
+				return new Entity[] {((EntityShootBowEvent) event).getProjectile()};
+			} else if (PAPER_METHOD || CONSUMABLE_METHOD) {
 				if (CONSUMABLE_METHOD)
 					return new ItemStack[] {((EntityShootBowEvent) event).getConsumable()};
 				return new ItemStack[] {((EntityShootBowEvent) event).getArrowItem()};
-			} else if (!item) {
-				return new Entity[] {((EntityShootBowEvent) event).getProjectile()};
 			}
 		}
 		Entity en;
@@ -166,7 +166,7 @@ public class ExprLastSpawnedEntity extends SimpleExpression<Object> {
 
 	@Override
 	public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-		if (mode == ChangeMode.SET && shootBowEvent && event instanceof EntityShootBowEvent) {
+		if (mode == ChangeMode.SET && shootBowEvent && !item && event instanceof EntityShootBowEvent) {
 			Object object = delta[0];
 			if (object instanceof Entity) {
 				((EntityShootBowEvent) event).setProjectile((Entity) delta[0]);
