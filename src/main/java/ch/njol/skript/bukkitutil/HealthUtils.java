@@ -132,7 +132,7 @@ public class HealthUtils {
 	public static boolean DAMAGE_SOURCE;
 
 	@Nullable
-	private static final Constructor<EntityDamageEvent> DAMAGE_EVENT_CONSTRUCTOR;
+	private static Constructor<EntityDamageEvent> DAMAGE_EVENT_CONSTRUCTOR;
 
 	static {
 		if (!DAMAGE_SOURCE) {
@@ -161,7 +161,7 @@ public class HealthUtils {
 			entity.setLastDamageCause(DAMAGE_EVENT_CONSTRUCTOR.newInstance(entity, cause, 0));
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			Skript.exception(e, "Failed to set last damage cause");
-    }
+		}
 	}
 
 }
