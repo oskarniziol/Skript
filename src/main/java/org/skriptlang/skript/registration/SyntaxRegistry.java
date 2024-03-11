@@ -107,6 +107,15 @@ public interface SyntaxRegistry {
 	<I extends SyntaxInfo<?>> void register(Key<I> key, I info);
 
 	/**
+	 * Unregisters a syntax registered under a provided key.
+	 *
+	 * @param key The key the <code>info</code> is registered under.
+	 * @param info The syntax info to unregister.
+	 * @param <I> The syntax type.
+	 */
+	<I extends SyntaxInfo<?>> void unregister(Key<I> key, I info);
+
+	/**
 	 * Represents a syntax element type.
 	 * @param <I> The syntax type.
 	 */

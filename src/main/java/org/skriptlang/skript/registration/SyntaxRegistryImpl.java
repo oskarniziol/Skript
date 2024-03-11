@@ -42,6 +42,14 @@ final class SyntaxRegistryImpl implements SyntaxRegistry {
 		}
 	}
 
+	@Override
+	public <I extends SyntaxInfo<?>> void unregister(Key<I> key, I info) {
+		register(key).remove(info);
+		if (key instanceof ChildKey) {
+			unregister(((ChildKey<? extends I, I>) key).parent(), info);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	private <I extends SyntaxInfo<?>> SyntaxRegister<I> register(Key<I> key) {
 		return (SyntaxRegister<I>) registers.computeIfAbsent(key, k -> new SyntaxRegisterImpl<>());
@@ -64,6 +72,11 @@ final class SyntaxRegistryImpl implements SyntaxRegistry {
 		@Override
 		public <I extends SyntaxInfo<?>> void register(Key<I> key, I info) {
 			throw new UnsupportedOperationException("An unmodifiable registry cannot have syntax infos added.");
+		}
+
+		@Override
+		public <I extends SyntaxInfo<?>> void unregister(Key<I> key, I info) {
+			throw new UnsupportedOperationException("An unmodifiable registry cannot have syntax infos removed.");
 		}
 
 	}

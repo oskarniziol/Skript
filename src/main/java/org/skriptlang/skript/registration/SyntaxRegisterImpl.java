@@ -41,4 +41,9 @@ final class SyntaxRegisterImpl<I extends SyntaxInfo<?>> implements SyntaxRegiste
 		syntaxes.add(info);
 	}
 
+	@Override
+	public void remove(I info) {
+		syntaxes.remove(info);
+	}
+
 }

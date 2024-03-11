@@ -42,4 +42,10 @@ interface SyntaxRegister<I extends SyntaxInfo<?>> {
 	 */
 	void add(I info);
 
+	/**
+	 * Removes a syntax info from this register.
+	 * @param info The syntax info to remove.
+	 */
+	void remove(I info);
+
 }
