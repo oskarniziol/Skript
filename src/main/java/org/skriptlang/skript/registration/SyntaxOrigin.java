@@ -36,5 +36,5 @@ public interface SyntaxOrigin {
 	 * @return A string representing this origin.
 	 */
 	String name();
-	
+
 }

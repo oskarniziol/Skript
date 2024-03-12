@@ -21,13 +21,13 @@ package org.skriptlang.skript;
 import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.localization.Language;
 import com.google.common.collect.ImmutableSet;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.localization.Localizer;
 import org.skriptlang.skript.registration.SyntaxRegistry;
+import org.skriptlang.skript.registration.SyntaxRegistry.ChildSyntaxRegistry;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,9 +40,11 @@ final class SkriptImpl implements Skript {
 	private final SkriptAddon unmodifiableAddon;
 
 	SkriptImpl(String name, AddonModule... modules) {
-		addon = registerAddon(name, modules);
-		unmodifiableAddon = addons.toArray(new SkriptAddon[0])[0];
-		addons.clear();
+		addon = new SkriptAddonImpl(name, SyntaxRegistry.empty(), Localizer.empty());
+		unmodifiableAddon = SkriptAddon.unmodifiableView(addon);
+		for (AddonModule module : modules) {
+			module.load(addon);
+		}
 	}
 
 	//
@@ -67,7 +69,7 @@ final class SkriptImpl implements Skript {
 			}
 		}
 
-		SkriptAddon addon = new SkriptAddonImpl(name);
+		SkriptAddon addon = new SkriptAddonImpl(name, ChildSyntaxRegistry.of(this.addon.registry(), SyntaxRegistry.empty()), Localizer.empty());
 		Language.loadDefault(addon);
 		// load and register the addon
 		for (AddonModule module : modules) {
@@ -107,9 +109,13 @@ final class SkriptImpl implements Skript {
 	private static final class SkriptAddonImpl implements SkriptAddon {
 
 		private final String name;
+		private final SyntaxRegistry registry;
+		private final Localizer localizer;
 
-		SkriptAddonImpl(String name) {
+		SkriptAddonImpl(String name, SyntaxRegistry registry, Localizer localizer) {
 			this.name = name;
+			this.registry = registry;
+			this.localizer = localizer;
 		}
 
 		@Override
@@ -119,12 +125,12 @@ final class SkriptImpl implements Skript {
 
 		@Override
 		public SyntaxRegistry registry() {
-			return null;
+			return registry;
 		}
 
 		@Override
 		public Localizer localizer() {
-			return null;
+			return localizer;
 		}
 
 	}

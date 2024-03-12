@@ -69,8 +69,9 @@ public interface SyntaxRegistry {
 	Key<SyntaxInfo.Expression<?, ?>> EXPRESSION = Key.of("expression");
 
 	/**
+	 * Constructs a default implementation of a syntax registry.
 	 * This implementation is practically a wrapper around {@code Map<Key<?>, SyntaxRegistry<?>>}.
-	 * @return A default registry implementation containing no elements.
+	 * @return A syntax registry containing no elements.
 	 */
 	@Contract("-> new")
 	static SyntaxRegistry empty() {
@@ -114,6 +115,31 @@ public interface SyntaxRegistry {
 	 * @param <I> The syntax type.
 	 */
 	<I extends SyntaxInfo<?>> void unregister(Key<I> key, I info);
+
+	/**
+	 * Like a {@link SyntaxRegistry}, but it has a parent which causes elements to be registered to itself and its parent.
+	 */
+	interface ChildSyntaxRegistry extends SyntaxRegistry {
+
+		/**
+		 * Constructs a new child registry backed by another existing registry.
+		 * If both registries have already had elements added, there is no guarantee that
+		 *  the {@link #syntaxes(Key)} of <code>child</code> will be a subset of <code>parent</code>'s.
+		 * @param parent The parent registry.
+		 * @param child The child registry to be tied to <code>parent</code>.
+		 * @return A registry backed by <code>child</code> with <code>parent</code> as the parent.
+		 */
+		@Contract("_, _ -> new")
+		static SyntaxRegistry of(SyntaxRegistry parent, SyntaxRegistry child) {
+			return new SyntaxRegistryImpl.ChildSyntaxRegistryImpl(parent, child);
+		}
+
+		/**
+		 * @return The parent syntax registry of this syntax registry.
+		 */
+		SyntaxRegistry parent();
+
+	}
 
 	/**
 	 * Represents a syntax element type.

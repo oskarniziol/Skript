@@ -55,6 +55,41 @@ final class SyntaxRegistryImpl implements SyntaxRegistry {
 		return (SyntaxRegister<I>) registers.computeIfAbsent(key, k -> new SyntaxRegisterImpl<>());
 	}
 
+	static final class ChildSyntaxRegistryImpl implements ChildSyntaxRegistry {
+
+		private final SyntaxRegistry parent;
+		private final SyntaxRegistry child;
+
+		ChildSyntaxRegistryImpl(SyntaxRegistry parent, SyntaxRegistry child) {
+			this.parent = parent;
+			this.child = child;
+		}
+
+		@Override
+		@Unmodifiable
+		public <I extends SyntaxInfo<?>> Collection<I> syntaxes(Key<I> key) {
+			return child.syntaxes(key);
+		}
+
+		@Override
+		public <I extends SyntaxInfo<?>> void register(Key<I> key, I info) {
+			parent.register(key, info);
+			child.register(key, info);
+		}
+
+		@Override
+		public <I extends SyntaxInfo<?>> void unregister(Key<I> key, I info) {
+			parent.unregister(key, info);
+			child.unregister(key, info);
+		}
+
+		@Override
+		public SyntaxRegistry parent() {
+			return parent;
+		}
+
+	}
+
 	static final class UnmodifiableRegistry implements SyntaxRegistry {
 
 		private final SyntaxRegistry registry;
