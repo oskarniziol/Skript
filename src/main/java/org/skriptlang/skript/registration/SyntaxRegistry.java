@@ -28,8 +28,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.skriptlang.skript.lang.structure.Structure;
-import org.skriptlang.skript.registration.SyntaxRegistryImpl.ChildKeyImpl;
-import org.skriptlang.skript.registration.SyntaxRegistryImpl.UnmodifiableRegistry;
 
 import java.util.Collection;
 
@@ -72,21 +70,23 @@ public interface SyntaxRegistry {
 
 	/**
 	 * This implementation is practically a wrapper around {@code Map<Key<?>, SyntaxRegistry<?>>}.
-	 * @return A default registry implementation.
+	 * @return A default registry implementation containing no elements.
 	 */
 	@Contract("-> new")
-	static SyntaxRegistry createInstance() {
+	static SyntaxRegistry empty() {
 		return new SyntaxRegistryImpl();
 	}
 
 	/**
+	 * Constructs an unmodifiable view of a syntax registry.
+	 * That is, the returned registry will not allow (un)registrations.
 	 * @param registry The registry backing this unmodifiable view.
 	 * @return An unmodifiable view of <code>registry</code>.
 	 */
 	@Contract("_ -> new")
 	@UnmodifiableView
 	static SyntaxRegistry unmodifiableView(SyntaxRegistry registry) {
-		return new UnmodifiableRegistry(registry);
+		return new SyntaxRegistryImpl.UnmodifiableRegistry(registry);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public interface SyntaxRegistry {
 		 */
 		@Contract("_, _ -> new")
 		static <I extends P, P extends SyntaxInfo<?>> Key<I> of(Key<P> parent, String name) {
-			return new ChildKeyImpl<>(parent, name);
+			return new SyntaxRegistryImpl.ChildKeyImpl<>(parent, name);
 		}
 
 		/**

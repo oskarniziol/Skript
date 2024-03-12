@@ -32,8 +32,7 @@ public interface AddonModule {
 	/**
 	 *
 	 * @param addon The addon this module belongs to.
-	 * @param registry A syntax registry for registering this addon's syntax.
 	 */
-	void load(SkriptAddon addon, SyntaxRegistry registry);
+	void load(SkriptAddon addon);
 
 }

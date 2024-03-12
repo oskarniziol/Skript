@@ -20,13 +20,10 @@ package org.skriptlang.skript;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
-import org.skriptlang.skript.localization.Localizer;
 import org.skriptlang.skript.registration.SyntaxRegistry;
 
 import java.util.Collection;
@@ -39,13 +36,13 @@ public interface Skript extends SkriptAddon {
 
 	/**
 	 * This implementation makes use of default implementations of required classes.
-	 * @param localizer Localizer for the Skript to use in translating strings.
+	 * @param name The name for this Skript instance to use.
 	 * @param modules Modules for the Skript to use. These modules would make up the "built-in" syntax.
 	 * @return A default Skript implementation.
 	 */
 	@Contract("_, _ -> new")
-	static Skript createInstance(Localizer localizer, AddonModule... modules) {
-		return new SkriptImpl(localizer, modules);
+	static Skript createInstance(String name, AddonModule... modules) {
+		return new SkriptImpl(name, modules);
 	}
 
 	/**
@@ -56,36 +53,22 @@ public interface Skript extends SkriptAddon {
 
 	/**
 	 * Registers the provided addon with this Skript and loads the provided modules.
-	 * @param addon The addon to register.
+	 * @param name The name of the addon to register.
 	 * @param modules Any modules of this addon to load.
 	 */
-	void registerAddon(SkriptAddon addon, AddonModule... modules);
+	SkriptAddon registerAddon(String name, AddonModule... modules);
 
 	/**
 	 * Registers the provided addon with this Skript and loads the provided modules.
-	 * @param addon The addon to register.
+	 * @param name The name of the addon to register.
 	 * @param modules Any modules of this addon to load.
 	 */
-	void registerAddon(SkriptAddon addon, Collection<? extends AddonModule> modules);
+	SkriptAddon registerAddon(String name, Collection<? extends AddonModule> modules);
 
 	/**
 	 * @return An unmodifiable snapshot of addons currently registered with this Skript.
 	 */
 	@Unmodifiable
 	Collection<SkriptAddon> addons();
-
-	/**
-	 * {@inheritDoc}
-	 */
-	default String name() {
-		return "Skript";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@NotNull // Skript will always have a Localizer
-	Localizer localizer();
 
 }

@@ -55,7 +55,7 @@ final class SyntaxRegistryImpl implements SyntaxRegistry {
 		return (SyntaxRegister<I>) registers.computeIfAbsent(key, k -> new SyntaxRegisterImpl<>());
 	}
 
-	static class UnmodifiableRegistry implements SyntaxRegistry {
+	static final class UnmodifiableRegistry implements SyntaxRegistry {
 
 		private final SyntaxRegistry registry;
 

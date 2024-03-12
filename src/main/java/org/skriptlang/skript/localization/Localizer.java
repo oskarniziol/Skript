@@ -20,7 +20,9 @@ package org.skriptlang.skript.localization;
 
 import ch.njol.skript.localization.Language;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 /**
  * A Localizer is used for the localization of translatable strings.
@@ -34,45 +36,42 @@ import org.jetbrains.annotations.Nullable;
 public interface Localizer {
 
 	/**
-	 * @return A Localizer with no default translations.
+	 * @return A localizer with no default translations.
 	 */
+	@Contract("-> new")
 	static Localizer empty() {
-		return new LocalizerImpl(null, null);
+		return new Localizer(){};
 	}
 
 	/**
-	 * An option for creating a Localizer that represents a set of language files.
-	 * @param languageFileDirectory {@link #languageFileDirectory()}.
-	 * @param dataFileDirectory {@link #dataFileDirectory()}
-	 * @return A Localizer populated from the provided directories.
+	 * Constructs an unmodifiable view of a localizer.
+	 * That is, the localizer may not have any new translations added.
+	 * @param localizer The localizer backing this unmodifiable view.
+	 * @return An unmodifiable view of <code>localizer</code>.
 	 */
-	static Localizer of(String languageFileDirectory, @Nullable String dataFileDirectory) {
-		return new LocalizerImpl(languageFileDirectory, dataFileDirectory);
+	@Contract("_ -> new")
+	@UnmodifiableView
+	static Localizer unmodifiableView(Localizer localizer) {
+		return new LocalizerImpl.UnmodifiableLocalizer(localizer);
 	}
 
+	/**
+	 *
+	 * @param languageFileDirectory The path to the directory containing language files.
+	 * When searching for language files on the jar, this will be used as the path.
+	 * When searching for language files on the disk, this will be used along with <code>dataFileDirectory</code>.
+	 * That is, it is expected that the path <code>dataFileDirectory + languageFileDirectory</code> would
+	 *  lead to language files on the disk.
+	 * @param dataFileDirectory The path to the directory on disk containing data files.
+	 * For example, this may include language files that have been saved to enable user customization.
+	 */
+	default void load(String languageFileDirectory, @Nullable String dataFileDirectory) {
+		// TODO fix language loading :)
+	}
+
+	// TODO potentially different name. translate? render?
 	default String localize(String key) {
 		return Language.get(key);
 	}
-
-	/**
-	 * The path to the directory containing language files for this Localizer.
-	 * When searching for language files on the jar, this will be used as the path.
-	 * When searching for language files on the disk, this will be used along with {@link #dataFileDirectory()}.
-	 * That is, it is expected that the path <code>dataFileDirectory() + languageFileDirectory()</code> would
-	 *  lead to this Localizer's language files on the disk.
-	 * @return A string representing the path to the directory.
-	 *  Null if this Localizer does not store any language files.
-	 */
-	@Nullable
-	String languageFileDirectory();
-
-	/**
-	 * The path to the directory on disk containing data files for this Localizer.
-	 *  For example, this may include language files that have been saved to enable user customization.
-	 * @return A string representing the path to the directory.
-	 *  Null if this Localizer does not store any data files.
-	 */
-	@Nullable
-	String dataFileDirectory();
 
 }

@@ -23,6 +23,7 @@ import ch.njol.skript.localization.Language;
 import com.google.common.collect.ImmutableSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.UnmodifiableView;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.localization.Localizer;
@@ -35,19 +36,13 @@ import java.util.Set;
 
 final class SkriptImpl implements Skript {
 
-	private final Localizer localizer;
+	private final SkriptAddon addon;
+	private final SkriptAddon unmodifiableAddon;
 
-	private final SyntaxRegistry registry = SyntaxRegistry.createInstance();
-	private final SyntaxRegistry unmodifiableRegistry = SyntaxRegistry.unmodifiableView(registry);
-
-	SkriptImpl(Localizer localizer, AddonModule... modules) {
-		this.localizer = localizer;
-		this.registerAddon(this, modules);
-	}
-
-	@Override
-	public SyntaxRegistry registry() {
-		return unmodifiableRegistry;
+	SkriptImpl(String name, AddonModule... modules) {
+		addon = registerAddon(name, modules);
+		unmodifiableAddon = addons.toArray(new SkriptAddon[0])[0];
+		addons.clear();
 	}
 
 	//
@@ -57,25 +52,30 @@ final class SkriptImpl implements Skript {
 	private static final Set<SkriptAddon> addons = new HashSet<>();
 
 	@Override
-	public void registerAddon(SkriptAddon addon, AddonModule... modules) {
-		registerAddon(addon, Arrays.asList(modules));
+	public SkriptAddon registerAddon(String name, AddonModule... modules) {
+		return registerAddon(name, Arrays.asList(modules));
 	}
 
 	@Override
-	public void registerAddon(SkriptAddon addon, Collection<? extends AddonModule> modules) {
+	public SkriptAddon registerAddon(String name, Collection<? extends AddonModule> modules) {
 		// make sure an addon is not already registered with this name
-		if (addons.stream().anyMatch(otherAddon -> addon.name().equals(otherAddon.name()))) {
-			throw new SkriptAPIException(
-				"An addon (provided by '" + addon.getClass().getName() + "') with the name '" + addon.name() + "' is already registered"
-			);
+		for (SkriptAddon addon : addons) {
+			if (name.equals(addon.name())) {
+				throw new SkriptAPIException(
+					"An addon (provided by '" + addon.getClass().getName() + "') with the name '" + name + "' is already registered"
+				);
+			}
 		}
 
-		Language.loadDefault(addon); // Language will abort if no localizer is present
+		SkriptAddon addon = new SkriptAddonImpl(name);
+		Language.loadDefault(addon);
 		// load and register the addon
 		for (AddonModule module : modules) {
-			module.load(addon, registry);
+			module.load(addon);
 		}
 		addons.add(addon);
+
+		return addon;
 	}
 
 	@Override
@@ -89,9 +89,44 @@ final class SkriptImpl implements Skript {
 	//
 
 	@Override
-	@NotNull
+	public String name() {
+		return unmodifiableAddon.name();
+	}
+
+	@Override
+	@UnmodifiableView
+	public SyntaxRegistry registry() {
+		return unmodifiableAddon.registry();
+	}
+
+	@Override
 	public Localizer localizer() {
-		return localizer;
+		return unmodifiableAddon.localizer();
+	}
+
+	private static final class SkriptAddonImpl implements SkriptAddon {
+
+		private final String name;
+
+		SkriptAddonImpl(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String name() {
+			return name;
+		}
+
+		@Override
+		public SyntaxRegistry registry() {
+			return null;
+		}
+
+		@Override
+		public Localizer localizer() {
+			return null;
+		}
+
 	}
 
 }
