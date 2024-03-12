@@ -304,10 +304,9 @@ public class Language {
 			throw new RuntimeException(e);
 		}
 
-		//noinspection ConstantConditions - localizer should not be null because languageFileDirectory is not null
 		String dataFileDirectory = addon.localizer().dataFileDirectory();
 		if (dataFileDirectory != null) { // attempt to load language files from disk
-			File file = new File(dataFileDirectory, languageFileDirectory + File.separator + name + ".lang");
+			File file = new File(dataFileDirectory, File.separator + name + ".lang");
 			try {
 				if (file.exists())
 					l.putAll(load(new FileInputStream(file), name, tryUpdate));

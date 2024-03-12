@@ -492,9 +492,11 @@ public final class Skript extends JavaPlugin implements Listener {
 			this.getName(),
 			// really hacky way to gain access to the mutable registry
 			// this is purely for backwards compatibility reasons
-			addon -> skriptRegistry = addon.registry()
+			addon -> {
+				skriptRegistry = addon.registry();
+				addon.localizer().setSourceDirectories(getClass(), "lang", getDataFolder().getAbsolutePath() + "lang");
+			}
 		);
-		skript.localizer().setSourceDirectories(getClass(), "lang", getDataFolder().getAbsolutePath() + "lang");
 		// initialize the old Skript SkriptAddon instance
 		getAddonInstance();
 		
