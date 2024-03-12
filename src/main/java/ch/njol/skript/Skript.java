@@ -159,6 +159,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -488,11 +489,12 @@ public final class Skript extends JavaPlugin implements Listener {
 
 		// initialize the modern Skript instance
 		skript = org.skriptlang.skript.Skript.createInstance(
-			Localizer.of("lang", getDataFolder().getAbsolutePath()),
+			this.getName(),
 			// really hacky way to gain access to the mutable registry
 			// this is purely for backwards compatibility reasons
-			(addon, registry) -> skriptRegistry = registry
+			addon -> skriptRegistry = addon.registry()
 		);
+		skript.localizer().setSourceDirectories(getClass(), "lang", getDataFolder().getAbsolutePath() + "lang");
 		// initialize the old Skript SkriptAddon instance
 		getAddonInstance();
 		
@@ -1331,19 +1333,22 @@ public final class Skript extends JavaPlugin implements Listener {
 	}
 	
 	// ================ ADDONS ================
-	
+
+	@Deprecated
+	private static final Set<SkriptAddon> addons = new HashSet<>();
+
 	/**
 	 * Registers an addon to Skript. This is currently not required for addons to work, but the returned {@link SkriptAddon} provides useful methods for registering syntax elements
 	 * and adding new strings to Skript's localization system (e.g. the required "types.[type]" strings for registered classes).
 	 * 
-	 * @param p The plugin
-	 * @deprecated Use {@link org.skriptlang.skript.Skript#registerAddon(org.skriptlang.skript.addon.SkriptAddon, AddonModule...)}
+	 * @param plugin The plugin
+	 * @deprecated Use {@link org.skriptlang.skript.Skript#registerAddon(String, AddonModule...)}
 	 */
 	@Deprecated
-	public static SkriptAddon registerAddon(final JavaPlugin p) {
+	public static SkriptAddon registerAddon(JavaPlugin plugin) {
 		checkAcceptRegistrations();
-		SkriptAddon addon = new SkriptAddon(p);
-		instance().registerAddon(addon);
+		SkriptAddon addon = new SkriptAddon(plugin);
+		addons.add(addon);
 		return addon;
 	}
 
@@ -1381,10 +1386,16 @@ public final class Skript extends JavaPlugin implements Listener {
 	@Deprecated
 	@Unmodifiable
 	public static Collection<SkriptAddon> getAddons() {
-		return Collections.unmodifiableCollection(instance().addons().stream()
-				.map(SkriptAddon::fromModern)
-				.collect(Collectors.toList())
+		Set<SkriptAddon> addons = new HashSet<>(Skript.addons);
+		addons.addAll(instance().addons().stream()
+			.filter(addon -> addons.stream().noneMatch(oldAddon -> oldAddon.name().equals(addon.name())))
+			.flatMap(addon -> {
+				SkriptAddon old = SkriptAddon.fromModern(addon);
+				return old == null ? Stream.empty() : Stream.of(old);
+			})
+			.collect(Collectors.toSet())
 		);
+		return Collections.unmodifiableCollection(addons);
 	}
 	
 	@Nullable

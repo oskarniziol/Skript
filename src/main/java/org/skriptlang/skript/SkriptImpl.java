@@ -19,8 +19,8 @@
 package org.skriptlang.skript;
 
 import ch.njol.skript.SkriptAPIException;
-import ch.njol.skript.localization.Language;
 import com.google.common.collect.ImmutableSet;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.jetbrains.annotations.UnmodifiableView;
 import org.skriptlang.skript.addon.AddonModule;
@@ -40,7 +40,7 @@ final class SkriptImpl implements Skript {
 	private final SkriptAddon unmodifiableAddon;
 
 	SkriptImpl(String name, AddonModule... modules) {
-		addon = new SkriptAddonImpl(name, SyntaxRegistry.empty(), Localizer.empty());
+		addon = new SkriptAddonImpl(name, SyntaxRegistry.empty(), Localizer.of(this));
 		unmodifiableAddon = SkriptAddon.unmodifiableView(addon);
 		for (AddonModule module : modules) {
 			module.load(addon);
@@ -69,8 +69,7 @@ final class SkriptImpl implements Skript {
 			}
 		}
 
-		SkriptAddon addon = new SkriptAddonImpl(name, ChildSyntaxRegistry.of(this.addon.registry(), SyntaxRegistry.empty()), Localizer.empty());
-		Language.loadDefault(addon);
+		SkriptAddon addon = new SkriptAddonImpl(name, ChildSyntaxRegistry.of(this.addon.registry(), SyntaxRegistry.empty()), null);
 		// load and register the addon
 		for (AddonModule module : modules) {
 			module.load(addon);
@@ -112,10 +111,10 @@ final class SkriptImpl implements Skript {
 		private final SyntaxRegistry registry;
 		private final Localizer localizer;
 
-		SkriptAddonImpl(String name, SyntaxRegistry registry, Localizer localizer) {
+		SkriptAddonImpl(String name, SyntaxRegistry registry, @Nullable Localizer localizer) {
 			this.name = name;
 			this.registry = registry;
-			this.localizer = localizer;
+			this.localizer = localizer == null ? Localizer.of(this) : localizer;
 		}
 
 		@Override

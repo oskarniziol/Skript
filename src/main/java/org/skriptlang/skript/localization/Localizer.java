@@ -18,11 +18,11 @@
  */
 package org.skriptlang.skript.localization;
 
-import ch.njol.skript.localization.Language;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnmodifiableView;
+import org.skriptlang.skript.addon.SkriptAddon;
 
 /**
  * A Localizer is used for the localization of translatable strings.
@@ -36,11 +36,12 @@ import org.jetbrains.annotations.UnmodifiableView;
 public interface Localizer {
 
 	/**
+	 * @param addon The addon this localizer is localizing for.
 	 * @return A localizer with no default translations.
 	 */
-	@Contract("-> new")
-	static Localizer empty() {
-		return new Localizer(){};
+	@Contract("_ -> new")
+	static Localizer of(SkriptAddon addon) {
+		return new LocalizerImpl(addon);
 	}
 
 	/**
@@ -56,22 +57,39 @@ public interface Localizer {
 	}
 
 	/**
-	 *
-	 * @param languageFileDirectory The path to the directory containing language files.
-	 * When searching for language files on the jar, this will be used as the path.
-	 * When searching for language files on the disk, this will be used along with <code>dataFileDirectory</code>.
-	 * That is, it is expected that the path <code>dataFileDirectory + languageFileDirectory</code> would
-	 *  lead to language files on the disk.
-	 * @param dataFileDirectory The path to the directory on disk containing data files.
+	 * Sets the language file directories for this localizer.
+	 * This method will initiate a loading of any language files in the provided directories.
+	 * @param source A class to be used for loading resources from the jar.
+	 * @param languageFileDirectory The path to the directory on the jar containing language files.
+	 * @param dataFileDirectory The path to the directory on the disk containing language files.
 	 * For example, this may include language files that have been saved to enable user customization.
 	 */
-	default void load(String languageFileDirectory, @Nullable String dataFileDirectory) {
-		// TODO fix language loading :)
-	}
+	void setSourceDirectories(Class<?> source, String languageFileDirectory, @Nullable String dataFileDirectory);
 
-	// TODO potentially different name. translate? render?
-	default String localize(String key) {
-		return Language.get(key);
-	}
+	/**
+	 * @return A class to be used for loading resources from the jar.
+	 */
+	@Nullable
+	Class<?> source();
+
+	/**
+	 * @return The path to the directory on the jar containing language files.
+	 */
+	@Nullable
+	String languageFileDirectory();
+
+	/**
+	 * @return The path to the directory on the disk containing language files.
+	 */
+	@Nullable
+	String dataFileDirectory();
+
+	/**
+	 * Used for obtaining the translation of a language key.
+	 * @param key The key of the translation to obtain.
+	 * @return The translation represented by the provided key, or null if no translation exists.
+	 */
+	@Nullable
+	String translate(String key);
 
 }

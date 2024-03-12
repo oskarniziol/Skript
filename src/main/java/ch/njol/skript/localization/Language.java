@@ -211,7 +211,8 @@ public class Language {
 			return;
 		}
 
-		Class<?> source = addon instanceof ch.njol.skript.SkriptAddon ? ((ch.njol.skript.SkriptAddon) addon).plugin.getClass() : addon.getClass();
+		Class<?> source = addon.localizer().source();
+		assert source != null; // getSanitizedLanguageDirectory call means source should not be null
 		try (
 			InputStream defaultIs = source.getResourceAsStream("/" + languageFileDirectory + "/default.lang");
 			InputStream englishIs = source.getResourceAsStream("/" + languageFileDirectory + "/english.lang")
@@ -282,7 +283,9 @@ public class Language {
 			return false;
 		}
 
-		Class<?> source = addon instanceof ch.njol.skript.SkriptAddon ? ((ch.njol.skript.SkriptAddon) addon).plugin.getClass() : addon.getClass();
+		Class<?> source = addon.localizer().source();
+		assert source != null; // getSanitizedLanguageDirectory call means source should not be null
+
 		// Backwards addon compatibility
 		if (name.equals("english")) {
 			try (InputStream is = source.getResourceAsStream("/" + languageFileDirectory + "/default.lang")) {
