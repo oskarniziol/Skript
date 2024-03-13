@@ -24,7 +24,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
-import org.skriptlang.skript.lang.Priority;
+import org.skriptlang.skript.util.Priority;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 	@Nullable
 	private final Supplier<T> supplier;
 	private final Collection<String> patterns;
-	private final Priority priority = new Priority();
+	private final Priority priority = Priority.of(0);
 
 	protected SyntaxInfoImpl(SyntaxOrigin origin, Class<T> type, @Nullable Supplier<T> supplier, Collection<String> patterns) {
 		if (supplier == null && (type.isInterface() || Modifier.isAbstract(type.getModifiers()))) {

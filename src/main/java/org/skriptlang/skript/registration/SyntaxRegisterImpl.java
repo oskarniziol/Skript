@@ -23,11 +23,21 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 final class SyntaxRegisterImpl<I extends SyntaxInfo<?>> implements SyntaxRegister<I> {
 
-	private final Set<I> syntaxes = new ConcurrentSkipListSet<>(Comparator.comparing(SyntaxInfo::priority));
+	private static final Comparator<SyntaxInfo<?>> SET_COMPARATOR = (a,b) -> {
+		if (a == b) { // only considered equal if registering the same infos
+			return 0;
+		}
+		int result = a.priority().compareTo(b.priority());
+		// when elements have the same priority, the oldest element comes first
+		return result != 0 ? result : 1;
+	};
+
+	private final Set<I> syntaxes = new ConcurrentSkipListSet<>(SET_COMPARATOR);
 
 	@Override
 	public Collection<I> syntaxes() {

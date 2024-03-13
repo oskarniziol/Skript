@@ -22,8 +22,8 @@ import ch.njol.skript.lang.ExpressionType;
 import com.google.common.base.MoreObjects;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import org.skriptlang.skript.lang.Priority;
 import org.skriptlang.skript.lang.entry.EntryValidator;
+import org.skriptlang.skript.util.Priority;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -90,7 +90,7 @@ final class DefaultSyntaxInfosImpl {
 
 		@Override
 		public Priority priority() {
-			return new Priority(super.priority().getPriority() | expressionType.ordinal() << 24);
+			return Priority.of(super.priority().priority() | expressionType.ordinal() << 24);
 		}
 
 		/**

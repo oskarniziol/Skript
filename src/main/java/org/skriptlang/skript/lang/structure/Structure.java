@@ -52,25 +52,25 @@ import java.util.Iterator;
  */
 public abstract class Structure implements SyntaxElement, Debuggable {
 
-	/**
-	 * The default {@link Priority} of every registered Structure.
-	 *
-	 * @deprecated Use {@link org.skriptlang.skript.lang.Priority#DEFAULT_PRIORITY}
-	 */
-	@Deprecated
-	public static final org.skriptlang.skript.lang.Priority DEFAULT_PRIORITY = org.skriptlang.skript.lang.Priority.DEFAULT_PRIORITY;
+	public static final org.skriptlang.skript.util.Priority DEFAULT_PRIORITY =
+			org.skriptlang.skript.util.Priority.of(1000);
 
 	/**
-	 * Priorities are used to determine the order in which Structures should be loaded.
-	 * As the priority approaches 0, it becomes more important. Example:
-	 * priority of 1 (loads first), priority of 2 (loads second), priority of 3 (loads third)
-	 *
-	 * @deprecated Use {@link org.skriptlang.skript.lang.Priority}
+	 * @deprecated Use {@link org.skriptlang.skript.util.Priority}
 	 */
 	@Deprecated
-	public static class Priority extends org.skriptlang.skript.lang.Priority {
+	public static class Priority implements org.skriptlang.skript.util.Priority {
+		private final org.skriptlang.skript.util.Priority priority;
 		public Priority(int priority) {
-			super(priority);
+			this.priority = org.skriptlang.skript.util.Priority.of(priority);
+		}
+		@Override
+		public int priority() {
+			return priority.priority();
+		}
+		@Override
+		public int compareTo(org.skriptlang.skript.util.Priority other) {
+			return priority.compareTo(other);
 		}
 	}
 
@@ -152,11 +152,11 @@ public abstract class Structure implements SyntaxElement, Debuggable {
 
 	/**
 	 * The priority of a Structure determines the order in which it should be loaded.
-	 * For more information, see the javadoc of {@link Priority}.
-	 * @return The priority of this Structure. By default, this is {@link Priority#DEFAULT_PRIORITY}.
+	 * For more information, see the javadoc of {@link org.skriptlang.skript.util.Priority}.
+	 * @return The priority of this Structure. By default, this is {@link Structure#DEFAULT_PRIORITY}.
 	 */
-	public org.skriptlang.skript.lang.Priority getPriority() {
-		return org.skriptlang.skript.lang.Priority.DEFAULT_PRIORITY;
+	public org.skriptlang.skript.util.Priority getPriority() {
+		return DEFAULT_PRIORITY;
 	}
 
 	@Override
