@@ -117,14 +117,33 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 	@SuppressWarnings("unchecked")
 	static class BuilderImpl<B extends Builder<B, E>, E extends SyntaxElement> implements Builder<B, E> {
 
+		/**
+		 * A default origin that describes the class of a syntax.
+		 */
+		private static final class ClassOrigin implements SyntaxOrigin {
+
+			private final String name;
+
+			ClassOrigin(Class<?> clazz) {
+				this.name = clazz.getName();
+			}
+
+			@Override
+			public String name() {
+				return name;
+			}
+
+		}
+
 		final Class<E> type;
 		final List<String> patterns = new ArrayList<>();
 		@Nullable
 		Supplier<E> supplier;
-		SyntaxOrigin origin = SyntaxOrigin.UNKNOWN;
+		SyntaxOrigin origin;
 
 		BuilderImpl(Class<E> type) {
 			this.type = type;
+			origin = new ClassOrigin(type);
 		}
 
 		public B origin(SyntaxOrigin origin) {
