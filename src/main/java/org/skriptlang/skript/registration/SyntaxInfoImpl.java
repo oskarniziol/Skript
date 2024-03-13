@@ -18,14 +18,15 @@
  */
 package org.skriptlang.skript.registration;
 
+import ch.njol.skript.SkriptAPIException;
 import ch.njol.skript.lang.SyntaxElement;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.skriptlang.skript.lang.Priority;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,6 +44,12 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 	private final Priority priority = new Priority();
 
 	protected SyntaxInfoImpl(SyntaxOrigin origin, Class<T> type, @Nullable Supplier<T> supplier, Collection<String> patterns) {
+		if (supplier == null && (type.isInterface() || Modifier.isAbstract(type.getModifiers()))) {
+			throw new SkriptAPIException(
+				"Failed to register a syntax info for '" + type.getName() + "'." +
+				" Element classes cannot be abstract or an interface unless a supplier is provided."
+			);
+		}
 		this.origin = origin;
 		this.type = type;
 		this.supplier = supplier;
