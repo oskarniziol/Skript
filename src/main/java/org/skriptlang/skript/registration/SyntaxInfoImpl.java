@@ -41,9 +41,12 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 	@Nullable
 	private final Supplier<T> supplier;
 	private final Collection<String> patterns;
-	private final Priority priority = Priority.of(0);
+	private final Priority priority;
 
-	protected SyntaxInfoImpl(SyntaxOrigin origin, Class<T> type, @Nullable Supplier<T> supplier, Collection<String> patterns) {
+	protected SyntaxInfoImpl(
+		SyntaxOrigin origin, Class<T> type, @Nullable Supplier<T> supplier,
+		Collection<String> patterns, Priority priority
+	) {
 		if (supplier == null && (type.isInterface() || Modifier.isAbstract(type.getModifiers()))) {
 			throw new SkriptAPIException(
 				"Failed to register a syntax info for '" + type.getName() + "'." +
@@ -54,6 +57,7 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 		this.type = type;
 		this.supplier = supplier;
 		this.patterns = ImmutableList.copyOf(patterns);
+		this.priority = priority;
 	}
 
 	@Override
@@ -135,11 +139,17 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 
 		}
 
+		/**
+		 * A default priority to use when one is not provided.
+		 */
+		private static final Priority DEFAULT_PRIORITY = Priority.of(1000);
+
 		final Class<E> type;
-		final List<String> patterns = new ArrayList<>();
+		SyntaxOrigin origin;
 		@Nullable
 		Supplier<E> supplier;
-		SyntaxOrigin origin;
+		final List<String> patterns = new ArrayList<>();
+		Priority priority = DEFAULT_PRIORITY;
 
 		BuilderImpl(Class<E> type) {
 			this.type = type;
@@ -171,8 +181,14 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 			return (B) this;
 		}
 
+		@Override
+		public B priority(Priority priority) {
+			this.priority = priority;
+			return (B) this;
+		}
+
 		public SyntaxInfo<E> build() {
-			return new SyntaxInfoImpl<>(origin, type, supplier, patterns);
+			return new SyntaxInfoImpl<>(origin, type, supplier, patterns, priority);
 		}
 
 	}

@@ -339,6 +339,12 @@ final class BukkitInfosImpl {
 			}
 
 			@Override
+			public B priority(Priority priority) {
+				defaultBuilder.priority(priority);
+				return (B) this;
+			}
+
+			@Override
 			public Event<E> build() {
 				return new EventImpl<>(
 					defaultBuilder.build(), name,

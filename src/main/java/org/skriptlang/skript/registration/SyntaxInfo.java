@@ -125,6 +125,13 @@ public interface SyntaxInfo<E extends SyntaxElement> extends DefaultSyntaxInfos 
 		B addPatterns(Collection<String> patterns);
 
 		/**
+		 * Sets the priority the syntax info will use, which dictates its position for matching during parsing.
+		 * @param priority The priority to use.
+		 * @return This builder.
+		 */
+		B priority(Priority priority);
+
+		/**
 		 * Builds a new syntax info from the set details.
 		 * @return A syntax info representing the class providing the syntax's implementation.
 		 */

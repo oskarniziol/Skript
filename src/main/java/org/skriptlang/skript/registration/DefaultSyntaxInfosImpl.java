@@ -42,9 +42,10 @@ final class DefaultSyntaxInfosImpl {
 
 		ExpressionImpl(
 			SyntaxOrigin origin, Class<E> type, @Nullable Supplier<E> supplier,
-			Collection<String> patterns, Class<R> returnType, ExpressionType expressionType
+			Collection<String> patterns, Priority priority, Class<R> returnType,
+			ExpressionType expressionType
 		) {
-			super(origin, type, supplier, patterns);
+			super(origin, type, supplier, patterns, priority);
 			if (returnType.isAnnotation() || returnType.isArray() || returnType.isPrimitive()) {
 				throw new IllegalArgumentException("returnType must be a normal type");
 			}
@@ -121,7 +122,7 @@ final class DefaultSyntaxInfosImpl {
 				if (expressionType == null) {
 					throw new NullPointerException("expressionType must be set");
 				}
-				return new ExpressionImpl<>(origin, type, supplier, patterns, returnType, expressionType);
+				return new ExpressionImpl<>(origin, type, supplier, patterns, priority, returnType, expressionType);
 			}
 
 		}
@@ -139,9 +140,9 @@ final class DefaultSyntaxInfosImpl {
 
 		StructureImpl(
 			SyntaxOrigin origin, Class<E> type, @Nullable Supplier<E> supplier,
-			Collection<String> patterns, @Nullable EntryValidator entryValidator
+			Collection<String> patterns, Priority priority, @Nullable EntryValidator entryValidator
 		) {
-			super(origin, type, supplier, patterns);
+			super(origin, type, supplier, patterns, priority);
 			this.entryValidator = entryValidator;
 		}
 
@@ -197,7 +198,7 @@ final class DefaultSyntaxInfosImpl {
 			}
 
 			public Structure<E> build() {
-				return new StructureImpl<>(origin, type, supplier, patterns, entryValidator);
+				return new StructureImpl<>(origin, type, supplier, patterns, priority, entryValidator);
 			}
 
 		}
