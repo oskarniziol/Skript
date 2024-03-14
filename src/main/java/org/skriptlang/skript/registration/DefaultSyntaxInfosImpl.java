@@ -18,9 +18,7 @@
  */
 package org.skriptlang.skript.registration;
 
-import ch.njol.skript.lang.ExpressionType;
 import com.google.common.base.MoreObjects;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.util.Priority;
@@ -38,19 +36,16 @@ final class DefaultSyntaxInfosImpl {
 		extends SyntaxInfoImpl<E> implements DefaultSyntaxInfos.Expression<E, R> {
 
 		private final Class<R> returnType;
-		private final ExpressionType expressionType;
 
 		ExpressionImpl(
 			SyntaxOrigin origin, Class<E> type, @Nullable Supplier<E> supplier,
-			Collection<String> patterns, Priority priority, Class<R> returnType,
-			ExpressionType expressionType
+			Collection<String> patterns, Priority priority, Class<R> returnType
 		) {
 			super(origin, type, supplier, patterns, priority);
 			if (returnType.isAnnotation() || returnType.isArray() || returnType.isPrimitive()) {
 				throw new IllegalArgumentException("returnType must be a normal type");
 			}
 			this.returnType = returnType;
-			this.expressionType = expressionType;
 		}
 
 		@Override
@@ -59,23 +54,17 @@ final class DefaultSyntaxInfosImpl {
 		}
 
 		@Override
-		public ExpressionType expressionType() {
-			return expressionType;
-		}
-
-		@Override
 		public boolean equals(Object other) {
 			if (!(other instanceof Expression) || !super.equals(other)) {
 				return false;
 			}
 			ExpressionImpl<?, ?> expression = (ExpressionImpl<?, ?>) other;
-			return returnType() == expression.returnType() &&
-					Objects.equals(expressionType(), expression.expressionType());
+			return returnType() == expression.returnType();
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(origin(), type(), patterns(), returnType(), expressionType());
+			return Objects.hash(origin(), type(), patterns(), returnType());
 		}
 
 		@Override
@@ -85,44 +74,25 @@ final class DefaultSyntaxInfosImpl {
 					.add("type", type())
 					.add("patterns", patterns())
 					.add("returnType", returnType())
-					.add("expressionType", expressionType())
 					.toString();
-		}
-
-		@Override
-		public Priority priority() {
-			return Priority.of(super.priority().priority() | expressionType.ordinal() << 24);
 		}
 
 		/**
 		 * {@inheritDoc}
 		 */
-		@SuppressWarnings("unchecked")
 		static final class BuilderImpl<B extends Expression.Builder<B, E, R>, E extends ch.njol.skript.lang.Expression<R>, R>
 			extends SyntaxInfoImpl.BuilderImpl<B, E>
 			implements Expression.Builder<B, E, R> {
 
 			private final Class<R> returnType;
-			@Nullable
-			private ExpressionType expressionType;
 
 			BuilderImpl(Class<E> expressionClass, Class<R> returnType) {
 				super(expressionClass);
 				this.returnType = returnType;
 			}
 
-			@Override
-			public B expressionType(ExpressionType expressionType) {
-				this.expressionType = expressionType;
-				return (B) this;
-			}
-
-			@Contract("-> new")
 			public Expression<E, R> build() {
-				if (expressionType == null) {
-					throw new NullPointerException("expressionType must be set");
-				}
-				return new ExpressionImpl<>(origin, type, supplier, patterns, priority, returnType, expressionType);
+				return new ExpressionImpl<>(origin, type, supplier, patterns, priority, returnType);
 			}
 
 		}

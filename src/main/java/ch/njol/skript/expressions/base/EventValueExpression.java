@@ -44,6 +44,8 @@ import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.skriptlang.skript.registration.SyntaxInfo;
+import org.skriptlang.skript.util.Priority;
 
 /**
  * A useful class for creating default expressions. It simply returns the event value of the given type.
@@ -65,6 +67,12 @@ import org.eclipse.jdt.annotation.Nullable;
  */
 public class EventValueExpression<T> extends SimpleExpression<T> implements DefaultExpression<T> {
 
+	/**
+	 * A priority for {@link EventValueExpression}s.
+	 * They will be registered before {@link SyntaxInfo.Expression#COMBINED} expressions
+	 *  but after {@link SyntaxInfo.Expression#SIMPLE} expressions.
+	 */
+	public static final Priority DEFAULT_PRIORITY = Priority.before(SyntaxInfo.Expression.COMBINED);
 
 	/**
 	 * Registers an expression as {@link ExpressionType#EVENT} with the provided pattern.

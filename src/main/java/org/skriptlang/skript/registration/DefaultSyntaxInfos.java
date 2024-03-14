@@ -18,22 +18,42 @@
  */
 package org.skriptlang.skript.registration;
 
-import ch.njol.skript.lang.ExpressionType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.registration.DefaultSyntaxInfosImpl.ExpressionImpl;
 import org.skriptlang.skript.registration.DefaultSyntaxInfosImpl.StructureImpl;
+import org.skriptlang.skript.util.Priority;
 
 interface DefaultSyntaxInfos {
 
 	/**
 	 * A syntax info to be used for {@link ch.njol.skript.lang.Expression}s.
-	 * It contains additional details including the return type and {@link ExpressionType}.
+	 * It differs from a typical info in that it also has a return type.
 	 * @param <E> The class providing the implementation of the Expression this info represents.
 	 * @param <R> The type of the return type of the Expression.
 	 */
 	interface Expression<E extends ch.njol.skript.lang.Expression<R>, R> extends SyntaxInfo<E> {
+
+		/**
+		 * A priority for expressions that only match simple text.
+		 * Example: "[the] console"
+		 */
+		Priority SIMPLE = Priority.base();
+
+		/**
+		 * A priority for expressions that contain other expressions.
+		 * Note that this is the default priority for all expression infos.
+		 * Example: "[the] first %number% characters of %strings%"
+		 */
+		Priority COMBINED = Priority.after(SIMPLE);
+
+		/**
+		 * A priority for expressions that can match almost anything.
+		 * This is likely the case when using regex or multiple expressions next to each other.
+		 * Example: "[the] [loop-]<.+>"
+		 */
+		Priority PATTERN_MATCHES_EVERYTHING = Priority.after(COMBINED);
 
 		/**
 		 * @param expressionClass The Expression class the info will represent.
@@ -52,14 +72,6 @@ interface DefaultSyntaxInfos {
 		Class<R> returnType();
 
 		/**
-		 * An Expression's type affects its priority. That is, the priority of an Expression syntax info
-		 *  only affects its ordering over other Expression syntax infos with the same type.
-		 * @return The type of Expression this info represents.
-		 * @see ExpressionType
-		 */
-		ExpressionType expressionType();
-
-		/**
 		 * An Expression-specific builder is used for constructing a new Expression syntax info.
 		 * @see #builder(Class, Class)
 		 * @param <B> The type of builder being used.
@@ -67,15 +79,6 @@ interface DefaultSyntaxInfos {
 		 * @param <R> The type of the return type of the Expression.
 		 */
 		interface Builder<B extends Builder<B, E, R>, E extends ch.njol.skript.lang.Expression<R>, R> extends SyntaxInfo.Builder<B, E> {
-
-			/**
-			 * Sets the expression type the syntax info will use.
-			 * @param expressionType The expression type to use.
-			 * @return This builder.
-			 * @see Expression#expressionType()
-			 */
-			@Contract("_ -> this")
-			B expressionType(ExpressionType expressionType);
 
 			/**
 			 * {@inheritDoc}
