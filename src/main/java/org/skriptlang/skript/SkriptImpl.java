@@ -36,7 +36,7 @@ import java.util.Set;
 
 final class SkriptImpl implements Skript {
 
-	private final SkriptAddon addon;
+	final SkriptAddon addon;
 	private final SkriptAddon unmodifiableAddon;
 
 	SkriptImpl(String name, AddonModule... modules) {

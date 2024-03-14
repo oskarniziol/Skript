@@ -81,6 +81,7 @@ import ch.njol.skript.util.chat.ChatMessages;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Closeable;
 import ch.njol.util.Kleenean;
+import ch.njol.util.NonNullPair;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.util.coll.iterator.CheckedIterator;
@@ -487,14 +488,14 @@ public final class Skript extends JavaPlugin implements Listener {
 		}
 
 		// initialize the modern Skript instance
-		skript = org.skriptlang.skript.Skript.createInstance(
-			this.getName(),
-			// really hacky way to gain access to the mutable registry
-			// this is purely for backwards compatibility reasons
-			addon -> {
-				skriptRegistry = addon.registry();
-				addon.localizer().setSourceDirectories(getClass(), "lang", getDataFolder().getAbsolutePath() + "lang");
-			}
+		NonNullPair<org.skriptlang.skript.Skript, org.skriptlang.skript.addon.SkriptAddon> skriptPair =
+			org.skriptlang.skript.Skript.createInstance(this.getName());
+		skript = skriptPair.getFirst();
+		skriptRegistry = skriptPair.getSecond().registry();
+		skriptPair.getSecond().localizer().setSourceDirectories(
+			getClass(),
+			"lang",
+			getDataFolder().getAbsolutePath() + "lang"
 		);
 		// initialize the old Skript SkriptAddon instance
 		getAddonInstance();

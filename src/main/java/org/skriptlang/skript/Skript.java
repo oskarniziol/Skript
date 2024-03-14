@@ -18,6 +18,7 @@
  */
 package org.skriptlang.skript;
 
+import ch.njol.util.NonNullPair;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
@@ -38,11 +39,12 @@ public interface Skript extends SkriptAddon {
 	 * This implementation makes use of default implementations of required classes.
 	 * @param name The name for this Skript instance to use.
 	 * @param modules Modules for the Skript to use. These modules would make up the "built-in" syntax.
-	 * @return A default Skript implementation.
+	 * @return A pair containing a default Skript implementation and the modifiable {@link SkriptAddon} backing it.
 	 */
 	@Contract("_, _ -> new")
-	static Skript createInstance(String name, AddonModule... modules) {
-		return new SkriptImpl(name, modules);
+	static NonNullPair<Skript, SkriptAddon> createInstance(String name, AddonModule... modules) {
+		SkriptImpl skript = new SkriptImpl(name, modules);
+		return new NonNullPair<>(skript, skript.addon);
 	}
 
 	/**
