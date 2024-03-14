@@ -18,23 +18,50 @@
  */
 package org.skriptlang.skript.util;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.Collection;
+
 /**
  * Priorities are used for things like ordering syntax and loading structures in a specific order.
  */
 public interface Priority extends Comparable<Priority> {
 
 	/**
-	 * Constructs a priority with the provided integer using the default implementation.
-	 * In this implementation, the lower the priority, the more important it is. For example:
-	 * priority of 1 (loads first), priority of 2 (loads second), priority of 3 (loads third)
+	 * @return A base priority for other priorities to build relationships off of.
 	 */
-	static Priority of(int priority) {
-		return new PriorityImpl(priority);
+	@Contract("-> new")
+	static Priority base() {
+		return new PriorityImpl();
 	}
 
 	/**
-	 * @return An integer representing this priority.
+	 * Constructs a new priority that is before <code>priority</code>.
+	 * Note that this method
+	 * @param priority The priority that will be after the returned priority.
+	 * @return A priority that is before <code>priority</code>.
 	 */
-	int priority();
+	@Contract("_ -> new")
+	static Priority before(Priority priority) {
+		return new PriorityImpl(priority, true);
+	}
+
+	@Contract("_ -> new")
+	static Priority after(Priority priority) {
+		return new PriorityImpl(priority, false);
+	}
+
+	/**
+	 * @return A collection of all priorities this priority is after.
+	 */
+	@Unmodifiable
+	Collection<Priority> after();
+
+	/**
+	 * @return A collection of all priorities this priority is before.
+	 */
+	@Unmodifiable
+	Collection<Priority> before();
 
 }

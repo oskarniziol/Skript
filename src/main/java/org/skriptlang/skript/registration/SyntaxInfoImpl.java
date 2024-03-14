@@ -139,17 +139,12 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 
 		}
 
-		/**
-		 * A default priority to use when one is not provided.
-		 */
-		private static final Priority DEFAULT_PRIORITY = Priority.of(1000);
-
 		final Class<E> type;
 		SyntaxOrigin origin;
 		@Nullable
 		Supplier<E> supplier;
 		final List<String> patterns = new ArrayList<>();
-		Priority priority = DEFAULT_PRIORITY;
+		Priority priority = SyntaxInfo.DEFAULT_PRIORITY;
 
 		BuilderImpl(Class<E> type) {
 			this.type = type;

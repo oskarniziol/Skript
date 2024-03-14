@@ -18,39 +18,65 @@
  */
 package org.skriptlang.skript.util;
 
-import org.jetbrains.annotations.NotNull;
+import com.google.common.collect.ImmutableSet;
 
-public class PriorityImpl implements Priority {
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-	private final int priority;
+class PriorityImpl implements Priority {
 
-	PriorityImpl(int priority) {
-		this.priority = priority;
+	private final Set<Priority> after;
+
+	private final Set<Priority> before;
+
+	PriorityImpl() {
+		this.after = ImmutableSet.of();
+		this.before = ImmutableSet.of();
 	}
 
-	public int priority() {
-		return priority;
+	PriorityImpl(Priority priority, boolean isBefore) {
+		Set<Priority> after = new HashSet<>();
+		Set<Priority> before = new HashSet<>();
+		if (isBefore) {
+			before.add(priority);
+		} else {
+			after.add(priority);
+		}
+		after.addAll(priority.after());
+		before.addAll(priority.before());
+
+		this.after = ImmutableSet.copyOf(after);
+		this.before = ImmutableSet.copyOf(before);
 	}
 
 	@Override
-	public int compareTo(@NotNull Priority other) {
-		return Integer.compare(priority, other.priority());
-	}
-
-	@Override
-	public boolean equals(Object other) {
+	public int compareTo(Priority other) {
 		if (this == other) {
-			return true;
+			return 0;
 		}
-		if (other == null || getClass() != other.getClass()) {
-			return false;
+
+		if (this.before().contains(other) || other.after().contains(this)) { // we are before other
+			return -1;
 		}
-		return priority() == ((Priority) other).priority();
+
+		if (this.after().contains(other) || other.before().contains(this)) { // we are after other
+			return 1;
+		}
+
+		// there is no meaningful relationship, we consider ourselves the same
+		// however, in cases of a custom implementation, we defer to them to determine the relationship
+		return (other instanceof PriorityImpl) ? 0 : (other.compareTo(this) * -1);
 	}
 
 	@Override
-	public int hashCode() {
-		return priority();
+	public Collection<Priority> after() {
+		return after;
+	}
+
+	@Override
+	public Collection<Priority> before() {
+		return before;
 	}
 
 }

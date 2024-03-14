@@ -36,6 +36,12 @@ import java.util.function.Supplier;
 public interface SyntaxInfo<E extends SyntaxElement> extends DefaultSyntaxInfos {
 
 	/**
+	 * A priority to be used by infos that do not specify a priority.
+	 * Note that custom info implementations (e.g. {@link Expression}) may use a different default priority.
+	 */
+	Priority DEFAULT_PRIORITY = Priority.base();
+
+	/**
 	 * @param type The syntax class the info will represent.
 	 * @return A builder for creating a syntax info representing <code>type</code>.
 	 */
