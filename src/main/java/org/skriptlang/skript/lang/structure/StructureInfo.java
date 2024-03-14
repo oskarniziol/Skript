@@ -30,15 +30,12 @@ public class StructureInfo<E extends Structure> extends SyntaxElementInfo<E> {
 	@Nullable
 	public final EntryValidator entryValidator;
 
-	public StructureInfo(String[] patterns, Class<E> elementClass, String originClassPath) throws IllegalArgumentException {
-		super(patterns, elementClass, originClassPath);
+	public StructureInfo(String[] patterns, Class<E> c, String originClassPath) throws IllegalArgumentException {
+		super(patterns, c, originClassPath);
 		entryValidator = null;
 	}
 
-	public StructureInfo(
-		String[] patterns, Class<E> elementClass, String originClassPath,
-		@Nullable EntryValidator entryValidator
-	) throws IllegalArgumentException {
+	public StructureInfo(String[] patterns, Class<E> elementClass, String originClassPath, @Nullable EntryValidator entryValidator) throws IllegalArgumentException {
 		super(patterns, elementClass, originClassPath);
 		this.entryValidator = entryValidator;
 	}
