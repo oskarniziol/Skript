@@ -18,6 +18,7 @@
  */
 package org.skriptlang.skript.util;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -26,6 +27,7 @@ import java.util.Collection;
 /**
  * Priorities are used for things like ordering syntax and loading structures in a specific order.
  */
+@ApiStatus.Experimental
 public interface Priority extends Comparable<Priority> {
 
 	/**
