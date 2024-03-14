@@ -27,6 +27,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
@@ -40,6 +41,7 @@ import ch.njol.util.Kleenean;
 		"\twill consume firework",
 		"\tset to consume the firework"
 })
+@RequiredPlugins("Paper")
 @Since("INSERT VERSION")
 public class CondElytraBoostConsume extends Condition {
 

@@ -27,6 +27,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -40,12 +41,13 @@ import ch.njol.util.Kleenean;
 		"\twill consume firework",
 		"\tset to consume the firework"
 })
+@RequiredPlugins("Paper")
 @Since("INSERT VERSION")
 public class EffElytraBoostConsume extends Effect {
 
 	static {
 		if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerElytraBoostEvent"))
-			Skript.registerEffect(EffElytraBoostConsume.class, "(set|change) [[the] event] to [:not] consume [the] firework", "[not:do not] consume firework", "set consume firework to %boolean%");
+			Skript.registerEffect(EffElytraBoostConsume.class, "[not:do not] consume firework", "set consum(e|ption of) firework to %boolean%");
 	}
 
 	@Nullable
@@ -59,7 +61,7 @@ public class EffElytraBoostConsume extends Effect {
 			Skript.error("You can only use the 'consume firework' effect in the 'on elytra boost' event!");
 			return false;
 		}
-		if (matchedPattern == 2) {
+		if (matchedPattern == 1) {
 			expression = (Expression<Boolean>) exprs[0];
 		} else {
 			consume = !parseResult.hasTag("not");
