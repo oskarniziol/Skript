@@ -33,10 +33,10 @@ public enum ExpressionType {
 
 	/**
 	 * Expressions that only match simple text, e.g. "[the] player"
-	 * @deprecated Use {@link SyntaxInfo.Expression#SIMPLE}.
+	 * @deprecated Use {@link SyntaxInfo#SIMPLE}.
 	 */
 	@Deprecated
-	SIMPLE(SyntaxInfo.Expression.SIMPLE),
+	SIMPLE(SyntaxInfo.SIMPLE),
 
 	/**
 	 * Expressions that are related to the Event that are typically simple.
@@ -51,10 +51,10 @@ public enum ExpressionType {
 	 * Expressions that contain other expressions, e.g. "[the] distance between %location% and %location%"
 	 * 
 	 * @see #PROPERTY
-	 * @deprecated Use {@link SyntaxInfo.Expression#COMBINED}.
+	 * @deprecated Use {@link SyntaxInfo#COMBINED}.
 	 */
 	@Deprecated
-	COMBINED(SyntaxInfo.Expression.COMBINED),
+	COMBINED(SyntaxInfo.COMBINED),
 
 	/**
 	 * Property expressions, e.g. "[the] data value[s] of %items%"/"%items%'[s] data value[s]"
@@ -67,10 +67,10 @@ public enum ExpressionType {
 
 	/**
 	 * Expressions whose pattern matches (almost) everything. Typically when using regex. Example: "[the] [loop-]<.+>"
-	 * @deprecated Use {@link SyntaxInfo.Expression#PATTERN_MATCHES_EVERYTHING}.
+	 * @deprecated Use {@link SyntaxInfo#PATTERN_MATCHES_EVERYTHING}.
 	 */
 	@Deprecated
-	PATTERN_MATCHES_EVERYTHING(SyntaxInfo.Expression.PATTERN_MATCHES_EVERYTHING);
+	PATTERN_MATCHES_EVERYTHING(SyntaxInfo.PATTERN_MATCHES_EVERYTHING);
 
 	private final Priority priority;
 
@@ -87,15 +87,15 @@ public enum ExpressionType {
 
 	@Nullable
 	public static ExpressionType fromModern(Priority priority) {
-		if (priority == SyntaxInfo.Expression.SIMPLE)
+		if (priority == SyntaxInfo.SIMPLE)
 			return ExpressionType.SIMPLE;
 		if (priority == EventValueExpression.DEFAULT_PRIORITY)
 			return ExpressionType.EVENT;
-		if (priority == SyntaxInfo.Expression.COMBINED)
+		if (priority == SyntaxInfo.COMBINED)
 			return ExpressionType.COMBINED;
 		if (priority == PropertyExpression.DEFAULT_PRIORITY)
 			return ExpressionType.PROPERTY;
-		if (priority == SyntaxInfo.Expression.PATTERN_MATCHES_EVERYTHING)
+		if (priority == SyntaxInfo.PATTERN_MATCHES_EVERYTHING)
 			return ExpressionType.PATTERN_MATCHES_EVERYTHING;
 		return null;
 	}

@@ -31,6 +31,7 @@ import ch.njol.util.Kleenean;
 import org.jetbrains.annotations.ApiStatus;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.registration.SyntaxRegistry;
+import org.skriptlang.skript.util.Priority;
 
 /**
  * This class can be used for an easier writing of conditions that contain only one type in the pattern,
@@ -56,6 +57,14 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
  * the first one needs to be a non-negated one and a negated one.
  */
 public abstract class PropertyCondition<T> extends Condition implements Checker<T> {
+
+	/**
+	 * A priority for {@link PropertyCondition}s.
+	 * They will be registered before {@link SyntaxInfo#PATTERN_MATCHES_EVERYTHING} expressions
+	 *  but after {@link SyntaxInfo#COMBINED} expressions.
+	 */
+	@ApiStatus.Experimental
+	public static final Priority DEFAULT_PRIORITY = Priority.before(SyntaxInfo.PATTERN_MATCHES_EVERYTHING);
 
 	/**
 	 * See {@link PropertyCondition} for more info
@@ -108,7 +117,7 @@ public abstract class PropertyCondition<T> extends Condition implements Checker<
 	public static void register(SyntaxRegistry registry, Class<? extends Condition> condition, PropertyType propertyType, String property, String type) {
 		if (type.contains("%"))
 			throw new SkriptAPIException("The type argument must not contain any '%'s");
-		SyntaxInfo.Builder<?, ? extends Condition> builder = SyntaxInfo.builder(condition);
+		SyntaxInfo.Builder<?, ? extends Condition> builder = SyntaxInfo.builder(condition).priority(DEFAULT_PRIORITY);
 		switch (propertyType) {
 			case BE:
 				builder.addPatterns(

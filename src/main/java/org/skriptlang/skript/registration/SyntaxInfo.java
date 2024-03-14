@@ -36,10 +36,24 @@ import java.util.function.Supplier;
 public interface SyntaxInfo<E extends SyntaxElement> extends DefaultSyntaxInfos {
 
 	/**
-	 * A priority to be used by infos that do not specify a priority.
-	 * Note that custom info implementations (e.g. {@link Expression}) may use a different default priority.
+	 * A priority for infos with patterns that only match simple text (they do not have any {@link Expression}s).
+	 * Example: "[the] console"
 	 */
-	Priority DEFAULT_PRIORITY = Priority.base();
+	Priority SIMPLE = Priority.base();
+
+	/**
+	 * A priority for infos with patterns that contain at least one {@link Expression}.
+	 * This is typically the default priority of an info.
+	 * Example: "[the] first %number% characters of %strings%"
+	 */
+	Priority COMBINED = Priority.after(SIMPLE);
+
+	/**
+	 * A priority for infos with patterns that can match almost anything.
+	 * This is likely the case when using regex or multiple expressions next to each other in a pattern.
+	 * Example: "[the] [loop-]<.+>"
+	 */
+	Priority PATTERN_MATCHES_EVERYTHING = Priority.after(COMBINED);
 
 	/**
 	 * @param type The syntax class the info will represent.

@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.registration.DefaultSyntaxInfosImpl.ExpressionImpl;
 import org.skriptlang.skript.registration.DefaultSyntaxInfosImpl.StructureImpl;
-import org.skriptlang.skript.util.Priority;
 
 interface DefaultSyntaxInfos {
 
@@ -34,26 +33,6 @@ interface DefaultSyntaxInfos {
 	 * @param <R> The type of the return type of the Expression.
 	 */
 	interface Expression<E extends ch.njol.skript.lang.Expression<R>, R> extends SyntaxInfo<E> {
-
-		/**
-		 * A priority for expressions that only match simple text.
-		 * Example: "[the] console"
-		 */
-		Priority SIMPLE = Priority.base();
-
-		/**
-		 * A priority for expressions that contain other expressions.
-		 * Note that this is the default priority for all expression infos.
-		 * Example: "[the] first %number% characters of %strings%"
-		 */
-		Priority COMBINED = Priority.after(SIMPLE);
-
-		/**
-		 * A priority for expressions that can match almost anything.
-		 * This is likely the case when using regex or multiple expressions next to each other.
-		 * Example: "[the] [loop-]<.+>"
-		 */
-		Priority PATTERN_MATCHES_EVERYTHING = Priority.after(COMBINED);
 
 		/**
 		 * @param expressionClass The Expression class the info will represent.

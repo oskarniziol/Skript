@@ -48,11 +48,11 @@ public abstract class PropertyExpression<F, T> extends SimpleExpression<T> {
 
 	/**
 	 * A priority for {@link PropertyExpression}s.
-	 * They will be registered before {@link SyntaxInfo.Expression#PATTERN_MATCHES_EVERYTHING} expressions
-	 *  but after {@link SyntaxInfo.Expression#COMBINED} expressions.
+	 * They will be registered before {@link SyntaxInfo#PATTERN_MATCHES_EVERYTHING} expressions
+	 *  but after {@link SyntaxInfo#COMBINED} expressions.
 	 */
 	@ApiStatus.Experimental
-	public static final Priority DEFAULT_PRIORITY = Priority.before(SyntaxInfo.Expression.PATTERN_MATCHES_EVERYTHING);
+	public static final Priority DEFAULT_PRIORITY = Priority.before(SyntaxInfo.PATTERN_MATCHES_EVERYTHING);
 
 	/**
 	 * Registers an expression with the two default property patterns "property of %types%" and "%types%'[s] property"

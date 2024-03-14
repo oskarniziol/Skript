@@ -144,7 +144,7 @@ class SyntaxInfoImpl<T extends SyntaxElement> implements SyntaxInfo<T> {
 		@Nullable
 		Supplier<E> supplier;
 		final List<String> patterns = new ArrayList<>();
-		Priority priority = SyntaxInfo.DEFAULT_PRIORITY;
+		Priority priority = SyntaxInfo.COMBINED;
 
 		BuilderImpl(Class<E> type) {
 			this.type = type;

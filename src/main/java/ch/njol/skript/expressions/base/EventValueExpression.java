@@ -71,11 +71,11 @@ public class EventValueExpression<T> extends SimpleExpression<T> implements Defa
 
 	/**
 	 * A priority for {@link EventValueExpression}s.
-	 * They will be registered before {@link SyntaxInfo.Expression#COMBINED} expressions
-	 *  but after {@link SyntaxInfo.Expression#SIMPLE} expressions.
+	 * They will be registered before {@link SyntaxInfo#COMBINED} expressions
+	 *  but after {@link SyntaxInfo#SIMPLE} expressions.
 	 */
 	@ApiStatus.Experimental
-	public static final Priority DEFAULT_PRIORITY = Priority.before(SyntaxInfo.Expression.COMBINED);
+	public static final Priority DEFAULT_PRIORITY = Priority.before(SyntaxInfo.COMBINED);
 
 	/**
 	 * Registers an event value expression with the provided pattern.
