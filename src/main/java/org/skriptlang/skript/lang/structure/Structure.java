@@ -34,6 +34,7 @@ import ch.njol.skript.log.SkriptLogger;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.iterator.ConsumingIterator;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryData;
 import org.skriptlang.skript.lang.entry.EntryValidator;
@@ -52,26 +53,33 @@ import java.util.Iterator;
  */
 public abstract class Structure implements SyntaxElement, Debuggable {
 
-	public static final org.skriptlang.skript.util.Priority DEFAULT_PRIORITY =
-			org.skriptlang.skript.util.Priority.of(1000);
+	/**
+	 * The default {@link Priority} of every registered Structure.
+	 */
+	public static final Priority DEFAULT_PRIORITY = new Priority(1000);
 
 	/**
-	 * @deprecated Use {@link org.skriptlang.skript.util.Priority}
+	 * Priorities are used to determine the order in which Structures should be loaded.
+	 * As the priority approaches 0, it becomes more important. Example:
+	 * priority of 1 (loads first), priority of 2 (loads second), priority of 3 (loads third)
 	 */
-	@Deprecated
-	public static class Priority implements org.skriptlang.skript.util.Priority {
-		private final org.skriptlang.skript.util.Priority priority;
+	public static class Priority implements Comparable<Priority> {
+
+		private final int priority;
+
 		public Priority(int priority) {
-			this.priority = org.skriptlang.skript.util.Priority.of(priority);
+			this.priority = priority;
 		}
+
+		public int getPriority() {
+			return priority;
+		}
+
 		@Override
-		public int priority() {
-			return priority.priority();
+		public int compareTo(@NotNull Structure.Priority o) {
+			return Integer.compare(this.priority, o.priority);
 		}
-		@Override
-		public int compareTo(org.skriptlang.skript.util.Priority other) {
-			return priority.compareTo(other);
-		}
+
 	}
 
 	@Nullable
@@ -152,10 +160,10 @@ public abstract class Structure implements SyntaxElement, Debuggable {
 
 	/**
 	 * The priority of a Structure determines the order in which it should be loaded.
-	 * For more information, see the javadoc of {@link org.skriptlang.skript.util.Priority}.
+	 * For more information, see the javadoc of {@link Priority}.
 	 * @return The priority of this Structure. By default, this is {@link Structure#DEFAULT_PRIORITY}.
 	 */
-	public org.skriptlang.skript.util.Priority getPriority() {
+	public Priority getPriority() {
 		return DEFAULT_PRIORITY;
 	}
 
