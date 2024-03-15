@@ -19,11 +19,12 @@
 package org.skriptlang.skript.registration;
 
 import com.google.common.collect.ImmutableSet;
+import org.skriptlang.skript.registration.util.SyntaxPriority;
+import org.skriptlang.skript.util.Priority;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 final class SyntaxRegisterImpl<I extends SyntaxInfo<?>> implements SyntaxRegister<I> {
@@ -32,7 +33,34 @@ final class SyntaxRegisterImpl<I extends SyntaxInfo<?>> implements SyntaxRegiste
 		if (a == b) { // only considered equal if registering the same infos
 			return 0;
 		}
-		int result = a.priority().compareTo(b.priority());
+
+		Priority aPriority = a.priority();
+		Priority bPriority = b.priority();
+
+		if (aPriority instanceof SyntaxPriority) {
+			SyntaxPriority priority = (SyntaxPriority) aPriority;
+			if (priority.beforeElements().contains(b.type())) { // a must be before b
+				return -1;
+			}
+			if (priority.afterElements().contains(b.type())) { // a must be after b
+				return 1;
+			}
+		}
+
+		if (bPriority instanceof SyntaxPriority) {
+			SyntaxPriority priority = (SyntaxPriority) bPriority;
+			// remember that return values are in terms of aPriority
+			if (priority.beforeElements().contains(a.type())) { // b must be before a
+				return 1;
+			}
+			if (priority.afterElements().contains(a.type())) { // b must be after a
+				return -1;
+			}
+		}
+
+		// if not a special SyntaxPriority case, refer to default behavior
+
+		int result = aPriority.compareTo(bPriority);
 		// when elements have the same priority, the oldest element comes first
 		return result != 0 ? result : 1;
 	};

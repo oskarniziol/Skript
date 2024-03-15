@@ -56,6 +56,7 @@ public interface SyntaxInfo<E extends SyntaxElement> extends DefaultSyntaxInfos 
 	Priority PATTERN_MATCHES_EVERYTHING = Priority.after(COMBINED);
 
 	/**
+	 * Constructs a builder for a syntax info.
 	 * @param type The syntax class the info will represent.
 	 * @return A builder for creating a syntax info representing <code>type</code>.
 	 */

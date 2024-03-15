@@ -35,6 +35,7 @@ interface DefaultSyntaxInfos {
 	interface Expression<E extends ch.njol.skript.lang.Expression<R>, R> extends SyntaxInfo<E> {
 
 		/**
+		 * Constructs a builder for an expression syntax info.
 		 * @param expressionClass The Expression class the info will represent.
 		 * @return An Expression-specific builder for creating a syntax info representing <code>type</code>.
 		 * @param <E> The class providing the implementation of the Expression this info represents.
@@ -78,6 +79,7 @@ interface DefaultSyntaxInfos {
 	interface Structure<E extends org.skriptlang.skript.lang.structure.Structure> extends SyntaxInfo<E> {
 
 		/**
+		 * Constructs a builder for a structure syntax info.
 		 * @param structureClass The Structure class the info will represent.
 		 * @return A Structure-specific builder for creating a syntax info representing <code>type</code>.
 		 * @param <E> The class providing the implementation of the Structure this info represents.
