@@ -42,20 +42,17 @@ final class SyntaxRegisterImpl<I extends SyntaxInfo<?>> implements SyntaxRegiste
 			if (priority.beforeElements().contains(b.type())) { // a must be before b
 				return -1;
 			}
-			if (priority.afterElements().contains(b.type())) { // a must be after b
-				return 1;
-			}
+			// TODO improve: not ideal, but we just stick it at the end to make sure it comes after everything
+			return 1;
 		}
 
 		if (bPriority instanceof SyntaxPriority) {
 			SyntaxPriority priority = (SyntaxPriority) bPriority;
-			// remember that return values are in terms of aPriority
-			if (priority.beforeElements().contains(a.type())) { // b must be before a
-				return 1;
-			}
 			if (priority.afterElements().contains(a.type())) { // b must be after a
-				return -1;
+				return -1; // returning that a must be before b
 			}
+			// a does not have a relationship with b, allow it to keep moving up
+			return 1;
 		}
 
 		// if not a special SyntaxPriority case, refer to default behavior
