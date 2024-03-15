@@ -61,4 +61,14 @@ public interface SkriptAddon {
 	 */
 	Localizer localizer();
 
+	/**
+	 * A helper method for loading addon modules.
+	 * @param modules The modules to load.
+	 */
+	default void loadModules(AddonModule... modules) {
+		for (AddonModule module : modules) {
+			module.load(this);
+		}
+	}
+
 }

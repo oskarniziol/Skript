@@ -39,12 +39,9 @@ final class SkriptImpl implements Skript {
 	final SkriptAddon addon;
 	private final SkriptAddon unmodifiableAddon;
 
-	SkriptImpl(String name, AddonModule... modules) {
+	SkriptImpl(String name) {
 		addon = new SkriptAddonImpl(name, SyntaxRegistry.empty(), Localizer.of(this));
 		unmodifiableAddon = SkriptAddon.unmodifiableView(addon);
-		for (AddonModule module : modules) {
-			module.load(addon);
-		}
 	}
 
 	//
@@ -54,12 +51,7 @@ final class SkriptImpl implements Skript {
 	private static final Set<SkriptAddon> addons = new HashSet<>();
 
 	@Override
-	public SkriptAddon registerAddon(String name, AddonModule... modules) {
-		return registerAddon(name, Arrays.asList(modules));
-	}
-
-	@Override
-	public SkriptAddon registerAddon(String name, Collection<? extends AddonModule> modules) {
+	public SkriptAddon registerAddon(String name) {
 		// make sure an addon is not already registered with this name
 		for (SkriptAddon addon : addons) {
 			if (name.equals(addon.name())) {
@@ -70,12 +62,7 @@ final class SkriptImpl implements Skript {
 		}
 
 		SkriptAddon addon = new SkriptAddonImpl(name, ChildSyntaxRegistry.of(this.addon.registry(), SyntaxRegistry.empty()), null);
-		// load and register the addon
-		for (AddonModule module : modules) {
-			module.load(addon);
-		}
 		addons.add(addon);
-
 		return addon;
 	}
 

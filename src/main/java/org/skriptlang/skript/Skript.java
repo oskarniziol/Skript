@@ -38,12 +38,11 @@ public interface Skript extends SkriptAddon {
 	/**
 	 * This implementation makes use of default implementations of required classes.
 	 * @param name The name for this Skript instance to use.
-	 * @param modules Modules for the Skript to use. These modules would make up the "built-in" syntax.
 	 * @return A pair containing a default Skript implementation and the modifiable {@link SkriptAddon} backing it.
 	 */
-	@Contract("_, _ -> new")
-	static NonNullPair<Skript, SkriptAddon> createInstance(String name, AddonModule... modules) {
-		SkriptImpl skript = new SkriptImpl(name, modules);
+	@Contract("_ -> new")
+	static NonNullPair<Skript, SkriptAddon> createInstance(String name) {
+		SkriptImpl skript = new SkriptImpl(name);
 		return new NonNullPair<>(skript, skript.addon);
 	}
 
@@ -56,16 +55,9 @@ public interface Skript extends SkriptAddon {
 	/**
 	 * Registers the provided addon with this Skript and loads the provided modules.
 	 * @param name The name of the addon to register.
-	 * @param modules Any modules of this addon to load.
 	 */
-	SkriptAddon registerAddon(String name, AddonModule... modules);
-
-	/**
-	 * Registers the provided addon with this Skript and loads the provided modules.
-	 * @param name The name of the addon to register.
-	 * @param modules Any modules of this addon to load.
-	 */
-	SkriptAddon registerAddon(String name, Collection<? extends AddonModule> modules);
+	@Contract("_ -> new")
+	SkriptAddon registerAddon(String name);
 
 	/**
 	 * @return An unmodifiable snapshot of addons currently registered with this Skript.
