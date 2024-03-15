@@ -56,11 +56,23 @@ class PriorityImpl implements Priority {
 			return 0;
 		}
 
-		if (this.before().contains(other) || other.after().contains(this)) { // we are before other
+		// check whether this is known to be before other and whether other is known to be after this
+		if (this.before().contains(other) || other.after().contains(this)) {
 			return -1;
 		}
 
-		if (this.after().contains(other) || other.before().contains(this)) { // we are after other
+		// check whether this is known to be after other and whether other is known to be before this
+		if (this.after().contains(other) || other.before().contains(this)) {
+			return 1;
+		}
+
+		// check whether the set of items we are before has common elements with the set of items other is after
+		if (this.before().stream().anyMatch(other.after()::contains)) {
+			return -1;
+		}
+
+		// check whether the set of items we are after has common elements with the set of items other is before
+		if (this.after().stream().anyMatch(other.before()::contains)) {
 			return 1;
 		}
 
