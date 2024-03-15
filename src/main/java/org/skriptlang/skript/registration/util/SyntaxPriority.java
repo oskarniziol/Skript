@@ -30,6 +30,8 @@ import org.skriptlang.skript.registration.SyntaxRegistry;
 import org.skriptlang.skript.util.Priority;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -56,8 +58,8 @@ public class SyntaxPriority implements Priority {
 
 	private SyntaxPriority(Priority priority, Collection<Class<? extends SyntaxElement>> after, Collection<Class<? extends SyntaxElement>> before) {
 		this.priority = priority;
-		this.after = after;
-		this.before = before;
+		this.after = ImmutableSet.copyOf(after);
+		this.before = ImmutableSet.copyOf(before);
 	}
 
 	/**
@@ -106,9 +108,8 @@ public class SyntaxPriority implements Priority {
 	public static final class Builder {
 
 		private final Priority priority;
-
-		@Nullable
-		private Set<Class<? extends SyntaxElement>> after, before;
+		private final Set<Class<? extends SyntaxElement>> after = new HashSet<>();
+		private final Set<Class<? extends SyntaxElement>> before = new HashSet<>();
 
 		/**
 		 * @param priority The priority that will back the syntax priority.
@@ -118,26 +119,70 @@ public class SyntaxPriority implements Priority {
 		}
 
 		/**
-		 * Sets the syntax elements the priority will be after.
-		 * @param elements The syntax elements the priority will be after.
+		 * Adds a syntax element the priority will be after.
+		 * @param element A syntax element the priority will be after.
+		 * @return This builder.
+		 * @see SyntaxPriority#after
+		 */
+		public Builder after(Class<? extends SyntaxElement> element) {
+			after.add(element);
+			return this;
+		}
+
+		/**
+		 * Adds syntax elements the priority will be after.
+		 * @param elements Syntax elements the priority will be after.
 		 * @return This builder.
 		 * @see SyntaxPriority#after
 		 */
 		@SafeVarargs
 		public final Builder after(Class<? extends SyntaxElement>... elements) {
-			after = ImmutableSet.copyOf(elements);
+			Collections.addAll(after, elements);
 			return this;
 		}
 
 		/**
-		 * Sets the syntax elements the priority will be before.
-		 * @param elements The syntax elements the priority will be before.
+		 * Adds syntax elements the priority will be before.
+		 * @param elements Syntax elements the priority will be before.
+		 * @return This builder.
+		 * @see SyntaxPriority#before
+		 */
+		public Builder after(Collection<Class<? extends SyntaxElement>> elements) {
+			after.addAll(elements);
+			return this;
+		}
+
+		/**
+		 * Adds a syntax element the priority will be before.
+		 * @param element A syntax element the priority will be before.
+		 * @return This builder.
+		 * @see SyntaxPriority#before
+		 */
+		public Builder before(Class<? extends SyntaxElement> element) {
+			before.add(element);
+			return this;
+		}
+
+		/**
+		 * Adds syntax elements the priority will be before.
+		 * @param elements Syntax elements the priority will be before.
 		 * @return This builder.
 		 * @see SyntaxPriority#before
 		 */
 		@SafeVarargs
 		public final Builder before(Class<? extends SyntaxElement>... elements) {
-			before = ImmutableSet.copyOf(elements);
+			Collections.addAll(before, elements);
+			return this;
+		}
+
+		/**
+		 * Adds syntax elements the priority will be before.
+		 * @param elements Syntax elements the priority will be before.
+		 * @return This builder.
+		 * @see SyntaxPriority#before
+		 */
+		public Builder before(Collection<Class<? extends SyntaxElement>> elements) {
+			before.addAll(elements);
 			return this;
 		}
 
@@ -146,15 +191,11 @@ public class SyntaxPriority implements Priority {
 		 * @return A syntax priority.
 		 */
 		public SyntaxPriority build() {
-			if ((after == null || after.isEmpty()) && (before == null || before.isEmpty())) {
+			if (after.isEmpty() && before.isEmpty()) {
 				// no point in using this if both are empty...
 				throw new SkriptAPIException("both 'after' and 'before' cannot be unset");
 			}
-			return new SyntaxPriority(
-				priority,
-				after != null ? after : ImmutableSet.of(),
-				before != null ? before : ImmutableSet.of()
-			);
+			return new SyntaxPriority(priority, after, before);
 		}
 
 	}
