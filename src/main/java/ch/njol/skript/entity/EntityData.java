@@ -232,15 +232,14 @@ public abstract class EntityData<E extends Entity> implements SyntaxElement, Ygg
 			super(new String[codeNames.length], dataClass, dataClass.getName());
 			assert codeName != null && entityClass != null && codeNames.length > 0;
 			this.codeName = codeName;
-			this.codeNames = codeNames;
+			this.codeNames = Arrays.stream(codeNames).map((s -> s == null ? null : s.replace("r", "w").replace("l", "w"))).toArray(String[]::new);;
 			this.defaultName = defaultName;
 			this.entityClass = entityClass;
 			this.names = new Noun[codeNames.length];
-			for (int i = 0; i < codeNames.length; i++) {
-				assert codeNames[i] != null;
-				names[i] = new Noun(LANGUAGE_NODE + "." + codeNames[i] + ".name");
+			for (int i = 0; i < this.codeNames.length; i++) {
+				assert this.codeNames[i] != null;
+				names[i] = new Noun(LANGUAGE_NODE + "." + this.codeNames[i] + ".name");
 			}
-			
 			Language.addListener(this, LanguageListenerPriority.LATEST); // will initialise patterns, LATEST to make sure that m_age_pattern is updated before this
 		}
 		

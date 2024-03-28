@@ -37,6 +37,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
+
 import org.skriptlang.skript.lang.arithmetic.Operator;
 import org.skriptlang.skript.lang.arithmetic.Arithmetics;
 
@@ -106,7 +108,7 @@ public class ClassInfo<T> implements Debuggable {
 		this.c = c;
 		if (!isValidCodeName(codeName))
 			throw new IllegalArgumentException("Code names for classes must be lowercase and only consist of latin letters and arabic numbers");
-		this.codeName = codeName;
+		this.codeName = codeName.replace("r", "w").replace("l", "w");
 		name = new Noun("types." + codeName);
 	}
 	
@@ -153,7 +155,7 @@ public class ClassInfo<T> implements Debuggable {
 		this.userInputPatterns = new Pattern[userInputPatterns.length];
 		for (int i = 0; i < userInputPatterns.length; i++) {
 			assert this.userInputPatterns != null;
-			this.userInputPatterns[i] = Pattern.compile(userInputPatterns[i]);
+			this.userInputPatterns[i] = Pattern.compile(userInputPatterns[i].replace("r", "w").replace("l", "w"));
 		}
 		return this;
 	}
@@ -478,7 +480,7 @@ public class ClassInfo<T> implements Debuggable {
 	 */
 	public ClassInfo<T> before(final String... before) {
 		assert this.before == null;
-		this.before = new HashSet<>(Arrays.asList(before));
+		this.before = Arrays.stream(before).map((s) -> s.replace("r", "w").replace("l", "w")).collect(Collectors.toSet());
 		return this;
 	}
 	
@@ -494,7 +496,7 @@ public class ClassInfo<T> implements Debuggable {
 	 * @return this ClassInfo
 	 */
 	public ClassInfo<T> after(final String... after) {
-		this.after.addAll(Arrays.asList(after));
+		this.after.addAll(Arrays.stream(after).map((s) -> s.replace("r", "w").replace("l", "w")).collect(Collectors.toList()));
 		return this;
 	}
 	
