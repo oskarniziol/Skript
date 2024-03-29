@@ -36,8 +36,8 @@ public class EvtHealing extends SkriptEvent {
 		Skript.registerEvent("Heal", EvtHealing.class, EntityRegainHealthEvent.class, "heal[ing] [of %-entitydatas%] [(from|due to|by) %-healreasons%]", "%entitydatas% heal[ing] [(from|due to|by) %-healreasons%]")
 				.description("Called when an entity is healed, e.g. by eating (players), being fed (pets), or by the effect of a potion of healing (overworld mobs) or harm (nether mobs).")
 				.examples("on heal:", "on player healing from a regeneration potion:",
-						"on healing of a zombie, cow or a wither:" +
-								"\theal reason is healing potion" +
+						"on healing of a zombie, cow or a wither:",
+								"\theal reason is healing potion",
 								"\tcancel event"
 				)
 				.since("1.0, INSERT VERSION (by entity)");
