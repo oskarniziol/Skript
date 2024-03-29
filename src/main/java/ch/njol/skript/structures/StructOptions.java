@@ -45,11 +45,11 @@ import java.util.regex.Matcher;
 @Description({
 	"Options are used for replacing parts of a script with something else.",
 	"For example, an option may represent a message that appears in multiple locations.",
-	"Take a look at the example below that showcases this."
+	"Take a look at the example below that showcases dis."
 })
 @Examples({
 	"options:",
-	"\tno_permission: You're missing the required permission to execute this command!",
+	"\tno_permission: You're missing the required permission to execute dis command!",
 	"",
 	"command /ping:",
 	"\tpermission: command.ping",

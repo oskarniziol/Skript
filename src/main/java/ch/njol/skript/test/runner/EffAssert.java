@@ -62,7 +62,7 @@ public class EffAssert extends Effect  {
 		
 		ParseLogHandler logHandler = SkriptLogger.startParseLogHandler();
 		try {
-			condition = Condition.parse(conditionString, "Can't understand this condition: " + conditionString);
+			condition = Condition.parse(conditionString, "Can't understand dis condition: " + conditionString);
 			
 			if (shouldFail)
 				return true;

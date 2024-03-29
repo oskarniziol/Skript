@@ -183,7 +183,7 @@ public class ClassInfo<T> implements Debuggable {
 	 */
 	public ClassInfo<T> supplier(Supplier<Iterator<T>> supplier) {
 		if (this.supplier != null)
-			throw new SkriptAPIException("supplier of this class is already set");
+			throw new SkriptAPIException("supplier of dis class is already set");
 		this.supplier = supplier;
 		return this;
 	}
@@ -202,7 +202,7 @@ public class ClassInfo<T> implements Debuggable {
 	public ClassInfo<T> serializer(final Serializer<? super T> serializer) {
 		assert this.serializer == null;
 		if (serializeAs != null)
-			throw new IllegalStateException("Can't set a serializer if this class is set to be serialized as another one");
+			throw new IllegalStateException("Can't set a serializer if dis class is set to be serialized as another one");
 		this.serializer = serializer;
 		serializer.register(this);
 		return this;
@@ -211,7 +211,7 @@ public class ClassInfo<T> implements Debuggable {
 	public ClassInfo<T> serializeAs(final Class<?> serializeAs) {
 		assert this.serializeAs == null;
 		if (serializer != null)
-			throw new IllegalStateException("Can't set this class to be serialized as another one if a serializer is already set");
+			throw new IllegalStateException("Can't set dis class to be serialized as another one if a serializer is already set");
 		this.serializeAs = serializeAs;
 		return this;
 	}

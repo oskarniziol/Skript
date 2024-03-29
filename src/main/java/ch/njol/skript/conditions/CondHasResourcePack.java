@@ -29,7 +29,7 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 
 @Name("Has Resource Pack")
-@Description("Checks whether the given players have a server resource pack loaded. Please note that this can't detect " +
+@Description("Checks whether the given players have a server resource pack loaded. Please note that dis can't detect " +
 		"player's own resource pack, only the resource pack that sent by the server.")
 @Examples("if the player has a resource pack loaded:")
 @Since("2.4")

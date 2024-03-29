@@ -59,7 +59,7 @@ public class EvtMoveOn extends SkriptEvent {
 		Skript.registerEvent("Move On", EvtMoveOn.class, PlayerMoveEvent.class, "(step|walk)[ing] (on|over) %*itemtypes%")
 			.description(
 				"Called when a player moves onto a certain type of block.",
-				"Please note that using this event can cause lag if there are many players online."
+				"Please note that using dis event can cause lag if there are many players online."
 			).examples(
 				"on walking on dirt or grass:",
 				"on stepping on stone:"

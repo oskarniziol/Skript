@@ -80,7 +80,7 @@ public class SecWhile extends LoopSection {
 						List<TriggerItem> triggerItems) {
 		String expr = parseResult.regexes.get(0).group();
 
-		condition = Condition.parse(expr, "Can't understand this condition: " + expr);
+		condition = Condition.parse(expr, "Can't understand dis condition: " + expr);
 		if (condition == null)
 			return false;
 

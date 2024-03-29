@@ -117,7 +117,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 
 		List<Argument<?>> currentArguments = Commands.currentArguments;
 		if (scriptCommand && (currentArguments == null || currentArguments.isEmpty())) {
-			Skript.error("This command doesn't have any arguments", ErrorQuality.SEMANTIC_ERROR);
+			Skript.error("dis command doesn't have any arguments", ErrorQuality.SEMANTIC_ERROR);
 			return false;
 		}
 
@@ -134,7 +134,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 			assert argMatch != null;
 			ordinal = Utils.parseInt(argMatch);
 			if (scriptCommand && ordinal > currentArguments.size()) { // Only check if it's a script command as we know nothing of command event arguments
-				Skript.error("This command doesn't have a " + StringUtils.fancyOrderNumber(ordinal) + " argument", ErrorQuality.SEMANTIC_ERROR);
+				Skript.error("dis command doesn't have a " + StringUtils.fancyOrderNumber(ordinal) + " argument", ErrorQuality.SEMANTIC_ERROR);
 				return false;
 			}
 		}
@@ -151,7 +151,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 					if (currentArguments.size() == 1) {
 						argument = currentArguments.get(0);
 					} else {
-						Skript.error("This command has multiple arguments, meaning it is not possible to get the 'argument'. Use 'argument 1', 'argument 2', etc. instead", ErrorQuality.SEMANTIC_ERROR);
+						Skript.error("dis command has multiple arguments, meaning it is not possible to get the 'argument'. Use 'argument 1', 'argument 2', etc. instead", ErrorQuality.SEMANTIC_ERROR);
 						return false;
 					}
 					break;
@@ -163,7 +163,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 					if (parseResult.regexes.size() > 0) {
 						ordinal = Utils.parseInt(parseResult.regexes.get(0).group());
 						if (ordinal > currentArguments.size()) {
-							Skript.error("This command doesn't have a " + StringUtils.fancyOrderNumber(ordinal) + " " + c + " argument", ErrorQuality.SEMANTIC_ERROR);
+							Skript.error("dis command doesn't have a " + StringUtils.fancyOrderNumber(ordinal) + " " + c + " argument", ErrorQuality.SEMANTIC_ERROR);
 							return false;
 						}
 					}
@@ -175,7 +175,7 @@ public class ExprArgument extends SimpleExpression<Object> {
 							continue;
 
 						if (ordinal == -1 && argAmount == 2) { // The user said '<type> argument' without specifying which, and multiple arguments for the type exist
-							Skript.error("There are multiple " + c + " arguments in this command", ErrorQuality.SEMANTIC_ERROR);
+							Skript.error("There are multiple " + c + " arguments in dis command", ErrorQuality.SEMANTIC_ERROR);
 							return false;
 						}
 
@@ -188,13 +188,13 @@ public class ExprArgument extends SimpleExpression<Object> {
 					}
 
 					if (argAmount == 0) {
-						Skript.error("There is no " + c + " argument in this command", ErrorQuality.SEMANTIC_ERROR);
+						Skript.error("There is no " + c + " argument in dis command", ErrorQuality.SEMANTIC_ERROR);
 						return false;
 					} else if (ordinal > argAmount) { // The user wanted an argument number that didn't exist for the given type
 						if (argAmount == 1) {
-							Skript.error("There is only one " + c + " argument in this command", ErrorQuality.SEMANTIC_ERROR);
+							Skript.error("There is only one " + c + " argument in dis command", ErrorQuality.SEMANTIC_ERROR);
 						} else {
-							Skript.error("There are only " + argAmount + " " + c + " arguments in this command", ErrorQuality.SEMANTIC_ERROR);
+							Skript.error("There are only " + argAmount + " " + c + " arguments in dis command", ErrorQuality.SEMANTIC_ERROR);
 						}
 						return false;
 					}

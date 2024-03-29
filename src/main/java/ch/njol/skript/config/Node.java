@@ -146,8 +146,8 @@ public abstract class Node {
 		Node n = SkriptLogger.getNode();
 		SkriptLogger.setNode(null); // Avoid duplicating the which node error occurred in paranthesis on every error message
 		
-		Skript.error("There was a StackOverFlowError occurred when loading a node. This maybe from your scripts, aliases or Skript configuration.");
-		Skript.error("Please make your script lines shorter! Do NOT report this to SkriptLang unless it occurs with a short script line or built-in aliases!");
+		Skript.error("There was a StackOverFlowError occurred when loading a node. dis maybe from your scripts, aliases or Skript configuration.");
+		Skript.error("Please make your script lines shorter! Do NOT report dis to SkriptLang unless it occurs with a short script line or built-in aliases!");
 		
 		Skript.error("");
 		Skript.error("Updating your Java and/or using respective 64-bit versions for your operating system may also help and is always a good practice.");

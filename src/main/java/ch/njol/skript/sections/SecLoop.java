@@ -105,7 +105,7 @@ public class SecLoop extends LoopSection {
 						List<TriggerItem> triggerItems) {
 		expr = LiteralUtils.defendExpression(exprs[0]);
 		if (!LiteralUtils.canInitSafely(expr)) {
-			Skript.error("Can't understand this loop: '" + parseResult.expr.substring(5) + "'");
+			Skript.error("Can't understand dis loop: '" + parseResult.expr.substring(5) + "'");
 			return false;
 		}
 

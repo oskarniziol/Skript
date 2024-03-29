@@ -34,7 +34,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("All Groups")
-@Description("All the groups a player can have. This expression requires Vault and a compatible permissions plugin to be installed.")
+@Description("All the groups a player can have. dis expression requires Vault and a compatible permissions plugin to be installed.")
 @Examples({"command /group &lt;text&gt;:",
 		"\ttrigger:",
 		"\t\tif argument is \"list\":",

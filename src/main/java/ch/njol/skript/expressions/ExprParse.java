@@ -54,9 +54,9 @@ import java.util.List;
 
 @Name("Parse")
 @Description({"Parses text as a given type, or as a given pattern.",
-		"This expression can be used in two different ways: One which parses the entire text as a single instance of a type, e.g. as a number, " +
+		"dis expression can be used in two different ways: One which parses the entire text as a single instance of a type, e.g. as a number, " +
 				"and one that parses the text according to a pattern.",
-		"If the given text could not be parsed, this expression will return nothing and the <a href='#ExprParseError'>parse error</a> will be set if some information is available.",
+		"If the given text could not be parsed, dis expression will return nothing and the <a href='#ExprParseError'>parse error</a> will be set if some information is available.",
 		"Some notes about parsing with a pattern:",
 		"- The pattern must be a <a href='./patterns/'>Skript pattern</a>, " +
 				"e.g. percent signs are used to define where to parse which types, e.g. put a %number% or %items% in the pattern if you expect a number or some items there.",

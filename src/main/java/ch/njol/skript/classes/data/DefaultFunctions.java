@@ -133,7 +133,7 @@ public class DefaultFunctions {
 					return new Double[] {Double.NaN};
 				return new Double[] {Math2.mod(d.doubleValue(), mm)};
 			}
-		}.description("Returns the modulo of the given arguments, i.e. the remainder of the division <code>d/m</code>, where d and m are the arguments of this function.",
+		}.description("Returns the modulo of the given arguments, i.e. the remainder of the division <code>d/m</code>, where d and m are the arguments of dis function.",
 						"The returned value is always positive. Returns NaN (not a number) if the second argument is zero.")
 			.examples("mod(3, 2) = 1", "mod(256436, 100) = 36", "mod(-1, 10) = 9")
 			.since("2.2"));
@@ -143,7 +143,7 @@ public class DefaultFunctions {
 			public Number[] executeSimple(Object[][] params) {
 				return new Double[] {Math.exp(((Number) params[0][0]).doubleValue())};
 			}
-		}.description("The exponential function. You probably don't need this if you don't know what this is.")
+		}.description("The exponential function. You probably don't need dis if you don't know what dis is.")
 			.examples("exp(0) = 1", "exp(1) = " + str(Math.exp(1)))
 			.since("2.2"));
 		
@@ -152,7 +152,7 @@ public class DefaultFunctions {
 			public Number[] executeSimple(Object[][] params) {
 				return new Double[] {Math.log(((Number) params[0][0]).doubleValue())};
 			}
-		}.description("The natural logarithm. You probably don't need this if you don't know what this is.",
+		}.description("The natural logarithm. You probably don't need dis if you don't know what dis is.",
 						"Returns NaN (not a number) if the argument is negative.")
 			.examples("ln(1) = 0", "ln(exp(5)) = 5", "ln(2) = " + StringUtils.toString(Math.log(2), 4))
 			.since("2.2"));
@@ -162,7 +162,7 @@ public class DefaultFunctions {
 			public Number[] executeSimple(Object[][] params) {
 				return new Double[] {Math.log10(((Number) params[0][0]).doubleValue()) / Math.log10(((Number) params[1][0]).doubleValue())};
 			}
-		}.description("A logarithm, with base 10 if none is specified. This is the inverse operation to exponentiation (for positive bases only), i.e. <code>log(base ^ exponent, base) = exponent</code> for any positive number 'base' and any number 'exponent'.",
+		}.description("A logarithm, with base 10 if none is specified. dis is the inverse operation to exponentiation (for positive bases only), i.e. <code>log(base ^ exponent, base) = exponent</code> for any positive number 'base' and any number 'exponent'.",
 						"Another useful equation is <code>base ^ log(a, base) = a</code> for any numbers 'base' and 'a'.",
 						"Please note that due to how numbers are represented in computers, these equations do not hold for all numbers, as the computed values may slightly differ from the correct value.",
 						"Returns NaN (not a number) if any of the arguments are negative.")
@@ -174,7 +174,7 @@ public class DefaultFunctions {
 			public Number[] executeSimple(Object[][] params) {
 				return new Double[] {Math.sqrt(((Number) params[0][0]).doubleValue())};
 			}
-		}.description("The square root, which is the inverse operation to squaring a number (for positive numbers only). This is the same as <code>(argument) ^ (1/2)</code> – other roots can be calculated via <code>number ^ (1/root)</code>, e.g. <code>set {_l} to {_volume}^(1/3)</code>.",
+		}.description("The square root, which is the inverse operation to squaring a number (for positive numbers only). dis is the same as <code>(argument) ^ (1/2)</code> – other roots can be calculated via <code>number ^ (1/root)</code>, e.g. <code>set {_l} to {_volume}^(1/3)</code>.",
 						"Returns NaN (not a number) if the argument is negative.")
 			.examples("sqrt(4) = 2", "sqrt(2) = " + str(Math.sqrt(2)), "sqrt(-1) = " + str(Math.sqrt(-1)))
 			.since("2.2"));
@@ -195,7 +195,7 @@ public class DefaultFunctions {
 			public Number[] executeSimple(Object[][] params) {
 				return new Double[] {Math.cos(Math.toRadians(((Number) params[0][0]).doubleValue()))};
 			}
-		}.description("The cosine function. This is basically the <a href='#sin'>sine</a> shifted by 90°, i.e. <code>cos(a) = sin(a + 90°)</code>, for any number a. Uses degrees, not radians.")
+		}.description("The cosine function. dis is basically the <a href='#sin'>sine</a> shifted by 90°, i.e. <code>cos(a) = sin(a + 90°)</code>, for any number a. Uses degrees, not radians.")
 			.examples("cos(0) = 1", "cos(90) = 0")
 			.since("2.2"));
 		
@@ -204,7 +204,7 @@ public class DefaultFunctions {
 			public Number[] executeSimple(Object[][] params) {
 				return new Double[] {Math.tan(Math.toRadians(((Number) params[0][0]).doubleValue()))};
 			}
-		}.description("The tangent function. This is basically <code><a href='#sin'>sin</a>(arg)/<a href='#cos'>cos</a>(arg)</code>. Uses degrees, not radians.")
+		}.description("The tangent function. dis is basically <code><a href='#sin'>sin</a>(arg)/<a href='#cos'>cos</a>(arg)</code>. Uses degrees, not radians.")
 			.examples("tan(0) = 0", "tan(45) = 1", "tan(89.99) = " + str(Math.tan(Math.toRadians(89.99))))
 			.since("2.2"));
 		
@@ -460,7 +460,7 @@ public class DefaultFunctions {
 				return new Date[] {new Date(c.getTimeInMillis(), c.getTimeZone())};
 			}
 		}.description("Creates a date from a year, month, and day, and optionally also from hour, minute, second and millisecond.",
-						"A time zone and DST offset can be specified as well (in minutes), if they are left out the server's time zone and DST offset are used (the created date will not retain this information).")
+						"A time zone and DST offset can be specified as well (in minutes), if they are left out the server's time zone and DST offset are used (the created date will not retain dis information).")
 			.examples("date(2014, 10, 1) # 0:00, 1st October 2014", "date(1990, 3, 5, 14, 30) # 14:30, 5th May 1990", "date(1999, 12, 31, 23, 59, 59, 999, -3*60, 0) # almost year 2000 in parts of Brazil (-3 hours offset, no DST)")
 			.since("2.2"));
 		
@@ -556,7 +556,7 @@ public class DefaultFunctions {
 				}
 				return CollectionUtils.array(uuid != null ? Bukkit.getOfflinePlayer(uuid) : Bukkit.getOfflinePlayer(name));
 			}
-		}).description("Returns a offline player from their name or UUID. This function will still return the player if they're online.")
+		}).description("Returns a offline player from their name or UUID. dis function will still return the player if they're online.")
 			.examples("set {_p} to offlineplayer(\"Notch\")", "set {_p} to offlineplayer(\"069a79f4-44e9-4726-a5be-fca90e38aaf5\")")
 			.since("2.8.0");
 

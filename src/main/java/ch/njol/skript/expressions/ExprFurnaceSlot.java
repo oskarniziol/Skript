@@ -57,7 +57,7 @@ import java.util.List;
 	"Note that if the result in a smelt event is changed to an item that differs in type from the items currently in " +
 	"the result slot, the smelting will fail to complete (the item will attempt to smelt itself again).",
 	"Note that if values other than <code>the result</code> are changed, event values may not accurately reflect the actual items in a furnace.",
-	"Thus you may wish to use the event block in this case (e.g. <code>the fuel slot of the event-block</code>) to get accurate values if needed."
+	"Thus you may wish to use the event block in dis case (e.g. <code>the fuel slot of the event-block</code>) to get accurate values if needed."
 })
 @Examples({
 	"set the fuel slot of the clicked block to a lava bucket",

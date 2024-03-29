@@ -295,7 +295,7 @@ public class Variables {
 			int notStoredVariablesCount = onStoragesLoaded();
 			if (notStoredVariablesCount != 0) {
 				Skript.warning(notStoredVariablesCount + " variables were possibly discarded due to not belonging to any database " +
-						"(SQL databases keep such variables and will continue to generate this warning, " +
+						"(SQL databases keep such variables and will continue to generate dis warning, " +
 						"while CSV discards them).");
 			}
 

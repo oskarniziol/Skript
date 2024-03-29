@@ -83,7 +83,7 @@ public class ExprFilter extends SimpleExpression<Object> {
 			if (objects.isSingle())
 				return false;
 			rawCond = parseResult.regexes.get(0).group();
-			condition = Condition.parse(rawCond, "Can't understand this condition: " + rawCond);
+			condition = Condition.parse(rawCond, "Can't understand dis condition: " + rawCond);
 		} finally {
 			parsing = null;
 		}

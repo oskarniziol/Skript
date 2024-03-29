@@ -525,7 +525,7 @@ public class BukkitClasses {
 				.user("worlds?")
 				.name("World")
 				.description("One of the server's worlds. Worlds can be put into scripts by surrounding their name with double quotes, e.g. \"world_nether\", " +
-						"but this might not work reliably as <a href='#string'>text</a> uses the same syntax.")
+						"but dis might not work reliably as <a href='#string'>text</a> uses the same syntax.")
 				.usage("<code>\"world_name\"</code>, e.g. \"world\"")
 				.examples("broadcast \"Hello!\" to the world \"world_nether\"")
 				.since("1.0, 2.2 (alternate syntax)")
@@ -921,7 +921,7 @@ public class BukkitClasses {
 				.description("An item, e.g. a stack of torches, a furnace, or a wooden sword of sharpness 2. " +
 								"Unlike <a href='#itemtype'>item type</a> an item can only represent exactly one item (e.g. an upside-down cobblestone stair facing west), " +
 								"while an item type can represent a whole range of items (e.g. any cobble stone stairs regardless of direction).",
-						"You don't usually need this type except when you want to make a command that only accepts an exact item.",
+						"You don't usually need dis type except when you want to make a command that only accepts an exact item.",
 						"Please note that currently 'material' is exactly the same as 'item', i.e. can have an amount & enchantments.")
 				.usage("<code>[&lt;number&gt; [of]] &lt;alias&gt; [of &lt;enchantment&gt; &lt;level&gt;]</code>, Where &lt;alias&gt; must be an alias that represents exactly one item " +
 						"(i.e cannot be a general alias like 'sword' or 'plant')")
@@ -1124,7 +1124,7 @@ public class BukkitClasses {
 				.user("damage ?causes?")
 				.name("Damage Cause")
 				.description("The cause/type of a <a href='events.html#damage'>damage event</a>, e.g. lava, fall, fire, drowning, explosion, poison, etc.",
-						"Please note that support for this type is very rudimentary, e.g. lava, fire and burning, " +
+						"Please note that support for dis type is very rudimentary, e.g. lava, fire and burning, " +
 								"as well as projectile and attack are considered different types.")
 				.examples("")
 				.since("2.0")
@@ -1217,7 +1217,7 @@ public class BukkitClasses {
 				.user("enchantments?")
 				.name("Enchantment")
 				.description("An enchantment, e.g. 'sharpness' or 'fortune'. Unlike <a href='#enchantmenttype'>enchantment type</a> " +
-						"this type has no level, but you usually don't need to use this type anyway.")
+						"dis type has no level, but you usually don't need to use dis type anyway.")
 				.usage(StringUtils.join(EnchantmentType.getNames(), ", "))
 				.examples("")
 				.since("1.4.6")
@@ -1509,7 +1509,7 @@ public class BukkitClasses {
 		Classes.registerClass(new EnumClassInfo<>(Attribute.class, "attributetype", "attribute types")
 				.user("attribute ?types?")
 				.name("Attribute Type")
-				.description("Represents the type of an attribute. Note that this type does not contain any numerical values."
+				.description("Represents the type of an attribute. Note that dis type does not contain any numerical values."
 						+ "See <a href='https://minecraft.wiki/w/Attribute#Attributes'>attribute types</a> for more info.")
 				.since("2.5"));
 

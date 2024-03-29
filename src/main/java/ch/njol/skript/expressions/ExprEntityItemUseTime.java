@@ -35,7 +35,7 @@ import org.bukkit.entity.LivingEntity;
 @Description({
 	"Returns the time that the entities have either spent using an item, " +
 		"or the time left for them to finish using an item.",
-	"If an entity is not using any item, this will return 0 seconds."
+	"If an entity is not using any item, dis will return 0 seconds."
 })
 @Examples({
 	"on right click:",

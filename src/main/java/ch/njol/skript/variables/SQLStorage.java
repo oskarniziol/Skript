@@ -317,7 +317,7 @@ public abstract class SQLStorage extends VariablesStorage {
 							// TODO don't print this message when Skript loads (because scripts are loaded after variables and take some time)
 							Skript.warning("Cannot load variables from the database fast enough (loading took " + ((now - next + monitor_interval) / 1000.) + "s, monitor interval = " + (monitor_interval / 1000.) + "s). " +
 									"Please increase your monitor interval or reduce usage of variables. " +
-									"(this warning will be repeated at most once every " + WARING_INTERVAL + " seconds)");
+									"(dis warning will be repeated at most once every " + WARING_INTERVAL + " seconds)");
 							lastWarning = now;
 						}
 						while (System.currentTimeMillis() < next) {

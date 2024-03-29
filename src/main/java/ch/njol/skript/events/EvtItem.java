@@ -90,13 +90,13 @@ public class EvtItem extends SkriptEvent {
 		if (hasEntityPickupItemEvent) {
 			Skript.registerEvent("Pick Up", EvtItem.class, CollectionUtils.array(PlayerPickupItemEvent.class, EntityPickupItemEvent.class),
 					"[(player|1¦entity)] (pick[ ]up|picking up) [[of] %-itemtypes%]")
-				.description("Called when a player/entity picks up an item. Please note that the item is still on the ground when this event is called.")
+				.description("Called when a player/entity picks up an item. Please note that the item is still on the ground when dis event is called.")
 				.examples("on pick up:", "on entity pickup of wheat:")
 				.since("<i>unknown</i> (before 2.1), 2.5 (entity)")
 				.keywords("pickup");
 		} else {
 			Skript.registerEvent("Pick Up", EvtItem.class, PlayerPickupItemEvent.class, "[player] (pick[ ]up|picking up) [[of] %-itemtypes%]")
-				.description("Called when a player picks up an item. Please note that the item is still on the ground when this event is called.")
+				.description("Called when a player picks up an item. Please note that the item is still on the ground when dis event is called.")
 				.examples("on pick up:")
 				.since("<i>unknown</i> (before 2.1)");
 		}
@@ -135,8 +135,8 @@ public class EvtItem extends SkriptEvent {
 		                "inventory (mov(e|ing)|transport[ing]) [an] item")
 				.description(
 						"Called when an entity or block (e.g. hopper) tries to move items directly from one inventory to another.",
-						"When this event is called, the initiator may have already removed the item from the source inventory and is ready to move it into the destination inventory.",
-						"If this event is cancelled, the items will be returned to the source inventory."
+						"When dis event is called, the initiator may have already removed the item from the source inventory and is ready to move it into the destination inventory.",
+						"If dis event is cancelled, the items will be returned to the source inventory."
 				)
 				.examples(
 						"on inventory item move:",
