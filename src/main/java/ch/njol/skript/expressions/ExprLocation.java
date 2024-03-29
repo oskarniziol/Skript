@@ -46,7 +46,7 @@ public class ExprLocation extends WrapperExpression<Location> {
 
 	static {
 		Skript.registerExpression(ExprLocation.class, Location.class, ExpressionType.SIMPLE, "[the] [event-](location|position)");
-		Skript.registerExpression(ExprLocation.class, Location.class, ExpressionType.COMBINED, "[the] (location|position) %directions% [%locations%]");
+		Skript.registerExpression(ExprLocation.class, Location.class, ExpressionType.COMBINED, "[the] (location|position)[s] %directions% [%locations%]");
 	}
 
 	@Override
