@@ -56,7 +56,7 @@ public class ExprCodepoint extends SimplePropertyExpression<String, Integer> {
 	@Override
 	@Nullable
 	public Integer convert(String string) {
-		if (string.length() != 1)
+		if (string.isEmpty())
 			return null;
 		return string.codePointAt(0);
 	}

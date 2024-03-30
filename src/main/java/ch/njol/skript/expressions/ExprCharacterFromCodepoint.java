@@ -28,7 +28,7 @@ import ch.njol.skript.lang.ExpressionType;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
-@Name("Character From Codepoint")
+@Name("Character from Codepoint")
 @Description("Returns the character at the specified codepoint")
 @Examples({
 	"function chars_between(lower: string, upper: string) :: strings:",
