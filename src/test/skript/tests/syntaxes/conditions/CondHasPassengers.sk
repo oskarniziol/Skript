@@ -1,8 +1,8 @@
 test "has passengers":
-    spawn a cow at spawn of world "world"
-    set {_cow} to last spawned cow
-    spawn a pig at spawn of world "world"
-    set {_pig} to the last spawned pig
+	spawn a cow at spawn of world "world"
+	set {_cow} to last spawned cow
+	spawn a pig at spawn of world "world"
+	set {_pig} to the last spawned pig
 	assert {_pig} has no passengers with "The pig had passengers after being spawned"
 	set passengers of {_pig} to {_cow}
 	assert {_pig} has a passenger with "The pig did not have any passengers"
