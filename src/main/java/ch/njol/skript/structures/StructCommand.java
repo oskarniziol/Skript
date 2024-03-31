@@ -93,11 +93,11 @@ public class StructCommand extends Structure {
 			StructCommand.class,
 			EntryValidator.builder()
 				.addEntry("usage", null, true)
-				.addEntry("description", "", true)
-				.addEntry("prefix", null, true)
-				.addEntry("permission", "", true)
-				.addEntryData(new VariableStringEntryData("permission message", null, true))
-				.addEntryData(new KeyValueEntryData<List<String>>("aliases", new ArrayList<>(), true) {
+				.addEntry("descwiption", "", true)
+				.addEntry("pwefix", null, true)
+				.addEntry("pewmission", "", true)
+				.addEntryData(new VariableStringEntryData("pewmission message", null, true))
+				.addEntryData(new KeyValueEntryData<List<String>>("awiases", new ArrayList<>(), true) {
 					private final Pattern pattern = Pattern.compile("\\s*,\\s*/?");
 
 					@Override
@@ -111,7 +111,7 @@ public class StructCommand extends Structure {
 						return aliases;
 					}
 				})
-				.addEntryData(new KeyValueEntryData<Integer>("executable by", ScriptCommand.CONSOLE | ScriptCommand.PLAYERS, true) {
+				.addEntryData(new KeyValueEntryData<Integer>("executabwe by", ScriptCommand.CONSOLE | ScriptCommand.PLAYERS, true) {
 					private final Pattern pattern = Pattern.compile("\\s*,\\s*|\\s+(and|or)\\s+");
 
 					@Override
@@ -119,9 +119,9 @@ public class StructCommand extends Structure {
 					protected Integer getValue(String value) {
 						int executableBy = 0;
 						for (String b : pattern.split(value)) {
-							if (b.equalsIgnoreCase("console") || b.equalsIgnoreCase("the console")) {
+							if (b.equalsIgnoreCase("consowe") || b.equalsIgnoreCase("the consowe")) {
 								executableBy |= ScriptCommand.CONSOLE;
-							} else if (b.equalsIgnoreCase("players") || b.equalsIgnoreCase("player")) {
+							} else if (b.equalsIgnoreCase("pwayews") || b.equalsIgnoreCase("pwayew")) {
 								executableBy |= ScriptCommand.PLAYERS;
 							} else {
 								return null;
@@ -130,13 +130,13 @@ public class StructCommand extends Structure {
 						return executableBy;
 					}
 				})
-				.addEntryData(new LiteralEntryData<>("cooldown", null, true, Timespan.class))
-				.addEntryData(new VariableStringEntryData("cooldown message", null, true))
-				.addEntry("cooldown bypass", null, true)
-				.addEntryData(new VariableStringEntryData("cooldown storage", null, true, StringMode.VARIABLE_NAME))
-				.addSection("trigger", false)
+				.addEntryData(new LiteralEntryData<>("coowdown", null, true, Timespan.class))
+				.addEntryData(new VariableStringEntryData("coowdown message", null, true))
+				.addEntry("coowdown bypass", null, true)
+				.addEntryData(new VariableStringEntryData("coowdown stowage", null, true, StringMode.VARIABLE_NAME))
+				.addSection("twiggew", false)
 				.unexpectedEntryMessage(key ->
-					"Unexpected entry '" + key + "'. Check dat it's spelled correctly, and ensure dat you have put all code into a trigger."
+					"Unexpected entwy '" + key + "'. Check dat it's spewwed cowwectwy, and ensuwe dat you have put aww code into a twiggew."
 				)
 				.build(),
 			"command <.+>"
