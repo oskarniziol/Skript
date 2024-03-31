@@ -5,14 +5,14 @@ version: @version@
 
 # -- General --
 and: and
-or: or
+or: ow
 a: a, an
 is: is
-are: are
+are: awe
 not: not
 # not a: not a(n) # @a:not a @an:not an @x:not
-neither: neither
-nor: nor
+neither: neithew
+nor: now
 
 genders:
 	0:
@@ -39,8 +39,8 @@ genders:
 aliases:
 	# regexes for Skript
 	any: any:
-	every: (?:every|all)
-	of every: of (?:every|all)
+	every: (?:evewy|aww)
+	of every: of (?:evewy|aww)
 	of: of(?: any)?
 
 	named: named
@@ -49,400 +49,400 @@ aliases:
 enchantments:
 	of: of
 	names:
-		protection: Protection
-		fire_protection: Fire Protection
-		feather_falling: Feather Falling
-		blast_protection: Blast Protection
-		projectile_protection: Projectile Protection
-		respiration: Respiration
+		protection: Pwotection
+		fire_protection: Fiwe Pwotection
+		feather_falling: Feathew Fawwing
+		blast_protection: Bwast Pwotection
+		projectile_protection: Pwojectiwe Pwotection
+		respiration: Respiwation
 		aqua_affinity: Aqua Affinity
-		sharpness: Sharpness
+		sharpness: Shawpness
 		smite: Smite
-		bane_of_arthropods: Bane of Arthropods
+		bane_of_arthropods: Bane of Awthwopods
 		knockback: Knockback
-		fire_aspect: Fire Aspect
+		fire_aspect: Fiwe Aspect
 		looting: Looting
 		efficiency: Efficiency
-		silk_touch: Silk Touch
-		unbreaking: Unbreaking
-		fortune: Fortune
-		power: Power
+		silk_touch: Siwk Touch
+		unbreaking: Unbweaking
+		fortune: Fowtune
+		power: Powew
 		punch: Punch
-		flame: Flame
+		flame: Fwame
 		infinity: Infinity
-		thorns: Thorns
+		thorns: Thowns
 		luck: Luck of the Sea
-		lure: Lure
-		depth_strider: Depth Strider
+		lure: Luwe
+		depth_strider: Depth Stwidew
 		mending: Mending
-		frost_walker: Frost Walker
-		vanishing_curse: Curse of Vanishing
-		binding_curse: Curse of Binding
+		frost_walker: Fwost Wawkew
+		vanishing_curse: Cuwse of Vanishing
+		binding_curse: Cuwse of Binding
 		# It's sweeping on 1.10 and below for some reason.
 		sweeping: Sweeping Edge
 		sweeping_edge: Sweeping Edge
 		# New 1.13 Enchantments
-		channeling: Channeling, Channelling
+		channeling: Channewing, Channewwing
 		riptide: Riptide
-		impaling: Impaling
-		loyalty: Loyalty
+		impaling: Impawing
+		loyalty: Loyawty
 		luck_of_the_sea: Luck of The Sea
 		# new 1.14 Enchantments
-		multishot: Multishot, Multi-Shot
-		piercing: Piercing
-		quick_charge: Quick Charge
+		multishot: Muwtishot, Muwti-Shot
+		piercing: Piewcing
+		quick_charge: Quick Chawge
 		# new 1.16 Enchantment
-		soul_speed: Soul Speed
+		soul_speed: Souw Speed
 		# new 1.19 Enchantment
 		swift_sneak: Swift Sneak
 
 # -- Potion Effects --
 potions:
 	speed: speed, swiftness
-	slow: slowness, slow
+	slow: swowness, swow
 	fast_digging: haste, fast digging, fast mining
-	slow_digging: mining fatigue, slow digging, slow mining
-	increase_damage: strength, increase damage, increased damage
-	heal: instant health, health
+	slow_digging: mining fatigue, swow digging, swow mining
+	increase_damage: stwength, incwease damage, incweased damage
+	heal: instant heawth, heawth
 	harm: instant damage, damage
 	jump: jump boost, jump
 	confusion: nausea, confusion
-	regeneration: regeneration
-	damage_resistance: resistance, damage resistance
-	fire_resistance: fire resistance, fire immunity
-	water_breathing: water breathing
-	invisibility: invisibility
-	blindness: blindness
+	regeneration: wegenewation
+	damage_resistance: wesistance, damage wesistance
+	fire_resistance: fiwe wesistance, fiwe immunity
+	water_breathing: watew bweathing
+	invisibility: invisibiwity
+	blindness: bwindness
 	night_vision: night vision
-	hunger: hunger
-	weakness: weakness, reduce damage, reduced damage
+	hunger: hungew
+	weakness: weakness, weduce damage, weduced damage
 	poison: poison
-	wither: wither, wither effect, wither potion effect
-	health_boost: health boost, max health boost, maximum health boost
-	absorption: absorption
-	saturation: saturation
-	luck: luck
-	unluck: bad luck, unluck
-	levitation: levitation, floating
-	glowing: glowing
+	wither: withew, withew effect, withew potion effect
+	health_boost: heawth boost, max heawth boost, maximum heawth boost
+	absorption: absowption
+	saturation: satuwation
+	luck: wuck
+	unluck: bad wuck, unwuck
+	levitation: wevitation, fwoating
+	glowing: gwowing
 
 	# 1.13 potion effect types
-	slow_falling: slow falling, slow fall
-	dolphins_grace: dolphins grace, dolphin's grace
-	conduit_power: conduit power
+	slow_falling: swow fawwing, swow faww
+	dolphins_grace: dowphins gwace, dowphin's gwace
+	conduit_power: conduit powew
 
 	# 1.14 potion effect types
 	bad_omen: bad omen
-	hero_of_the_village: hero of the village
+	hero_of_the_village: hewo of the viwwage
 
 	# 1.19 potion effect types
-	darkness: darkness
+	darkness: dawkness
 
 # -- Weather --
 weather:
 	clear:
-		name: clear, sun, sunny
+		name: cweaw, sun, sunny
 		adjective: sunny
 	rain:
-		name: rain, rainy, raining
-		adjective: rainy
+		name: wain, wainy, waining
+		adjective: wainy
 	thunder:
-		name: thunder, thundering, thunderstorm
-		adjective: thundering
+		name: thundew, thundewing, thundewstowm
+		adjective: thundewing
 
 # -- Biomes --
 biomes:
-	swamp: swampland, swamp, marsh
-	swamp_hills: swamp hills
-	forest: forest
+	swamp: swampwand, swamp, mawsh
+	swamp_hills: swamp hiwws
+	forest: fowest
 	taiga: taiga
-	desert: desert
-	plains: plains
-	nether: hell, nether
+	desert: desewt
+	plains: pwains
+	nether: heww, nethew
 	the_end: sky, the end
 	ocean: ocean, sea
-	river: river
-	mountains: extreme hills, mountains
-	frozen_ocean: frozen ocean
-	frozen_river: frozen river
-	snowy_tundra: ice plains, snowy tundra
+	river: wivew
+	mountains: extweme hiwws, mountains
+	frozen_ocean: fwozen ocean
+	frozen_river: fwozen wivew
+	snowy_tundra: ice pwains, snowy tundwa
 	snowy_mountains: ice mountains, snowy mountains
-	mushroom_fields: mushroom island, mushroom fields
-	mushroom_field_shore: mushroom shore, mushroom island shore, mushroom fields shore
+	mushroom_fields: mushwoom iswand, mushwoom fiewds
+	mushroom_field_shore: mushwoom showe, mushwoom iswand showe, mushwoom fiewds showe
 	beach: beach
-	desert_hills: desert hills
-	wooded_hills: forest hills, wooded hills
-	taiga_hills: taiga hills
-	mountain_edge: small mountains, hills, mountain edge
-	jungle: jungle
-	jungle_hills: jungle hills
-	jungle_edge: jungle edge
+	desert_hills: desewt hiwws
+	wooded_hills: fowest hiwws, wooded hiwws
+	taiga_hills: taiga hiwws
+	mountain_edge: smaww mountains, hiwws, mountain edge
+	jungle: jungwe
+	jungle_hills: jungwe hiwws
+	jungle_edge: jungwe edge
 	deep_ocean: deep ocean
-	stone_shore: stone beach, stone shore
-	snowy_beach: cold beach, snowy beach
-	birch_forest: birch forest
-	birch_forest_hills: birch forest hills
-	dark_forest: roofed forest, black forest, dark forest
-	snowy_taiga: cold taiga, snowy taiga
-	snowy_taiga_hills: cold taiga hills, snowy taiga hills
-	giant_tree_taiga: mega taiga, giant tree taiga, redwood taiga
-	giant_tree_taiga_hills: mega taiga hills, giant tree taiga hills, redwood taiga hills
-	wooded_mountains: extreme hills plus, mountains with trees, wooded mountains
+	stone_shore: stone beach, stone showe
+	snowy_beach: cowd beach, snowy beach
+	birch_forest: biwch fowest
+	birch_forest_hills: biwch fowest hiwws
+	dark_forest: woofed fowest, bwack fowest, dawk fowest
+	snowy_taiga: cowd taiga, snowy taiga
+	snowy_taiga_hills: cowd taiga hiwws, snowy taiga hiwws
+	giant_tree_taiga: mega taiga, giant twee taiga, wedwood taiga
+	giant_tree_taiga_hills: mega taiga hiwws, giant twee taiga hiwws, wedwood taiga hiwws
+	wooded_mountains: extweme hiwws pwus, mountains with twees, wooded mountains
 	savanna: savanna
-	savanna_plateau: savanna plateau
-	badlands: mesa, badlands
-	wooded_badlands_plateau: mesa plateau forest, badlands plateau forest, wooded badlands plateau
-	badlands_plateau: mesa plateau, badlands plateau
-	eroded_badlands: eroded badlands, eroded mesa
-	sunflower_plains: sunflower plains
-	desert_lakes: desert lakes
-	flower_forest: flower forest
+	savanna_plateau: savanna pwateau
+	badlands: mesa, badwands
+	wooded_badlands_plateau: mesa pwateau fowest, badwands pwateau fowest, wooded badwands pwateau
+	badlands_plateau: mesa pwateau, badwands pwateau
+	eroded_badlands: ewoded badwands, ewoded mesa
+	sunflower_plains: sunfwowew pwains
+	desert_lakes: desewt wakes
+	flower_forest: fwowew fowest
 	taiga_mountains: taiga mountains
-	swampland_mountains: swampland mountains, swamp hills
-	ice_spikes: ice plains spikes, spiked ice plains, ice plains with spikes, ice spikes
-	modified_jungle: jungle mountains
-	modified_jungle_edge: jungle edge mountains
-	snowy_taiga_mountains: cold taiga mountains, snowy taiga mountains
-	shattered_savanna: savanna mountains, shattered savanna
-	shattered_savanna_plateau: savanna plateau mountains, shattered savanna plateau
-	eroded badlands: bryce, mesa bryce, mesa (bryce), hoodoos, eroded badlands
-	modified_wooded_badlands_plateau: mesa plateau forest mountains, modified wooded badlands plateau, badlands plateau forest mountains
-	modified_badlands_plateau: mesa plateau mountains, badlands plateau mountains, modified badlands plateau
-	tall_birch_forest: birch forest mountains, tall birch forest
-	tall_birch_hills: birch forest hills mountains, tall birch hills
-	dark_forest_hills: roofed forest mountains, dark forest hills
-	giant_spruce_taiga: mega spruce taiga, giant spruce taiga
-	gravelly_mountains: extreme hills mountains, gravelly mountains
-	modified_gravelly_mountains: extreme hills plus mountains, modified gravelly mountains
-	giant_spruce_taiga_hills: mega spruce taiga hills, giant spruce taiga hills
+	swampland_mountains: swampwand mountains, swamp hiwws
+	ice_spikes: ice pwains spikes, spiked ice pwains, ice pwains with spikes, ice spikes
+	modified_jungle: jungwe mountains
+	modified_jungle_edge: jungwe edge mountains
+	snowy_taiga_mountains: cowd taiga mountains, snowy taiga mountains
+	shattered_savanna: savanna mountains, shattewed savanna
+	shattered_savanna_plateau: savanna pwateau mountains, shattewed savanna pwateau
+	eroded badlands: bwyce, mesa bwyce, mesa (bwyce), hoodoos, ewoded badwands
+	modified_wooded_badlands_plateau: mesa pwateau fowest mountains, modified wooded badwands pwateau, badwands pwateau fowest mountains
+	modified_badlands_plateau: mesa pwateau mountains, badwands pwateau mountains, modified badwands pwateau
+	tall_birch_forest: biwch fowest mountains, taww biwch fowest
+	tall_birch_hills: biwch fowest hiwws mountains, taww biwch hiwws
+	dark_forest_hills: woofed fowest mountains, dawk fowest hiwws
+	giant_spruce_taiga: mega spwuce taiga, giant spwuce taiga
+	gravelly_mountains: extweme hiwws mountains, gwavewwy mountains
+	modified_gravelly_mountains: extweme hiwws pwus mountains, modified gwavewwy mountains
+	giant_spruce_taiga_hills: mega spwuce taiga hiwws, giant spwuce taiga hiwws
 	the_void: void, the void
-	small_end_islands: small end islands
-	end_midlands: end midlands
-	end_highlands: end highlands
-	end_barrens: end barrens
-	warm_ocean: warm ocean
-	lukewarm_ocean: lukewarm ocean
-	cold_ocean: cold ocean
-	deep_warm_ocean: deep warm ocean
-	deep_lukewarm_ocean: deep lukewarm ocean
-	deep_cold_ocean: deep cold ocean
-	deep_frozen_ocean: deep frozen ocean
+	small_end_islands: smaww end iswands
+	end_midlands: end midwands
+	end_highlands: end highwands
+	end_barrens: end bawwens
+	warm_ocean: wawm ocean
+	lukewarm_ocean: wukewawm ocean
+	cold_ocean: cowd ocean
+	deep_warm_ocean: deep wawm ocean
+	deep_lukewarm_ocean: deep wukewawm ocean
+	deep_cold_ocean: deep cowd ocean
+	deep_frozen_ocean: deep fwozen ocean
 	# 1.14 biomes
-	bamboo_jungle: bamboo jungle
-	bamboo_jungle_hills: bamboo jungle hills
+	bamboo_jungle: bamboo jungwe
+	bamboo_jungle_hills: bamboo jungwe hiwws
 	# 1.16 biomes
-	nether_wastes: nether wastes, nether, hell
-	crimson_forest: crimson forest
-	soul_sand_valley: soul sand valley
-	warped_forest: warped forest
-	basalt_deltas: basalt deltas
+	nether_wastes: nethew wastes, nethew, heww
+	crimson_forest: cwimson fowest
+	soul_sand_valley: souw sand vawwey
+	warped_forest: wawped fowest
+	basalt_deltas: basawt dewtas
 	custom: custom, unknown
 	# 1.17 biomes
-	dripstone_caves: dripstone caves
-	lush_caves: lush caves
+	dripstone_caves: dwipstone caves
+	lush_caves: wush caves
 	# 1.18 biomes
 	meadow: meadow
-	snowy_slopes: snowy slopes
+	snowy_slopes: snowy swopes
 	jagged_peaks: jagged peaks
 	stony_peaks: stony peaks
-	frozen_peaks: frozen peaks
-	grove: grove
-	old_growth_birch_forest: old growth birch forest, tall birch forest
-	old_growth_pine_taiga: old growth pine taiga, giant tree taiga
-	old_growth_spruce_taiga: old growth spruce taiga, giant spruce taiga
-	snowy_plains: snowy plains, snowy tundra
-	sparse_jungle: sparse jungle, jungle edge
-	stony_shore: stony shore, stone shore
-	windswept_hills: windswept hills, mountains
-	windswept_forest: windswept forest, wooded mountains
-	windswept_gravelly_hills: windswept gravelly hills, gravelly mountains
-	windswept_savanna: windswept savanna, shattered savanna
-	wooded_badlands: wooded badlands, wooded mesa, mesa forest, badlands forest
+	frozen_peaks: fwozen peaks
+	grove: gwove
+	old_growth_birch_forest: owd gwowth biwch fowest, taww biwch fowest
+	old_growth_pine_taiga: owd gwowth pine taiga, giant twee taiga
+	old_growth_spruce_taiga: owd gwowth spwuce taiga, giant spwuce taiga
+	snowy_plains: snowy pwains, snowy tundwa
+	sparse_jungle: spawse jungwe, jungwe edge
+	stony_shore: stony showe, stone showe
+	windswept_hills: windswept hiwws, mountains
+	windswept_forest: windswept fowest, wooded mountains
+	windswept_gravelly_hills: windswept gwavewwy hiwws, gwavewwy mountains
+	windswept_savanna: windswept savanna, shattewed savanna
+	wooded_badlands: wooded badwands, wooded mesa, mesa fowest, badwands fowest
 	# 1.19 biomes
-	mangrove_swamp: mangrove swamp
-	deep_dark: deep dark
+	mangrove_swamp: mangwove swamp
+	deep_dark: deep dawk
 	# 1.19.4
-	cherry_grove: cherry grove
+	cherry_grove: chewwy gwove
 
 # -- Tree Types --
 tree types:
 	tree:
-		name: tree¦s
-		pattern: (any )?trees?
+		name: twee¦s
+		pattern: (any )?twees?
 	regular:
 		name: oak¦s
-		pattern: (any )?(regular|normal|oak)( tree)?s?
+		pattern: (any )?(weguwaw|nowmaw|oak)( twee)?s?
 	small_regular:
-		name: small oak¦s
-		pattern: small (regular|normal|oak)( tree)?s?
+		name: smaww oak¦s
+		pattern: smaww (weguwaw|nowmaw|oak)( twee)?s?
 	big_regular:
-		name: big tree¦s
-		pattern: (big|large) (regular|normal|oak)( tree)?s?
+		name: big twee¦s
+		pattern: (big|wawge) (weguwaw|nowmaw|oak)( twee)?s?
 	redwood:
-		name: redwood¦s
-		pattern: (any )?(fir|pine|spruce|redwood)( tree)?s?
+		name: wedwood¦s
+		pattern: (any )?(fiw|pine|spwuce|wedwood)( twee)?s?
 	small_redwood:
-		name: small redwood¦s
-		pattern: small (fir|pine|spruce|redwood)( tree)?s?
+		name: smaww wedwood¦s
+		pattern: smaww (fiw|pine|spwuce|wedwood)( twee)?s?
 	big_redwood:
-		name: tall redwood¦s
-		pattern: (big|tall) (fir|pine|spruce|redwood)( tree)?s?
+		name: taww wedwood¦s
+		pattern: (big|taww) (fiw|pine|spwuce|wedwood)( twee)?s?
 	mega_redwood:
-		name: mega redwood¦s
-		pattern: (mega|giant) (fir|pine|spruce|redwood)( tree)?s?
+		name: mega wedwood¦s
+		pattern: (mega|giant) (fiw|pine|spwuce|wedwood)( twee)?s?
 	birch:
-		name: birch¦es
-		pattern: birch( trees?|es)
+		name: biwch¦es
+		pattern: biwch( twees?|es)
 	tall_birch:
-		name: tall birch¦es
-		pattern: (tall|big) birch( trees?|es)
+		name: taww biwch¦es
+		pattern: (taww|big) biwch( twees?|es)
 	jungle:
-		name: jungle tree¦s
-		pattern: (any )?jungle( tree)?s?
+		name: jungwe twee¦s
+		pattern: (any )?jungwe( twee)?s?
 	small_jungle:
-		name: small jungle tree¦s
-		pattern: small jungle( tree)?s?
+		name: smaww jungwe twee¦s
+		pattern: smaww jungwe( twee)?s?
 	big_jungle:
-		name: big jungle tree¦s
-		pattern: (big|tall|huge|giant|large) jungle( tree)?s?
+		name: big jungwe twee¦s
+		pattern: (big|taww|huge|giant|wawge) jungwe( twee)?s?
 	cocoa_tree:
-		name: cocoa tree¦s
-		pattern: cocoa trees?
+		name: cocoa twee¦s
+		pattern: cocoa twees?
 	acacia:
 		name: acacia¦s
-		pattern: acacia( tree)?s?
+		pattern: acacia( twee)?s?
 	dark_oak:
-		name: dark oak¦s
-		pattern: dark oak( tree)?s?
+		name: dawk oak¦s
+		pattern: dawk oak( twee)?s?
 	jungle_bush:
 		name: bush¦es
-		pattern: (jungle )?bush(es)?
+		pattern: (jungwe )?bush(es)?
 	swamp:
-		name: swamp tree¦s
-		pattern: swamp trees?
+		name: swamp twee¦s
+		pattern: swamp twees?
 	mushroom:
-		name: huge mushroom¦s
-		pattern: (any )?(huge|giant|large|big) mushrooms?
+		name: huge mushwoom¦s
+		pattern: (any )?(huge|giant|wawge|big) mushwooms?
 	red_mushroom:
-		name: huge red mushroom¦s
-		pattern: (huge|giant|large|big) red mushrooms?
+		name: huge wed mushwoom¦s
+		pattern: (huge|giant|wawge|big) wed mushwooms?
 	brown_mushroom:
-		name: huge brown mushroom¦s
-		pattern: (huge|giant|large|big) brown mushrooms?
+		name: huge bwown mushwoom¦s
+		pattern: (huge|giant|wawge|big) bwown mushwooms?
 
 # -- Time --
 time:
 	tick: tick¦s
 	second: second¦s
 	minute: minute¦s
-	hour: hour¦s
+	hour: houw¦s
 	day: day¦s
 	week: week¦s
 	month: month¦s
-	year: year¦s
-	real: real, rl, irl
-	minecraft: mc, minecraft
+	year: yeaw¦s
+	real: weaw, ww, iww
+	minecraft: mc, minecwaft
 
 # -- Chat and Wool Colours --
 colors:
 	black:
-		adjective: black
-		names: black
+		adjective: bwack
+		names: bwack
 	dark_grey:
-		adjective: dark grey
-		names: dark grey, dark gray
+		adjective: dawk gwey
+		names: dawk gwey, dawk gway
 	light_grey:
-		adjective: grey
-		names: grey, light grey, gray, light gray, silver
+		adjective: gwey
+		names: gwey, wight gwey, gway, wight gway, siwvew
 	white:
 		adjective: white
 		names: white
 	dark_blue:
-		adjective: blue
-		names: blue, dark blue
+		adjective: bwue
+		names: bwue, dawk bwue
 	brown:
-		adjective: brown
-		names: brown, light blue, indigo
+		adjective: bwown
+		names: bwown, wight bwue, indigo
 	dark_cyan:
 		adjective: cyan
-		names: cyan, aqua, dark cyan, dark aqua, dark turquoise, dark turquois
+		names: cyan, aqua, dawk cyan, dawk aqua, dawk tuwquoise, dawk tuwquois
 	light_cyan:
-		adjective: light cyan
-		names: light cyan, light aqua, turquoise, turquois, light blue
+		adjective: wight cyan
+		names: wight cyan, wight aqua, tuwquoise, tuwquois, wight bwue
 	dark_green:
-		adjective: green
-		names: green, dark green
+		adjective: gween
+		names: gween, dawk gween
 	light_green:
-		adjective: light green
-		names: light green, lime, lime green
+		adjective: wight gween
+		names: wight gween, wime, wime gween
 	yellow:
-		adjective: yellow
-		names: yellow, light yellow
+		adjective: yewwow
+		names: yewwow, wight yewwow
 	orange:
-		adjective: orange
-		names: orange, gold, dark yellow
+		adjective: owange
+		names: owange, gowd, dawk yewwow
 	dark_red:
-		adjective: red
-		names: red, dark red
+		adjective: wed
+		names: wed, dawk wed
 	light_red:
 		adjective: pink
-		names: pink, light red
+		names: pink, wight wed
 	dark_purple:
-		adjective: purple
-		names: purple, dark purple
+		adjective: puwpwe
+		names: puwpwe, dawk puwpwe
 	light_purple:
 		adjective: magenta
-		names: magenta, light purple
+		names: magenta, wight puwpwe
 
 # -- Chat Styles --
 chat styles:
-	bold: bold, b
-	italic: italic, italics, i
-	strikethrough: strikethrough, strike, s
-	underline: underlined, underline, u
+	bold: bowd, b
+	italic: itawic, itawics, i
+	strikethrough: stwikethwough, stwike, s
+	underline: undewwined, undewwine, u
 	magic: magic, obfuscated
 	obfuscated: magic, obfuscated
-	reset: reset, r
-	open_url: link, open url, url
-	run_command: run command, command, cmd
+	reset: weset, w
+	open_url: wink, open uww, uww
+	run_command: wun command, command, cmd
 	suggest_command: suggest command, sgt
 	change_page: change page
-	copy_to_clipboard: copy to clipboard, copy, clipboard
-	show_text: tooltip, show text, ttp
+	copy_to_clipboard: copy to cwipboawd, copy, cwipboawd
+	show_text: toowtip, show text, ttp
 	font: font, f
-	insertion: insertion, insert, ins
-	translate: translate, tr, lang
+	insertion: insewtion, insewt, ins
+	translate: twanswate, tw, wang
 	keybind: keybind, key
 
 # -- Directions --
 directions:
-	meter: meter¦s
+	meter: metew¦s
 
 	at: at
 
 	up: above
-	down: below
-	north: north
+	down: bewow
+	north: nowth
 	east: east
 	south: south
 	west: west
 
 	above: above
-	below: below
-	front: in front of
+	below: bewow
+	front: in fwont of
 	behind: behind
-	right: to the right of
-	left: to the left of
+	right: to the wight of
+	left: to the weft of
 
 # -- Entities --
 # about patterns:
 #	the marks (1¦..) are only required in the english file, i.e. you can use (..|..) or [..] for plurals in other languages
 #	the exception to this rule is the 'f' and the corresponding marks (4¦ and 8¦)
 entities:
-	age pattern: (|4¦baby|4¦young|8¦adult|8¦grown(-| )up)
+	age pattern: (|4¦baby|4¦young|8¦aduwt|8¦gwown(-| )up)
 	age adjectives:
 		baby: baby
-		adult: adult
+		adult: aduwt
 	entity:
 		name: entit¦y¦ies @an
 		pattern: <age> entit(y|1¦ies)
@@ -802,7 +802,7 @@ entities:
 	xp-owb:
 		name: expewience owb¦s @an
 		pattern: ([e]xp|expewience)( |-)owb(|1¦s)
-		fowmat: %2$s-%1$s
+		format: %2$s-%1$s
 	fiwewowk:
 		name: fiwewowk wocket¦s
 		pattern: fiwewowk(|1¦s) [wocket(|1¦s)]
@@ -1251,75 +1251,75 @@ entities:
 
 # -- Heal Reasons --
 heal reasons:
-	custom: unknown, custom, plugin, a plugin
+	custom: unknown, custom, pwugin, a pwugin
 	eating: eating, consuming, ingesting
-	ender_crystal: end crystal, ender crystal, an end crystal, an ender crystal
+	ender_crystal: end cwystaw, endew cwystaw, an end cwystaw, an endew cwystaw
 	magic: magic, potion, a potion
-	magic_regen: magic regen, magic regeneration, a magic regen, a magic regeneration, a healing potion, a regeneration potion, healing potion, regeneration potion, regen potion, a regen potion
-	regen: peaceful regeneration, peaceful regen, peaceful
+	magic_regen: magic wegen, magic wegenewation, a magic wegen, a magic wegenewation, a heawing potion, a wegenewation potion, heawing potion, wegenewation potion, wegen potion, a wegen potion
+	regen: peacefuw wegenewation, peacefuw wegen, peacefuw
 	satiated: satiated, satisfied, fed, sated
-	wither: withering, withered, wither potion, a wither effect, wither effect, wither
-	wither_spawn: wither spawning, wither spawn, wither summoning, a wither summoning, a wither spawn, a wither spawning
+	wither: withewing, withewed, withew potion, a withew effect, withew effect, withew
+	wither_spawn: withew spawning, withew spawn, withew summoning, a withew summoning, a withew spawn, a withew spawning
 
 # -- Cat Types --
 cat types:
 	tabby: tabby
-	black: black
-	red: red
+	black: bwack
+	red: wed
 	siamese: siamese
-	british_shorthair: british shorthair
-	calico: calico
-	persian: persian
-	ragdoll: ragdoll
+	british_shorthair: bwitish showthaiw
+	calico: cawico
+	persian: pewsian
+	ragdoll: wagdoww
 	white: white
-	jellie: jellie
-	all_black: all black
+	jellie: jewwie
+	all_black: aww bwack
 
 # -- Damage Causes --
 damage causes:
 	contact: contact
 	entity_attack: attack, entity attack, an attack, an entity attack
 	entity_sweep_attack: sweep attack, sweeping
-	projectile: projectile, a projectile
+	projectile: pwojectiwe, a pwojectiwe
 	suffocation: suffocation, suffocate
-	fall: fall, a fall
-	fire: fire, a fire
-	fire_tick: burning, burn
-	melting: melting, melt
-	lava: lava
-	drowning: drowning, drown
-	block_explosion: block explosion, a block explosion
-	entity_explosion: entity explosion, an entity explosion
+	fall: faww, a faww
+	fire: fiwe, a fiwe
+	fire_tick: buwning, buwn
+	melting: mewting, mewt
+	lava: wava
+	drowning: dwowning, dwown
+	block_explosion: bwock expwosion, a bwock expwosion
+	entity_explosion: entity expwosion, an entity expwosion
 	void: void, the void
-	lightning: lightning, lightning strike, a lightning, a lightning strike
-	starvation: starvation
+	lightning: wightning, wightning stwike, a wightning, a wightning stwike
+	starvation: stawvation
 	poison: poison
 	magic: potion, a potion
-	wither: wither, wither effect, a wither, wither potion effect
-	falling_block: falling block, a falling block
+	wither: withew, withew effect, a withew, withew potion effect
+	falling_block: fawwing bwock, a fawwing bwock
 	suicide: suicide
-	thorns: thorns
-	dragon_breath: dragon's breath, dragonfire
-	fly_into_wall: hitting wall while flying, flying into a wall
-	hot_floor: magma, hot floor
-	cramming: cramming
-	freeze: freeze
-	dryout: dryout
-	custom: unknown, custom, plugin, a plugin
+	thorns: thowns
+	dragon_breath: dwagon's bweath, dwagonfiwe
+	fly_into_wall: hitting waww whiwe fwying, fwying into a waww
+	hot_floor: magma, hot fwoow
+	cramming: cwamming
+	freeze: fweeze
+	dryout: dwyout
+	custom: unknown, custom, pwugin, a pwugin
 	sonic_boom: sonic boom
-	kill: kill, killed
-	world_border: world border
+	kill: kiww, kiwwed
+	world_border: wowwd bowdew
 
 # -- Teleport Causes --
 teleport causes:
-	chorus_fruit: chorus, chorus fruit
+	chorus_fruit: chowus, chowus fwuit
 	command: command
-	end_gateway: gateway, end gateway, ender gateway
-	end_portal: end portal, ender portal
-	ender_pearl: ender pearl
-	nether_portal: nether portal
-	plugin: plugin
-	spectate: spectate, spectator
+	end_gateway: gateway, end gateway, endew gateway
+	end_portal: end powtaw, endew powtaw
+	ender_pearl: endew peaww
+	nether_portal: nethew powtaw
+	plugin: pwugin
+	spectate: spectate, spectatow
 	unknown: unknown
 	dismount: dismount, dismounted
 	exit_bed: exit bed, exiting bed, bed exit
@@ -1327,229 +1327,229 @@ teleport causes:
 # -- Inventory Close Reasons --
 inventory close reasons:
 	unknown: unknown
-	teleport: teleport
+	teleport: tewepowt
 	cant_use: can't use, can not use, cannot use
-	unloaded: unloaded
+	unloaded: unwoaded
 	open_new: open new, new opened
-	player: player
+	player: pwayew
 	disconnect: disconnected, disconnect
 	death: death
-	plugin: plugin
+	plugin: pwugin
 
 # -- Game Modes --
 game modes:
-	survival: survival
-	creative: creative
-	adventure: adventure
-	spectator: spectator
+	survival: suwvivaw
+	creative: cweative
+	adventure: adventuwe
+	spectator: spectatow
 
 # -- Visual Effects --
 visual effects:
-	area_expression: [[with] [(1¦offset (of|by) %-number%, %-number%(,| and) %-number%)][(2¦[(and|at) ]speed %-number%)]]
+	area_expression: [[with] [(1¦offset (of|by) %-numbew%, %-numbew%(,| and) %-numbew%)][(2¦[(and|at) ]speed %-numbew%)]]
 	effect:
 		ender_signal:
-			name: ender signal @an
-			pattern: ender [eye] signal[s]
+			name: endew signaw @an
+			pattern: endew [eye] signaw[s]
 		mobspawner_flames:
-			name: mobspawner flames  @x
-			pattern: [mo(b|nster)][ ]spawner flames
+			name: mobspawnew fwames  @x
+			pattern: [mo(b|nstew)][ ]spawnew fwames
 		potion_break:
-			name: potion break @a
-			pattern: [%potioneffecttype%] potion break[ing]
+			name: potion bweak @a
+			pattern: [%potioneffecttype%] potion bweak[ing]
 		smoke:
 			name: smoke @-
-			pattern: smoke [%direction%]
+			pattern: smoke [%diwection%]
 	entityeffect:
 		hurt:
-			name: hurt @-
-			pattern: (hurt|damage)
+			name: huwt @-
+			pattern: (huwt|damage)
 		sheep_eat:
 			name: sheep eating @a
-			pattern: sheep eat[ing] [a] [grass] [block]
+			pattern: sheep eat[ing] [a] [gwass] [bwock]
 		wolf_hearts:
-			name: wolf hearts @x
-			pattern: wolf (hearts|tame|being tamed)
+			name: wowf heawts @x
+			pattern: wowf (heawts|tame|being tamed)
 		wolf_shake:
-			name: wolf shaking @a
-			pattern: wolf shak(e|ing)
+			name: wowf shaking @a
+			pattern: wowf shak(e|ing)
 		wolf_smoke:
-			name: wolf smoke @-
-			pattern: wolf smok(e|ing)
+			name: wowf smoke @-
+			pattern: wowf smok(e|ing)
 		iron_golem_rose:
-			name: iron golem offering rose @an
-			pattern: (iron golem [offering] rose|rose in hand)
+			name: iwon gowem offewing wose @an
+			pattern: (iwon gowem [offewing] wose|wose in hand)
 		villager_heart:
-			name: villager hearts @x
-			pattern: villager hearts
+			name: viwwagew heawts @x
+			pattern: viwwagew heawts
 		villager_angry:
-			name: angry villager entity @an
-			pattern: angry villager entity
+			name: angwy viwwagew entity @an
+			pattern: angwy viwwagew entity
 		villager_happy:
-			name: happy villager entity @a
-			pattern: happy villager entity
+			name: happy viwwagew entity @a
+			pattern: happy viwwagew entity
 		witch_magic:
 			name: witch magic @-
 			pattern: witch magic
 		zombie_transform:
-			name: zombie turning to a villager
-			pattern: ([zombie] turning to a villager|zombie transform)
+			name: zombie tuwning to a viwwagew
+			pattern: ([zombie] tuwning to a viwwagew|zombie twansfowm)
 		firework_explode:
-			name: firework explosion @a
-			pattern: firework explosion
+			name: fiwewowk expwosion @a
+			pattern: fiwewowk expwosion
 		arrow_particles:
-			name: arrow particles @x
-			pattern: [tipped] arrow particles
+			name: awwow pawticwes @x
+			pattern: [tipped] awwow pawticwes
 		rabbit_jump:
-			name: jumping rabbit @a
-			pattern: (jumping rabbit|rabbit jump)
+			name: jumping wabbit @a
+			pattern: (jumping wabbit|wabbit jump)
 		love_hearts:
-			name: love hearts @x
-			pattern: (love|breeding) hearts
+			name: wove heawts @x
+			pattern: (wove|bweeding) heawts
 		squid_rotate:
-			name: squid rotation reset @a
-			pattern: [squid] rotation reset
+			name: squid wotation weset @a
+			pattern: [squid] wotation weset
 		entity_poof:
 			name: entity poof @-
 			pattern: entity poof
 		guardian_target:
-			name: guardian target @a
-			pattern: guardian target [with laser]
+			name: guawdian tawget @a
+			pattern: guawdian tawget [with wasew]
 		shield_block:
-			name: block with shield @-
-			pattern: (block [with a shield]|shield block)
+			name: bwock with shiewd @-
+			pattern: (bwock [with a shiewd]|shiewd bwock)
 		shield_break:
-			name: shield break @a
-			pattern: shield break
+			name: shiewd bweak @a
+			pattern: shiewd bweak
 		armor_stand_hit:
-			name: armor stand hit @a
-			pattern: armor stand hit
+			name: awmow stand hit @a
+			pattern: awmow stand hit
 		thorns_hurt:
-			name: hurt by thorns @-
-			pattern: (hurt|damage) by thorns
+			name: huwt by thowns @-
+			pattern: (huwt|damage) by thowns
 		iron_golem_sheath:
-			name: iron golem sheathing rose
-			pattern: iron golem (sheathing|putting away) rose
+			name: iwon gowem sheathing wose
+			pattern: iwon gowem (sheathing|putting away) wose
 		totem_resurrect:
-			name: resurrection by totem
-			pattern: resurrection [by totem]
+			name: wesuwwection by totem
+			pattern: wesuwwection [by totem]
 		hurt_drown:
-			name: hurt by drowning @-
-			pattern: (hurt|damage) by drowning
+			name: huwt by dwowning @-
+			pattern: (huwt|damage) by dwowning
 		hurt_explosion:
-			name: hurt by explosion @-
-			pattern: (hurt|damage) by explosion
+			name: huwt by expwosion @-
+			pattern: (huwt|damage) by expwosion
 	particle:
 		fireworks_spark:
-			name: firework's spark @-
-			pattern: firework['s] spark
+			name: fiwewowk's spawk @-
+			pattern: fiwewowk['s] spawk
 		crit:
-			name: critical hit @a
-			pattern: (critical hit|crit) [spark]
+			name: cwiticaw hit @a
+			pattern: (cwiticaw hit|cwit) [spawk]
 		crit_magic:
-			name: magical critical hit @a
-			pattern: (magic[al]|blue) (critical hit|crit) [spark]
+			name: magicaw cwiticaw hit @a
+			pattern: (magic[aw]|bwue) (cwiticaw hit|cwit) [spawk]
 		spell_mob:
-			name: potion swirl @a
-			pattern: [%-color%] potion swirl
+			name: potion swiww @a
+			pattern: [%-cowow%] potion swiww
 		spell_mob_ambient:
-			name: transparent potion swirl @a
-			pattern: [%-color%] transparent potion swirl
+			name: twanspawent potion swiww @a
+			pattern: [%-cowow%] twanspawent potion swiww
 		spell:
-			name: spell @a
-			pattern: (spell|thrown potion|lingering potion)
+			name: speww @a
+			pattern: (speww|thwown potion|wingewing potion)
 		spell_instant:
-			name: spell @a
-			pattern: instant (spell|thrown potion)
+			name: speww @a
+			pattern: instant (speww|thwown potion)
 		spell_witch:
-			name: witch spell @-
-			pattern: (witch (magic|spell)|purple spark)
+			name: witch speww @-
+			pattern: (witch (magic|speww)|puwpwe spawk)
 		note:
 			name: note @a
-			pattern: note [(of|with) [colo[u]r] %number%]
+			pattern: note [(of|with) [cowo[u]w] %numbew%]
 		portal:
-			name: portal @a
-			pattern: [nether] portal
+			name: powtaw @a
+			pattern: [nethew] powtaw
 		enchantment_table:
-			name: flying glyph @a
-			pattern: (flying (glyph|letter)|enchantment table)
+			name: fwying gwyph @a
+			pattern: (fwying (gwyph|wettew)|enchantment tabwe)
 		flame:
-			name: flame @-
-			pattern: (flame|fire)
+			name: fwame @-
+			pattern: (fwame|fiwe)
 		lava:
-			name: lava pop @a
-			pattern: lava pop
+			name: wava pop @a
+			pattern: wava pop
 		footstep:
 			name: footstep @x
 			pattern: footsteps
 		water_splash:
-			name: water splash @a
-			pattern: [water] splash
+			name: watew spwash @a
+			pattern: [watew] spwash
 		smoke_normal:
-			name: smoke particle @a
-			pattern: smoke particle
+			name: smoke pawticwe @a
+			pattern: smoke pawticwe
 		explosion_huge:
-			name: huge explosion @a
-			pattern: huge explosion
+			name: huge expwosion @a
+			pattern: huge expwosion
 		explosion_large:
-			name: large explosion @a
-			pattern: large explosion
+			name: wawge expwosion @a
+			pattern: wawge expwosion
 		explosion_normal:
-			name: explosion @an
-			pattern: explosion
+			name: expwosion @an
+			pattern: expwosion
 		suspended_depth:
 			name: void fog @-
 			pattern: void fog
 		town_aura:
-			name: small smoke @-
-			pattern: (small smoke|town aura)
+			name: smaww smoke @-
+			pattern: (smaww smoke|town auwa)
 		cloud:
-			name: cloud @a
-			pattern: cloud
+			name: cwoud @a
+			pattern: cwoud
 		redstone:
-			name: coloured dust @-
-			pattern: [%-color%] [colo[u]red] dust
+			name: cowouwed dust @-
+			pattern: [%-cowow%] [cowo[u]wed] dust
 		snowball:
-			name: snowball break @a
-			pattern: snowball break
+			name: snowbaww bweak @a
+			pattern: snowbaww bweak
 		drip_water:
-			name: water drip @a
-			pattern: water drip
+			name: watew dwip @a
+			pattern: watew dwip
 		drip_lava:
-			name: lava drip @a
-			pattern: lava drip
+			name: wava dwip @a
+			pattern: wava dwip
 		snow_shovel:
-			name: snow shovel @-
-			pattern: (snow shovel|snow(man| golem) spawn)
+			name: snow shovew @-
+			pattern: (snow shovew|snow(man| gowem) spawn)
 		slime:
-			name: slime @-
-			pattern: slime
+			name: swime @-
+			pattern: swime
 		heart:
-			name: heart @a
-			pattern: heart
+			name: heawt @a
+			pattern: heawt
 		villager_angry:
-			name: angry villager @a
-			pattern: (angry villager|[villager] thundercloud)
+			name: angwy viwwagew @a
+			pattern: (angwy viwwagew|[viwwagew] thundewcwoud)
 		villager_happy:
-			name: happy villager @-
-			pattern: (happy villager|green spark)
+			name: happy viwwagew @-
+			pattern: (happy viwwagew|gween spawk)
 		smoke_large:
-			name: large smoke @-
-			pattern: large smoke
+			name: wawge smoke @-
+			pattern: wawge smoke
 		item_crack:
-			name: item crack @-
-			pattern: %itemtype% item (break|crack)[ing]
+			name: item cwack @-
+			pattern: %itemtype% item (bweak|cwack)[ing]
 		block_crack:
-			name: block break @-
-			pattern: %itemtype% break[ing]
+			name: bwock bweak @-
+			pattern: %itemtype% bweak[ing]
 		block_dust:
-			name: block dust @-
-			pattern: [sprinting] dust of [%itemtype%]
+			name: bwock dust @-
+			pattern: [spwinting] dust of [%itemtype%]
 		end_rod:
-			name: end rod @-
-			pattern: end rod
+			name: end wod @-
+			pattern: end wod
 		falling_dust:
-			name: falling dust @-
-			pattern: falling dust of [%itemtype%]
+			name: fawwing dust @-
+			pattern: fawwing dust of [%itemtype%]
 
 		# 1.11 particles
 		totem:
@@ -1564,159 +1564,159 @@ visual effects:
 			name: squid ink @-
 			pattern: squid ink
 		bubble_pop:
-			name: bubble pop @-
-			pattern: bubble pop
+			name: bubbwe pop @-
+			pattern: bubbwe pop
 		current_down:
-			name: current down @-
-			pattern: (current|bubble column) down
+			name: cuwwent down @-
+			pattern: (cuwwent|bubbwe cowumn) down
 		bubble_column_up:
-			name: bubble column up @-
-			pattern: (current|bubble column) up
+			name: bubbwe cowumn up @-
+			pattern: (cuwwent|bubbwe cowumn) up
 		nautilus:
-			name: nautilus @-
-			pattern: nautilus
+			name: nautiwus @-
+			pattern: nautiwus
 		dolphin:
-			name: dolphin @-
-			pattern: dolphin
+			name: dowphin @-
+			pattern: dowphin
 
 		# 1.14 particles
 		sneeze:
 			name: sneeze @-
 			pattern: sneeze
 		campfire_cosy_smoke:
-			name: campfire cosy smoke @-
-			pattern: campfire co(s|z)y smoke
+			name: campfiwe cosy smoke @-
+			pattern: campfiwe co(s|z)y smoke
 		campfire_signal_smoke:
-			name: campfire signal smoke @-
-			pattern: campfire signal smoke
+			name: campfiwe signaw smoke @-
+			pattern: campfiwe signaw smoke
 		composter:
-			name: composter @-
-			pattern: composter particle
+			name: compostew @-
+			pattern: compostew pawticwe
 		flash:
-			name: flash @-
-			pattern: flash
+			name: fwash @-
+			pattern: fwash
 		falling_lava:
-			name: falling lava @-
-			pattern: falling lava
+			name: fawwing wava @-
+			pattern: fawwing wava
 		landing_lava:
-			name: landing lava @-
-			pattern: landing lava
+			name: wanding wava @-
+			pattern: wanding wava
 		falling_water:
-			name: falling water @-
-			pattern: falling water
+			name: fawwing watew @-
+			pattern: fawwing watew
 		barrier:
-			name: barrier @a
-			pattern: barrier
+			name: bawwiew @a
+			pattern: bawwiew
 		damage_indicator:
-			name: damage indicator @-
-			pattern: damage indicator
+			name: damage indicatow @-
+			pattern: damage indicatow
 		dragon_breath:
-			name: dragon breath @-
-			pattern: dragon[s] breath
+			name: dwagon bweath @-
+			pattern: dwagon[s] bweath
 		mob_appearance:
-			name: mob appearance @-
-			pattern: (mob appearance|guardian ghost)
+			name: mob appeawance @-
+			pattern: (mob appeawance|guawdian ghost)
 		suspended:
 			name: suspended @-
-			pattern: (suspended|underwater)
+			pattern: (suspended|undewwatew)
 		sweep_attack:
 			name: sweep attack @-
 			pattern: sweep attack
 		water_bubble:
-			name: water bubble @-
-			pattern: water bubble
+			name: watew bubbwe @-
+			pattern: watew bubbwe
 		water_wake:
-			name: water wake @-
-			pattern: water wake
+			name: watew wake @-
+			pattern: watew wake
 		water_drop:
-			name: water drop @-
-			pattern: water drop
+			name: watew dwop @-
+			pattern: watew dwop
 
 		# 1.15 particles
 		dripping_honey:
-			name: dripping honey @-
-			pattern: dripping honey
+			name: dwipping honey @-
+			pattern: dwipping honey
 		falling_honey:
-			name: falling honey @-
-			pattern: falling honey
+			name: fawwing honey @-
+			pattern: fawwing honey
 		landing_honey:
-			name: landing honey @-
-			pattern: landing honey
+			name: wanding honey @-
+			pattern: wanding honey
 		falling_nectar:
-			name: falling nectar @-
-			pattern: falling nectar
+			name: fawwing nectaw @-
+			pattern: fawwing nectaw
 
 		# 1.16 particles
 		ash:
 			name: ash @-
 			pattern: ash
 		crimson_spore:
-			name: crimson spore @-
-			pattern: crimson spore
+			name: cwimson spowe @-
+			pattern: cwimson spowe
 		soul_fire_flame:
-			name: soul fire flame @-
-			pattern: soul fire flame
+			name: souw fiwe fwame @-
+			pattern: souw fiwe fwame
 		warped_spore:
-			name: warped spore @-
-			pattern: warped spore
+			name: wawped spowe @-
+			pattern: wawped spowe
 		dripping_obsidian_tear:
-			name: dripping obsidian tear @-
-			pattern: dripping obsidian tear
+			name: dwipping obsidian teaw @-
+			pattern: dwipping obsidian teaw
 		falling_obsidian_tear:
-			name: falling obsidian tear @-
-			pattern: falling obsidian tear
+			name: fawwing obsidian teaw @-
+			pattern: fawwing obsidian teaw
 		landing_obsidian_tear:
-			name: landing obsidian tear @-
-			pattern: landing obsidian tear
+			name: wanding obsidian teaw @-
+			pattern: wanding obsidian teaw
 		soul:
-			name: soul @-
-			pattern: soul
+			name: souw @-
+			pattern: souw
 		reverse_portal:
-			name: reverse portal @-
-			pattern: reverse portal
+			name: wevewse powtaw @-
+			pattern: wevewse powtaw
 		white_ash:
 			name: white ash @-
 			pattern: white ash
 		# 1.17 particles
 		light:
-			name: light @-
-			pattern: light
+			name: wight @-
+			pattern: wight
 		#dust_color_transition:
-			#name: dust color transition @a
-			#pattern: dust colo[u]r transition [from %-color%] [to %-color%] [with size %-number%]
+			#name: dust cowow twansition @a
+			#pattern: dust cowo[u]w twansition [fwom %-cowow%] [to %-cowow%] [with size %-numbew%]
 		#vibration:
-			#name: vibration @a
-			#pattern: vibration
+			#name: vibwation @a
+			#pattern: vibwation
 		falling_spore_blossom:
-			name: falling spore blossom @-
-			pattern: falling spore blossom
+			name: fawwing spowe bwossom @-
+			pattern: fawwing spowe bwossom
 		spore_blossom_air:
-			name: spore blossom air @-
-			pattern: spore blossom air
+			name: spowe bwossom aiw @-
+			pattern: spowe bwossom aiw
 		small_flame:
-			name: small flame @-
-			pattern: small flame
+			name: smaww fwame @-
+			pattern: smaww fwame
 		snowflake:
-			name: snowflake @-
-			pattern: snowflake
+			name: snowfwake @-
+			pattern: snowfwake
 		dripping_dripstone_lava:
-			name: dripping dripstone lava @-
-			pattern: dripping dripstone lava
+			name: dwipping dwipstone wava @-
+			pattern: dwipping dwipstone wava
 		falling_dripstone_lava:
-			name: falling dripstone lava @-
-			pattern: falling dripstone lava
+			name: fawwing dwipstone wava @-
+			pattern: fawwing dwipstone wava
 		dripping_dripstone_water:
-			name: dripping dripstone water @-
-			pattern: dripping dripstone water
+			name: dwipping dwipstone watew @-
+			pattern: dwipping dwipstone watew
 		falling_dripstone_water:
-			name: falling dripstone water @-
-			pattern: falling dripstone water
+			name: fawwing dwipstone watew @-
+			pattern: fawwing dwipstone watew
 		glow_squid_ink:
-			name: glow squid ink @-
-			pattern: glow squid ink
+			name: gwow squid ink @-
+			pattern: gwow squid ink
 		glow:
-			name: glow @-
-			pattern: glow
+			name: gwow @-
+			pattern: gwow
 		wax_on:
 			name: wax on @-
 			pattern: wax on
@@ -1724,276 +1724,276 @@ visual effects:
 			name: wax off @-
 			pattern: wax off
 		electric_spark:
-			name: electric spark @-
-			pattern: electric spark
+			name: ewectwic spawk @-
+			pattern: ewectwic spawk
 		scrape:
-			name: scrape @-
-			pattern: scrape
+			name: scwape @-
+			pattern: scwape
 
 		# 1.19 particles
 		sonic_boom:
 			name: sonic boom @-
 			pattern: sonic boom
 		sculk_soul:
-			name: sculk soul @-
-			pattern: sculk soul
+			name: scuwk souw @-
+			pattern: scuwk souw
 		sculk_charge:
-			name: sculk charge @-
-			pattern: sculk charge
+			name: scuwk chawge @-
+			pattern: scuwk chawge
 		sculk_charge_pop:
-			name: sculk charge pop @-
-			pattern: sculk charge pop
+			name: scuwk chawge pop @-
+			pattern: scuwk chawge pop
 		shriek:
-			name: shriek @-
-			pattern: shriek
+			name: shwiek @-
+			pattern: shwiek
 
 		# 1.19.4 particles
 		dripping_cherry_leaves:
-			name: dripping cherry leaves @-
-			pattern: dripping cherry leaves
+			name: dwipping chewwy weaves @-
+			pattern: dwipping chewwy weaves
 		falling_cherry_leaves:
-			name: falling cherry leaves @-
-			pattern: falling cherry leaves
+			name: fawwing chewwy weaves @-
+			pattern: fawwing chewwy weaves
 		landing_cherry_leaves:
-			name: landing cherry leaves @-
-			pattern: landing cherry leaves
+			name: wanding chewwy weaves @-
+			pattern: wanding chewwy weaves
 
 # -- Inventory Actions --
 inventory actions:
 	nothing: nothing, do nothing
-	pickup_all: pickup all, pickup all items
+	pickup_all: pickup aww, pickup aww items
 	pickup_some: pickup some, pickup some items
-	pickup_half: pickup half, pickup half stack
-	pickup_one: pickup one item, pickup single item, pickup single
-	place_all: place all, place all items
-	place_some: place some, place some items
-	place_one: place one, place one item
-	swap_with_cursor: swap with cursor, swap stack with cursor, swap cursor, swap cursor stack
-	drop_all_cursor: drop all from cursor, drop stack from cursor, drop items from cursor, drop stack from cursor, drop cursor, drop cursor stack
-	drop_one_cursor: drop one from cursor, drop one item from cursor, drop single item from cursor, drop cursor item
-	drop_all_slot: drop all from slot, drop stack from slot, drop items from slot, drop stack from slot, drop slot, drop slot stack
-	drop_one_slot: drop one from slot, drop one item from slot, drop single item from slot, drop slot item
-	move_to_other_inventory: instant move, move to other inventory, shift move
-	hotbar_move_and_readd: hotbar move and readd
-	hotbar_swap: swap with hotbar, swap items with hotbar, hotbar swap, hotbar swap items
-	clone_stack: clone stack
-	collect_to_cursor: collect to cursor, collect items to cursor
-	unknown: unknown, unsupported, custom
+	pickup_half: pickup hawf, pickup hawf stack
+	pickup_one: pickup one item, pickup singwe item, pickup singwe
+	place_all: pwace aww, pwace aww items
+	place_some: pwace some, pwace some items
+	place_one: pwace one, pwace one item
+	swap_with_cursor: swap with cuwsow, swap stack with cuwsow, swap cuwsow, swap cuwsow stack
+	drop_all_cursor: dwop aww fwom cuwsow, dwop stack fwom cuwsow, dwop items fwom cuwsow, dwop stack fwom cuwsow, dwop cuwsow, dwop cuwsow stack
+	drop_one_cursor: dwop one fwom cuwsow, dwop one item fwom cuwsow, dwop singwe item fwom cuwsow, dwop cuwsow item
+	drop_all_slot: dwop aww fwom swot, dwop stack fwom swot, dwop items fwom swot, dwop stack fwom swot, dwop swot, dwop swot stack
+	drop_one_slot: dwop one fwom swot, dwop one item fwom swot, dwop singwe item fwom swot, dwop swot item
+	move_to_other_inventory: instant move, move to othew inventowy, shift move
+	hotbar_move_and_readd: hotbaw move and weadd
+	hotbar_swap: swap with hotbaw, swap items with hotbaw, hotbaw swap, hotbaw swap items
+	clone_stack: cwone stack
+	collect_to_cursor: cowwect to cuwsow, cowwect items to cuwsow
+	unknown: unknown, unsuppowted, custom
 
 # -- Inventory Click Types --
 click types:
-	left: left mouse button, left mouse, LMB
-	shift_left: left mouse button with shift, left mouse with shift, Shift+LMB
-	right: right mouse button, right mouse, RMB
-	shift_right: right mouse button with shift, right mouse with shift, Shift+RMB
-	window_border_left: window border using right mouse button, window border using right mouse, border using LMB
-	window_border_right: window border using left mouse button, window border using right mouse, border using RMB
-	middle: middle mouse button, middle mouse, MMB
-	number_key: number key, 0-9
-	double_click: double click using mouse, double click
-	drop: drop key, drop item, Q
-	control_drop: drop key with control, drop stack, Ctrl+Q
-	creative: creative action
-	unknown: unknown, unsupported, custom
-	swap_offhand: swap offhand, swap shield
+	left: weft mouse button, weft mouse, LMB
+	shift_left: weft mouse button with shift, weft mouse with shift, Shift+LMB
+	right: wight mouse button, wight mouse, RMB
+	shift_right: wight mouse button with shift, wight mouse with shift, Shift+RMB
+	window_border_left: window bowdew using wight mouse button, window bowdew using wight mouse, bowdew using LMB
+	window_border_right: window bowdew using weft mouse button, window bowdew using wight mouse, bowdew using RMB
+	middle: middwe mouse button, middwe mouse, MMB
+	number_key: numbew key, 0-9
+	double_click: doubwe cwick using mouse, doubwe cwick
+	drop: dwop key, dwop item, Q
+	control_drop: dwop key with contwow, dwop stack, Ctww+Q
+	creative: cweative action
+	unknown: unknown, unsuppowted, custom
+	swap_offhand: swap offhand, swap shiewd
 
 # -- Inventory Types --
 inventory types:
-	chest: chest inventory @a
-	dispenser: dispenser inventory @a
-	dropper: dropper inventory @a
-	furnace: furnace inventory @a
-	workbench: workbench inventory @a
-	crafting: crafting table inventory @a
-	enchanting: enchanting table inventory @an
-	brewing: brewing stand inventory @a
-	player: player inventory @a
-	creative: creative inventory @a
-	merchant: merchant inventory @a, villager inventory @a
-	ender_chest: ender chest inventory @an
-	anvil: anvil inventory @an
-	beacon: beacon inventory @a
-	hopper: hopper inventory @a
-	shulker_box: shulker box inventory @a
-	barrel: barrel inventory @a
-	blast_furnace: blast furnace inventory @a
-	lectern: lectern inventory @a
-	smoker: smoker inventory @a
-	loom: loom inventory @a
-	cartography: cartography table inventory @a
-	grindstone: grindstone inventory @a
-	stonecutter: stonecutter inventory @a
-	smithing: smithing inventory @a
-	composter: composter inventory @a
-	chiseled_bookshelf: chiseled bookshelf @a, bookshelf @a
-	decorated_pot: decorated pot @a
-	crafter: crafter inventory @a
+	chest: chest inventowy @a
+	dispenser: dispensew inventowy @a
+	dropper: dwoppew inventowy @a
+	furnace: fuwnace inventowy @a
+	workbench: wowkbench inventowy @a
+	crafting: cwafting tabwe inventowy @a
+	enchanting: enchanting tabwe inventowy @an
+	brewing: bwewing stand inventowy @a
+	player: pwayew inventowy @a
+	creative: cweative inventowy @a
+	merchant: mewchant inventowy @a, viwwagew inventowy @a
+	ender_chest: endew chest inventowy @an
+	anvil: anviw inventowy @an
+	beacon: beacon inventowy @a
+	hopper: hoppew inventowy @a
+	shulker_box: shuwkew box inventowy @a
+	barrel: bawwew inventowy @a
+	blast_furnace: bwast fuwnace inventowy @a
+	lectern: wectewn inventowy @a
+	smoker: smokew inventowy @a
+	loom: woom inventowy @a
+	cartography: cawtogwaphy tabwe inventowy @a
+	grindstone: gwindstone inventowy @a
+	stonecutter: stonecuttew inventowy @a
+	smithing: smithing inventowy @a
+	composter: compostew inventowy @a
+	chiseled_bookshelf: chisewed bookshewf @a, bookshewf @a
+	decorated_pot: decowated pot @a
+	crafter: cwaftew inventowy @a
 
 	jukebox: jukebox @a
 	# The smithing new table is required for Skript to work, but this is a draft API for 1.20
-	smithing_new: new smithing table @a, upgrade gear @a, upgrade gear table @a
+	smithing_new: new smithing tabwe @a, upgwade geaw @a, upgwade geaw tabwe @a
 
 # -- Spawn Reasons --
 spawn reasons:
 	bed: bed
 	beehive: beehive
-	breeding: breed, breeding
-	build_irongolem: built iron golem, build iron golem
-	build_snowman: built snowman, build snowman
-	build_wither: built wither, build wither
-	chunk_gen: chunk generation
+	breeding: bweed, bweeding
+	build_irongolem: buiwt iwon gowem, buiwd iwon gowem
+	build_snowman: buiwt snowman, buiwd snowman
+	build_wither: buiwt withew, buiwd withew
+	chunk_gen: chunk genewation
 	command: command
-	cured: cured
+	cured: cuwed
 	custom: customized, customised, custom
-	default: default
+	default: defauwt
 	dispense_egg: dispense egg, dispensing egg
-	drowned: drowned
-	duplication: duplication
+	drowned: dwowned
+	duplication: dupwication
 	egg: egg
-	ender_pearl: ender pearl
-	explosion: explosion
-	frozen: frozen
+	ender_pearl: endew peaww
+	explosion: expwosion
+	frozen: fwozen
 	infection: infection, infected
 	jockey: jockey
-	lightning: lightning
-	metamorphosis: metamorphosis
+	lightning: wightning
+	metamorphosis: metamowphosis
 	mount: mount
-	natural: natural
-	nether_portal: nether portal
-	ocelot_baby: ocelot baby
-	patrol: patrol
-	piglin_zombified: piglin zombification
-	raid: raid
-	reinforcements: reinforcements
-	sheared: shear, sheared
-	shoulder_entity: perching, shoulder
-	silverfish_block: silverfish reveal, silverfish trap
-	slime_split: slime split
-	spawner: mob spawner, creature spawner, spawner
+	natural: natuwaw
+	nether_portal: nethew powtaw
+	ocelot_baby: ocewot baby
+	patrol: patwow
+	piglin_zombified: pigwin zombification
+	raid: waid
+	reinforcements: weinfowcements
+	sheared: sheaw, sheawed
+	shoulder_entity: pewching, shouwdew
+	silverfish_block: siwvewfish weveaw, siwvewfish twap
+	slime_split: swime spwit
+	spawner: mob spawnew, cweatuwe spawnew, spawnew
 	spawner_egg: spawn egg
-	spell: spell
-	trap: trap
-	village_defense: village defense, golem defense, iron golem defense
-	village_invasion: village invasion, village invading
+	spell: speww
+	trap: twap
+	village_defense: viwwage defense, gowem defense, iwon gowem defense
+	village_invasion: viwwage invasion, viwwage invading
 
 # -- Difficulties --
 difficulties:
 	easy: easy
-	normal: medium, normal
-	hard: hard
-	peaceful: peaceful
+	normal: medium, nowmaw
+	hard: hawd
+	peaceful: peacefuw
 
 # -- Firework types --
 firework types:
-	ball_large: large ball, ball large, large
-	creeper: creeper, creeper face
-	ball: ball, small, small ball
-	star: star, star shaped
-	burst: burst
+	ball_large: wawge baww, baww wawge, wawge
+	creeper: cweepew, cweepew face
+	ball: baww, smaww, smaww baww
+	star: staw, staw shaped
+	burst: buwst
 
 # -- Resource Pack States --
 resource pack states:
 	accepted: accept, accepted
-	declined: decline, refuse, reject, declined, refused, rejected
-	failed_download: download fail, fail, failed to download, failed
-	successfully_loaded: successfully load, successfully install, success, successfully loaded, successfully installed
-	downloaded: downloaded
-	invalid_url: invalid url
-	failed_reload: failed reload, failed to reload
-	discarded: discarded
+	declined: decwine, wefuse, weject, decwined, wefused, wejected
+	failed_download: downwoad faiw, faiw, faiwed to downwoad, faiwed
+	successfully_loaded: successfuwwy woad, successfuwwy instaww, success, successfuwwy woaded, successfuwwy instawwed
+	downloaded: downwoaded
+	invalid_url: invawid uww
+	failed_reload: faiwed wewoad, faiwed to wewoad
+	discarded: discawded
 
 # -- Sound Categories --
 sound categories:
-	ambient: ambient category, environment category
-	blocks: block category, blocks category
-	hostile: hostile category, hostile creature category, hostile creatures category, hostile mob category, hostile mobs category
-	master: master category, master volume category
-	music: music category
-	neutral: neutral category, friendly creature category, friendly creatures category, friendly mob category, friendly mobs category
-	players: player category, players category
-	records: record category, records category, jukebox category, jukeboxes category, noteblock category, noteblocks category, note block category, note blocks category
-	voice: voice category, speech category
-	weather: weather category
+	ambient: ambient categowy, enviwonment categowy
+	blocks: bwock categowy, bwocks categowy
+	hostile: hostiwe categowy, hostiwe cweatuwe categowy, hostiwe cweatuwes categowy, hostiwe mob categowy, hostiwe mobs categowy
+	master: mastew categowy, mastew vowume categowy
+	music: music categowy
+	neutral: neutwaw categowy, fwiendwy cweatuwe categowy, fwiendwy cweatuwes categowy, fwiendwy mob categowy, fwiendwy mobs categowy
+	players: pwayew categowy, pwayews categowy
+	records: wecowd categowy, wecowds categowy, jukebox categowy, jukeboxes categowy, notebwock categowy, notebwocks categowy, note bwock categowy, note bwocks categowy
+	voice: voice categowy, speech categowy
+	weather: weathew categowy
 
 # -- Panda Genes --
 genes:
-	normal: normal
-	lazy: lazy
-	worried: worried, worrisome
-	playful: playful, happy
-	brown: brown, brownish
+	normal: nowmaw
+	lazy: wazy
+	worried: wowwied, wowwisome
+	playful: pwayfuw, happy
+	brown: bwown, bwownish
 	weak: weak
-	aggressive: aggressive, savage, wild
+	aggressive: aggwessive, savage, wiwd
 
 # -- Attribute Types --
 attribute types:
-	generic_armor: generic armor, armor
-	generic_armor_toughness: generic armor toughness, armor toughness
-	generic_attack_damage: generic attack damage, attack damage
-	generic_attack_knockback: generic attack knockback, attack knockback
-	generic_attack_speed: generic attack speed, attack speed
-	generic_flying_speed: generic flying speed, flying speed
-	generic_follow_range: generic follow range, follow range
-	generic_knockback_resistance: generic knockback resistance, knockback resistance
-	generic_luck: generic luck, luck
-	generic_max_absorption: generic max absorption, max absorption
-	generic_max_health: generic max health, max health
-	generic_movement_speed: generic movement speed, movement speed
-	horse_jump_strength: horse jump strength
-	zombie_spawn_reinforcements: zombie spawn reinforcements
+	generic_armor: genewic awmow, awmow
+	generic_armor_toughness: genewic awmow toughness, awmow toughness
+	generic_attack_damage: genewic attack damage, attack damage
+	generic_attack_knockback: genewic attack knockback, attack knockback
+	generic_attack_speed: genewic attack speed, attack speed
+	generic_flying_speed: genewic fwying speed, fwying speed
+	generic_follow_range: genewic fowwow wange, fowwow wange
+	generic_knockback_resistance: genewic knockback wesistance, knockback wesistance
+	generic_luck: genewic wuck, wuck
+	generic_max_absorption: genewic max absowption, max absowption
+	generic_max_health: genewic max heawth, max heawth
+	generic_movement_speed: genewic movement speed, movement speed
+	horse_jump_strength: howse jump stwength
+	zombie_spawn_reinforcements: zombie spawn weinfowcements
 
 # -- Environments --
 environments:
-	normal: normal, overworld, the overworld
-	nether: nether, the nether
+	normal: nowmaw, ovewwowwd, the ovewwowwd
+	nether: nethew, the nethew
 	the_end: end, the end
 	custom: custom
 
 # -- Moon Phases --
 moon phases:
-	first_quarter: first quarter
-	full_moon: full moon
-	last_quarter: last quarter
+	first_quarter: fiwst quawtew
+	full_moon: fuww moon
+	last_quarter: wast quawtew
 	new_moon: new moon
-	waning_crescent: waning crescent
+	waning_crescent: waning cwescent
 	waning_gibbous: waning gibbous
-	waxing_crescent: waxing crescent
+	waxing_crescent: waxing cwescent
 	waxing_gibbous: waxing gibbous
 
 # -- Quit Reasons --
 quit reasons:
 	disconnected: disconnected, quit
-	erroneous_state: erroneous, erroneous state
+	erroneous_state: ewwoneous, ewwoneous state
 	kicked: kicked
 	timed_out: timed out
 
 # -- Transform Reasons --
 transform reasons:
-	cured: zombie cure, zombie curing, curing
-	drowned: entity drowning, drowning, zombie converting to drowned, zombie drowning
-	frozen: entity freezing, entity freeze, skeleton freezing, skeleton freeze, skeleton converting to stray
-	lightning: lightning, creeper super charge
-	metamorphosis: tadpole converting, tadpole converting to frog, tadpole metamorphosis, metamorphosis
-	piglin_zombified: piglin zombification
-	sheared: mooshroom shear, mooshroom shearing
-	split: slime split, slime splitting, split, magma slime split, magma slime splitting
+	cured: zombie cuwe, zombie cuwing, cuwing
+	drowned: entity dwowning, dwowning, zombie convewting to dwowned, zombie dwowning
+	frozen: entity fweezing, entity fweeze, skeweton fweezing, skeweton fweeze, skeweton convewting to stway
+	lightning: wightning, cweepew supew chawge
+	metamorphosis: tadpowe convewting, tadpowe convewting to fwog, tadpowe metamowphosis, metamowphosis
+	piglin_zombified: pigwin zombification
+	sheared: mooshwoom sheaw, mooshwoom sheawing
+	split: swime spwit, swime spwitting, spwit, magma swime spwit, magma swime spwitting
 	unknown: unknown
-	infection: infection, villager infection
+	infection: infection, viwwagew infection
 
 # -- Boolean --
 boolean:
 	true:
-		name: true
-		pattern: (true|yes|on)
+		name: twue
+		pattern: (twue|yes|on)
 	false:
-		name: false
-		pattern: (false|no|off)
+		name: fawse
+		pattern: (fawse|no|off)
 
 # -- Operators --
 operators:
 	add: addition
-	subtract: subtraction
-	multiply: multiplication
+	subtract: subtwaction
+	multiply: muwtipwication
 	divide: division
 	exponentiate: exponentiation
 
@@ -2082,3 +2082,62 @@ types:
 	# Hooks
 	money: money
 	wegion: wegion¦s
+
+	# Java
+	number: numbew¦s @a
+	integer: integew¦s @an
+	long: integew¦s @an
+	short: integew¦s @an
+	double: numbew¦s @a
+	float: numbew¦s @a
+	boolean: boowean¦ (yes/no)¦s (yes/no) @a
+	string: text¦s @a
+
+	# Bukkit
+	livingentity: wiving entit¦y¦ies @a
+	projectile: pwojectiwe¦s @a
+	block: bwock¦s @a
+	location: wocation¦s @a
+	world: wowwd¦s @a
+	inventory: inventow¦y¦ies @an
+	player: pwayew¦s @a
+	offlineplayer: offwine pwayew¦s @a
+	commandsender: command sendew¦s @a
+	inventoryholder: inventowy howdew¦s @an
+	material: matewiaw¦s @a
+	teleportcause: tewepowt cause¦s @a
+	inventoryaction: inventowy action¦s @a
+	clicktype: cwick type¦s @a
+	vector: vectow¦s @a
+	inventorytype: inventowy type¦s @an
+	metadataholder: metadata howdew¦s @a
+	spawnreason: spawn weason¦s @a
+	cachedservericon: sewvew icon¦s @a
+	difficulty: difficuwt¦y¦ies @a
+	fireworkeffect: fiwewowk effect¦s @a
+	fireworktype: fiwewowk type¦s @a
+	soundcategory: sound categow¦y¦ies @a
+	blockdata: bwock data¦s @a
+	healreason: heaw weason¦s @a
+	gamerule: gamewuwe¦s @a
+	attributetype: attwibute type¦s @a
+	enchantmentoffer: enchantment offew¦s @an
+	environment: enviwonment¦s @an
+	resourcepackstate: wesouwce pack state¦s @a
+	gamerulevalue: gamewuwe vawue¦s @a
+	quitreason: quit weason¦s @a
+	inventoryclosereason: inventowy cwose weason¦s @an
+	transformreason: twansfowm weason¦s @a
+
+	# Skwipt
+	weathertype: weathew type¦s @a
+	timeperiod: time pewiod¦s @a
+	direction: diwection¦s @a
+	slot: swot¦s @a
+	color: cowow¦s @a
+	structuretype: twee type¦s @a
+	experience: expewience point¦s @an
+	experience.pattern: (e?xp|expewience( points?)?)
+	classinfo: type¦s @a
+	visualeffect: visuaw effect¦s @a
+	region: wegion¦s
