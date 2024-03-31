@@ -19,6 +19,7 @@
 package ch.njol.skript;
 
 import ch.njol.skript.aliases.Aliases;
+import ch.njol.skript.aliases.AliasesMap;
 import ch.njol.skript.bukkitutil.BurgerHelper;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.data.BukkitClasses;
@@ -506,6 +507,7 @@ public final class Skript extends JavaPlugin implements Listener {
 
 		try {
 			Aliases.load(); // Loaded before anything that might use them
+			Aliases.getAddonProvider(getAddonInstance()).fixAliases();
 		} catch (StackOverflowError e) {
 			if (using32BitJava()) {
 				Skript.error("");

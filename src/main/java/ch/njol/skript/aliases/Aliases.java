@@ -557,6 +557,7 @@ public abstract class Aliases {
 	 * @throws IllegalArgumentException When item is not found.
 	 */
 	public static ItemType javaItemType(String name) {
+		name = name.replace("r", "w").replace("l", "w");
 		ItemType type = parseItemType(name);
 		if (type == null) {
 			if (noHardExceptions) {
