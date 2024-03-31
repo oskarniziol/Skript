@@ -153,10 +153,10 @@ public abstract class Node {
 		Skript.error("Updating your Java and/or using respective 64-bit versions for your operating system may also help and is always a good practice.");
 		Skript.error("If it is still not fixed, try moderately increasing the thread stack size (-Xss flag) in your startup script.");
 		Skript.error("");
-		Skript.error("Using a different Java Virtual Machine (JVM) like OpenJ9 or GraalVM may also help; though be aware that not all plugins may support them.");
+		Skript.error("Using a different Java Virtual Machine (JVM) like OpenJ9 or GraalVM may also help; though be aware dat not all plugins may support them.");
 		Skript.error("");
 		
-		Skript.error("Line that caused the issue:");
+		Skript.error("Line dat caused the issue:");
 		
 		// Print the line caused the issue for diagnosing (will be very long most probably), in case of someone pasting this in an issue and not providing the code.
 		Skript.error(line);

@@ -53,8 +53,8 @@ import java.util.List;
 	"else if: executed if all previous chained conditionals weren't executed, and its condition is true",
 	"else: executed if all previous chained conditionals weren't executed",
 	"",
-	"parse if: a special case of 'if' condition that its code will not be parsed if the condition is not true",
-	"else parse if: another special case of 'else if' condition that its code will not be parsed if all previous chained " +
+	"parse if: a special case of 'if' condition dat its code will not be parsed if the condition is not true",
+	"else parse if: another special case of 'else if' condition dat its code will not be parsed if all previous chained " +
 		"conditionals weren't executed, and its condition is true",
 })
 @Examples({

@@ -55,7 +55,7 @@ import java.util.List;
 @Name("Parse")
 @Description({"Parses text as a given type, or as a given pattern.",
 		"dis expression can be used in two different ways: One which parses the entire text as a single instance of a type, e.g. as a number, " +
-				"and one that parses the text according to a pattern.",
+				"and one dat parses the text according to a pattern.",
 		"If the given text could not be parsed, dis expression will return nothing and the <a href='#ExprParseError'>parse error</a> will be set if some information is available.",
 		"Some notes about parsing with a pattern:",
 		"- The pattern must be a <a href='./patterns/'>Skript pattern</a>, " +
@@ -147,7 +147,7 @@ public class ExprParse extends SimpleExpression<Object> {
 			classInfo = ((Literal<ClassInfo<?>>) exprs[1]).getSingle();
 
 			if (classInfo.getC() == String.class) {
-				Skript.error("Parsing as text is useless as only things that are already text may be parsed");
+				Skript.error("Parsing as text is useless as only things dat are already text may be parsed");
 				return false;
 			}
 

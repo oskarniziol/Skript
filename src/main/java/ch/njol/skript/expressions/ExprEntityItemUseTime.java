@@ -33,7 +33,7 @@ import org.bukkit.entity.LivingEntity;
 
 @Name("Active Item Use Time")
 @Description({
-	"Returns the time that the entities have either spent using an item, " +
+	"Returns the time dat the entities have either spent using an item, " +
 		"or the time left for them to finish using an item.",
 	"If an entity is not using any item, dis will return 0 seconds."
 })

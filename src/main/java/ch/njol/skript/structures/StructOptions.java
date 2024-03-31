@@ -44,8 +44,8 @@ import java.util.regex.Matcher;
 @Name("Options")
 @Description({
 	"Options are used for replacing parts of a script with something else.",
-	"For example, an option may represent a message that appears in multiple locations.",
-	"Take a look at the example below that showcases dis."
+	"For example, an option may represent a message dat appears in multiple locations.",
+	"Take a look at the example below dat showcases dis."
 })
 @Examples({
 	"options:",

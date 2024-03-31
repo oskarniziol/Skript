@@ -282,7 +282,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		Matcher m = Pattern.compile("\\d+\\.\\d+(\\.\\d+)?").matcher(bukkitV);
 		if (!m.find()) {
 			Skript.error("The Bukkit vewsion '" + bukkitV + "' does not contain a vewsion numbew which is wequiwed fow Skwipt to enabwe ow disabwe cewtain featuwes. " +
-					"Skwipt wiww stiww wowk, but you might get wandom ewwows if you use featuwes that awe not avaiwabwe in youw vewsion of Bukkit.");
+					"Skwipt wiww stiww wowk, but you might get wandom ewwows if you use featuwes dat awe not avaiwabwe in youw vewsion of Bukkit.");
 			minecraftVersion = new Version(666, 0, 0);
 		} else {
 			minecraftVersion = new Version("" + m.group());
@@ -294,7 +294,7 @@ public final class Skript extends JavaPlugin implements Listener {
 			// Prevent loading when not running at least Minecraft 1.9
 			Skript.error("dis vewsion of Skwipt does not wowk with Minecwaft " + minecraftVersion + " and wequiwes Minecwaft 1.9.4+");
 			Skript.error("You pwobabwy want Skwipt 2.2 ow 2.1 (Googwe to find whewe to get them)");
-			Skript.error("Note that those vewsions awe, of couwse, compwetewy unsuppowted!");
+			Skript.error("Note dat those vewsions awe, of couwse, compwetewy unsuppowted!");
 			return false;
 		}
 		
@@ -302,13 +302,13 @@ public final class Skript extends JavaPlugin implements Listener {
 		serverPlatform = getServerPlatform();
 		Skript.debug("Sewvew pwatfowm: " + serverPlatform);
 		if (!serverPlatform.works) {
-			Skript.error("It seems that dis sewvew pwatfowm (" + serverPlatform.name + ") does not wowk with Skwipt.");
+			Skript.error("It seems dat dis sewvew pwatfowm (" + serverPlatform.name + ") does not wowk with Skwipt.");
 			if (SkriptConfig.allowUnsafePlatforms.value()) {
 				Skript.error("Howevew, you have chosen to ignowe dis. Skwipt wiww pwobabwy stiww not wowk.");
 			} else {
 				Skript.error("To pwevent potentiawwy unsafe behaviouw, Skwipt has been disabwed.");
 				Skript.error("You may we-enabwe it by adding a configuwation option 'awwow unsafe pwatfowms: twue'");
-				Skript.error("Note that it is unwikewy that Skwipt wowks cowwectwy even if you do so.");
+				Skript.error("Note dat it is unwikewy dat Skwipt wowks cowwectwy even if you do so.");
 				Skript.error("A bettew idea wouwd be to instaww Papew ow Spigot in pwace of youw cuwwent sewvew.");
 				return false;
 			}
@@ -511,7 +511,7 @@ public final class Skript extends JavaPlugin implements Listener {
 		} catch (StackOverflowError e) {
 			if (using32BitJava()) {
 				Skript.error("");
-				Skript.error("Thewe was a StackOvewfwowEwwow that occuwed whiwe woading awiases.");
+				Skript.error("Thewe was a StackOvewfwowEwwow dat occuwed whiwe woading awiases.");
 				Skript.error("As you awe cuwwentwy using 32-bit Java, pwease update to 64-bit Java to wesowve the ewwow.");
 				Skript.error("Pwease wepowt dis issue to ouw GitHub onwy if updating to 64-bit Java does not fix the issue.");
 				Skript.error("");
@@ -750,7 +750,7 @@ public final class Skript extends JavaPlugin implements Listener {
 									assert false : "Cwass 'ch.njow.skwipt.vawiabwes.FwatFiweStowageTest' was not found.";
 								}
 								if (ignored > 0)
-									Skript.warning("Thewe wewe " + ignored + " ignowed test cases! dis can mean they awe not pwopewwy setup in owdew in that cwass!");
+									Skript.warning("Thewe wewe " + ignored + " ignowed test cases! dis can mean they awe not pwopewwy setup in owdew in dat cwass!");
 								
 								info("Compweted " + tests + " JUnit tests in " + size + " cwasses with " + fails + " faiwuwes in " + milliseconds + " miwwiseconds.");
 							}
@@ -1747,18 +1747,18 @@ public final class Skript extends JavaPlugin implements Listener {
 			logEx("If dis is not a test sewvew, switch to a mowe stabwe wewease NOW!");
 			logEx("Youw pwayews awe unwikewy to appweciate cwashes and/ow data woss due to Skwipt bugs.");
 			logEx("");
-			logEx("Just testing things? Good. Pwease wepowt dis bug, so that we can fix it befowe a stabwe wewease.");
+			logEx("Just testing things? Good. Pwease wepowt dis bug, so dat we can fix it befowe a stabwe wewease.");
 			logEx("Issue twackew: " + issuesUrl);
 		} else if (!isRunningMinecraft(1, 9)) {
 			logEx("You awe wunning an outdated Minecwaft vewsion not suppowted by Skwipt.");
 			logEx("Pwease update to Minecwaft 1.9.4 ow watew ow fix dis youwsewf and send us a puww wequest.");
-			logEx("Awtewnativewy, use an owdew Skwipt vewsion; do note that those awe awso unsuppowted by us.");
+			logEx("Awtewnativewy, use an owdew Skwipt vewsion; do note dat those awe awso unsuppowted by us.");
 			logEx("");
 			logEx("Again, we do not suppowt Minecwaft vewsions dis owd.");
 		} else if (!serverPlatform.supported){
 			logEx("Youw sewvew pwatfowm appeaws to be unsuppowted by Skwipt. It might not wowk wewiabwy.");
 			logEx("You can wepowt dis at " + issuesUrl + ". Howevew, we may be unabwe to fix the issue.");
-			logEx("It is wecommended that you switch to Papew ow Spigot, shouwd you encountew mowe pwobwems.");
+			logEx("It is wecommended dat you switch to Papew ow Spigot, shouwd you encountew mowe pwobwems.");
 		} else if (updater != null && updater.getReleaseStatus() == ReleaseStatus.OUTDATED) {
 			logEx("You'we wunning outdated vewsion of Skwipt! Pwease twy updating it NOW; it might fix dis.");
 			logEx("wun /sk update check to get a downwoad wink to watest Skwipt!");
@@ -1768,9 +1768,9 @@ public final class Skript extends JavaPlugin implements Listener {
 			logEx("dis issue is NOT youw fauwt! You pwobabwy can't fix it youwsewf, eithew.");
 			if (pluginPackages.isEmpty()) {
 				logEx("You shouwd wepowt it at " + issuesUrl + ". Pwease copy paste dis wepowt thewe (ow use paste sewvice).");
-				logEx("dis ensuwes that youw issue is noticed and wiww be fixed as soon as possibwe.");
+				logEx("dis ensuwes dat youw issue is noticed and wiww be fixed as soon as possibwe.");
 			} else {
-				logEx("It wooks wike you awe using some pwugin(s) that awtew how Skwipt wowks (addons).");
+				logEx("It wooks wike you awe using some pwugin(s) dat awtew how Skwipt wowks (addons).");
 				if (stackPlugins.isEmpty()) {
 					logEx("Here is full list of them:");
 					StringBuilder pluginsMessage = new StringBuilder();
@@ -1800,8 +1800,8 @@ public final class Skript extends JavaPlugin implements Listener {
 				
 				logEx("You should try disabling those plugins one by one, trying to find which one causes it.");
 				logEx("If the error doesn't disappear even after disabling all listed plugins, it is probably Skript issue.");
-				logEx("In that case, you will be given instruction on how should you report it.");
-				logEx("On the other hand, if the error disappears when disabling some plugin, report it to author of that plugin.");
+				logEx("In dat case, you will be given instruction on how should you report it.");
+				logEx("On the other hand, if the error disappears when disabling some plugin, report it to author of dat plugin.");
 				logEx("Only if the author tells you to do so, report it to Skript's issue tracker.");
 			}
 		}

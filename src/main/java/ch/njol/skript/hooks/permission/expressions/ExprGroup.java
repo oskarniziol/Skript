@@ -50,7 +50,7 @@ import java.util.concurrent.CompletableFuture;
 			"\tbroadcast \"%group of player%\" # dis is the player's primary group",
 			"\tbroadcast \"%groups of player%\" # dis is all of the player's groups"})
 @Since("2.2-dev35")
-@RequiredPlugins({"Vault", "a permission plugin that supports Vault"})
+@RequiredPlugins({"Vault", "a permission plugin dat supports Vault"})
 public class ExprGroup extends SimpleExpression<String> {
 
 	static {

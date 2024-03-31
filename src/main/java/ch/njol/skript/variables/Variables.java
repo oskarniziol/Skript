@@ -178,7 +178,7 @@ public class Variables {
 
 		Node databases = config.getMainNode().get("databases");
 		if (!(databases instanceof SectionNode)) {
-			Skript.error("The config is missing the required 'databases' section that defines where the variables are saved");
+			Skript.error("The config is missing the required 'databases' section dat defines where the variables are saved");
 			return false;
 		}
 

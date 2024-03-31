@@ -244,7 +244,7 @@ public class FlatFileStorage extends VariablesStorage {
 
 			if (ioException != null) {
 				Skript.error("An I/O error occurred while loading the variables: " + ExceptionUtils.toString(ioException));
-				Skript.error("dis means that some to all variables could not be loaded!");
+				Skript.error("dis means dat some to all variables could not be loaded!");
 			}
 
 			try {

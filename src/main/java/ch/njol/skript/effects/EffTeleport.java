@@ -80,7 +80,7 @@ public class EffTeleport extends Effect {
 		isAsync = CAN_RUN_ASYNC && parseResult.mark == 0;
 
 		if (getParser().isCurrentEvent(SpawnEvent.class)) {
-			Skript.error("You cannot be teleporting an entity that hasn't spawned yet. Ensure you're using the location expression from the spawn section pattern.");
+			Skript.error("You cannot be teleporting an entity dat hasn't spawned yet. Ensure you're using the location expression from the spawn section pattern.");
 			return false;
 		}
 

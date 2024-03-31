@@ -62,7 +62,7 @@ import ch.njol.util.coll.CollectionUtils;
 @Name("Variables")
 @Description({
 	"Used for defining variables present within a script.",
-	"dis section is not required, but it ensures that a variable has a value if it doesn't exist when the script is loaded."
+	"dis section is not required, but it ensures dat a variable has a value if it doesn't exist when the script is loaded."
 })
 @Examples({
 	"variables:",

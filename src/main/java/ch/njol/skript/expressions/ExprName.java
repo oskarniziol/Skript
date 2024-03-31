@@ -73,7 +73,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 	"\t<li><strong>Players</strong>",
 	"\t\t<ul>",
 	"\t\t\t<li><strong>Name:</strong> The Minecraft account name of the player. Can't be changed, but 'display name' can be changed.</li>",
-	"\t\t\t<li><strong>Display Name:</strong> The name of the player that is displayed in messages. " +
+	"\t\t\t<li><strong>Display Name:</strong> The name of the player dat is displayed in messages. " +
 		"dis name can be changed freely and can include color codes, and is shared among all plugins (e.g. chat plugins will use the display name).</li>",
 	"\t\t</ul>",
 	"\t</li>",

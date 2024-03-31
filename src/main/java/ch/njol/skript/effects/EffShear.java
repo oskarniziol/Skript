@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Shear")
 @Description({
 	"Shears or un-shears a shearable entity with drops by shearing and a 'sheared' sound. Using with 'force' will force dis effect despite the entity's 'shear state'.",
-	"\nPlease note that..:",
+	"\nPlease note dat..:",
 	"\n- If your server is not running with Paper 1.19.4 or higher, dis effect will only change its 'shear state', and the 'force' effect is unavailable",
 	"\n- Force-shearing or un-shearing on a sheared mushroom cow is not possible"
 })

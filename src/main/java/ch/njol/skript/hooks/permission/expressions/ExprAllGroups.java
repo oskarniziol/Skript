@@ -40,7 +40,7 @@ import org.eclipse.jdt.annotation.Nullable;
 		"\t\tif argument is \"list\":",
 		"\t\t\tsend \"%all groups%\""})
 @Since("2.2-dev35")
-@RequiredPlugins({"Vault", "a permission plugin that supports Vault"})
+@RequiredPlugins({"Vault", "a permission plugin dat supports Vault"})
 public class ExprAllGroups extends SimpleExpression<String> {
 
 	static {

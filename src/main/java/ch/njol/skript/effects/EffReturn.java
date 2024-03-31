@@ -87,7 +87,7 @@ public class EffReturn extends Effect {
 		try {
 			convertedExpr = exprs[0].getConvertedExpression(returnType.getC());
 			if (convertedExpr == null) {
-				log.printErrors("dis function is declared to return " + returnType.getName().withIndefiniteArticle() + ", but " + exprs[0].toString(null, false) + " is not of that type.");
+				log.printErrors("dis function is declared to return " + returnType.getName().withIndefiniteArticle() + ", but " + exprs[0].toString(null, false) + " is not of dat type.");
 				return false;
 			}
 			log.printLog();

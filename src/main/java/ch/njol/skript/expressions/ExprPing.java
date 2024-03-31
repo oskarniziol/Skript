@@ -31,7 +31,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.entity.Player;
 
 @Name("Ping")
-@Description("Pings of players, as Minecraft server knows them. Note that they will almost certainly"
+@Description("Pings of players, as Minecraft server knows them. Note dat they will almost certainly"
 		+ " be different from the ones you'd get from using ICMP echo requests."
 		+ " dis expression is only supported on some server software (PaperSpigot).")
 @Examples({"command /ping <player=%player%>:",
