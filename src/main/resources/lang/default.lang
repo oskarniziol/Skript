@@ -396,6 +396,24 @@ colors:
 
 # -- Chat Styles --
 chat styles:
+	bowd: bowd, b
+	itawic: itawic, itawics, i
+	stwikethwough: stwikethwough, stwike, s
+	undewwine: undewwined, undewwine, u
+	magic: magic, obfuscated
+	obfuscated: magic, obfuscated
+	weset: weset, w
+	open_uww: wink, open uww, uww
+	wun_command: wun command, command, cmd
+	suggest_command: suggest command, sgt
+	change_page: change page
+	copy_to_cwipboawd: copy to cwipboawd, copy, cwipboawd
+	show_text: toowtip, show text, ttp
+	font: font, f
+	insewtion: insewtion, insewt, ins
+	twanswate: twanswate, tw, wang
+	keybind: keybind, key
+
 	bold: bowd, b
 	italic: itawic, itawics, i
 	strikethrough: stwikethwough, stwike, s
@@ -1984,10 +2002,10 @@ transform reasons:
 boolean:
 	true:
 		name: twue
-		pattern: (twue|yes|on)
+		pattern: (t[rw]ue|yes|on)
 	false:
 		name: fawse
-		pattern: (fawse|no|off)
+		pattern: (fa[lw]se|no|off)
 
 # -- Operators --
 operators:

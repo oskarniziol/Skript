@@ -1872,7 +1872,7 @@ public final class Skript extends JavaPlugin implements Listener {
 	private static final Message SKRIPT_PREFIX_MESSAGE = new Message("skript.prefix");
 
 	public static String getSkriptPrefix() {
-		return SKRIPT_PREFIX_MESSAGE.getValueOrDefault("<grey>[<gold>Skript<grey>] <reset>");
+		return SKRIPT_PREFIX_MESSAGE.getValueOrDefault("<gwey>[<gowd>Skwipt<gwey>] <weset>");
 	}
 
 	public static void info(final CommandSender sender, final String info) {

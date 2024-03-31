@@ -9,7 +9,7 @@ none: <none>
 # -- Skript --
 skript:
 	copyright: ~ cweated by & © Petew Güttingew aka Njow ~
-	prefix: <gray>[<gold>Skwipt<gray>] <reset>
+	prefix: <gway>[<gowd>Skwipt<gway>] <weset>
 	quotes error: Invawid use of quotes ("). If you want to use quotes in "quoted text", doubwe them: "".
 	brackets error: Invawid amount ow pwacement of bwackets. Pwease make suwe that each opening bwacket has a cowwesponding cwosing bwacket.
 	invalid reload: Skwipt may onwy be wewoaded by eithew Bukkit's '/wewoad' ow Skwipt's '/skwipt wewoad' command.
@@ -30,15 +30,15 @@ skript command:
 			config: Rewoads the main config
 			aliases: Rewoads the awiases configs (awiases-engwish.zip ow pwugin jaw)
 			scripts: Rewoads aww scwipts
-			<script>: Rewoads a specific scwipt ow a fowdew of scwipts
+			<scwipt>: Rewoads a specific scwipt ow a fowdew of scwipts
 		enable:
 			description: Enabwes aww scwipts ow a specific one
 			all: Enabwes aww scwipts
-			<script>: Enabwes a specific scwipt ow a fowdew of scwipts
+			<scwipt>: Enabwes a specific scwipt ow a fowdew of scwipts
 		disable:
 			description: Disabwes aww scwipts ow a specific one
 			all: Disabwes aww scwipts
-			<script>: Disabwes a specific scwipt ow a fowdew of scwipts
+			<scwipt>: Disabwes a specific scwipt ow a fowdew of scwipts
 		update:
 			description: Check fow updates, wead the changewog, ow downwoad the watest vewsion of Skwipt
 			check: Checks fow a new vewsion
@@ -48,28 +48,28 @@ skript command:
 		gen-docs: Genewates documentation using docs/tempwates in pwugin fowdew
 		test: Used fow wunning intewnaw Skwipt tests
 
-	invalid script: Can't find the scwipt <grey>'<gold>%s<grey>'<red> in the scwipts fowdew!
-	invalid folder: Can't find the fowdew <grey>'<gold>%s<grey>'<red> in the scwipts fowdew!
+	invalid script: Can't find the scwipt <gwey>'<gowd>%s<gwey>'<wed> in the scwipts fowdew!
+	invalid folder: Can't find the fowdew <gwey>'<gowd>%s<gwey>'<wed> in the scwipts fowdew!
 	reload:
-		warning line info: <gold><bold>Wine %s:<gray> (%s)<reset>\n
-		error line info: <light red><bold>Wine %s:<gray> (%s)<reset>\n
-		reloading: Rewoading <gold>%s<reset>...
-		reloaded: <lime>Successfuwwy wewoaded <gold>%s<lime>. <gray>(<gold>%2$sms<gray>)
-		error: <light red>Encountewed <gold>%2$s <light red>ewwow¦¦s¦ whiwe wewoading <gold>%1$s<light red>! <gray>(<gold>%3$sms<gray>)
-		script disabled: <gold>%s<reset> is cuwwentwy disabwed. Use <gray>/<gold>skwipt <cyan>enabwe <red>%s<reset> to enabwe it.
-		warning details: <yellow>    %s<reset>\n
-		error details: <light red>    %s<reset>\n
-		other details: <white>    %s<reset>\n
-		line details: <gold>    Line: <gray>%s<reset>\n <reset>
+		warning line info: <gowd><bowd>Wine %s:<gway> (%s)<weset>\n
+		error line info: <wight wed><bowd>Wine %s:<gway> (%s)<weset>\n
+		reloading: Rewoading <gowd>%s<weset>...
+		reloaded: <wime>Successfuwwy wewoaded <gowd>%s<wime>. <gway>(<gowd>%2$sms<gway>)
+		error: <wight wed>Encountewed <gowd>%2$s <wight wed>ewwow¦¦s¦ whiwe wewoading <gowd>%1$s<wight wed>! <gway>(<gowd>%3$sms<gway>)
+		script disabled: <gowd>%s<weset> is cuwwentwy disabwed. Use <gway>/<gowd>skwipt <cyan>enabwe <wed>%s<weset> to enabwe it.
+		warning details: <yewwow>    %s<weset>\n
+		error details: <wight wed>    %s<weset>\n
+		other details: <white>    %s<weset>\n
+		line details: <gowd>    Wine: <gway>%s<weset>\n <weset>
 
 		config, aliases and scripts: the config, awiases and aww scwipts
 		scripts: aww scwipts
 		main config: the main configuwation
 		aliases: the awiases
-		script: <gold>%s<reset>
-		scripts in folder: aww scwipts in <gold>%s<reset>
-		x scripts in folder: <gold>%2$s <lime>scwipt¦¦s¦ in <gold>%1$s<reset>
-		empty folder: <gold>%s<reset> does not contain any enabwed scwipts.
+		script: <gowd>%s<weset>
+		scripts in folder: aww scwipts in <gowd>%s<weset>
+		x scripts in folder: <gowd>%2$s <wime>scwipt¦¦s¦ in <gowd>%1$s<weset>
+		empty folder: <gowd>%s<weset> does not contain any enabwed scwipts.
 	enable:
 		all:
 			enabling: Enabwing aww disabwed scwipts...
@@ -77,38 +77,38 @@ skript command:
 			error: Encountewed %s ewwow¦¦s¦ whiwe pawsing disabwed scwipts!
 			io error: Couwd not woad one ow mowe scwipts - some scwipts might have been wenamed awweady and wiww be enabwed when the sewvew westawts: %s
 		single:
-			already enabled: <gold>%s<reset> is awweady enabwed! Use <gray>/<gold>skwipt <cyan>wewoad <red>%s<reset> to wewoad it if it was changed.
-			enabling: Enabwing <gold>%s<reset>...
-			enabled: Successfuwwy enabwed & pawsed <gold>%s<reset>.
-			error: Encountewed %2$s ewwow¦¦s¦ whiwe pawsing <gold>%1$s<red>!
-			io error: Couwd not enabwe <gold>%s<red>: %s
+			already enabled: <gowd>%s<weset> is awweady enabwed! Use <gway>/<gowd>skwipt <cyan>wewoad <wed>%s<weset> to wewoad it if it was changed.
+			enabling: Enabwing <gowd>%s<weset>...
+			enabled: Successfuwwy enabwed & pawsed <gowd>%s<weset>.
+			error: Encountewed %2$s ewwow¦¦s¦ whiwe pawsing <gowd>%1$s<wed>!
+			io error: Couwd not enabwe <gowd>%s<wed>: %s
 		folder:
-			empty: <gold>%s<reset> does not contain any disabwed scwipts.
-			enabling: Enabwing <gold>%2$s <reset>scwipt¦¦s¦ in <gold>%1$s<reset>...
-			enabled: Successfuwwy enabwed & pawsed <gold>%2$s<reset> pweviouswy disabwed scwipts in <gold>%1$s<reset>.
-			error: Encountewed %2$s ewwow¦¦s¦ whiwe pawsing scwipts in <gold>%1$s<red>!
-			io error: Ewwow whiwe enabwing one ow mowe scwipts in <gold>%s<red> (some scwipts might get enabwed when the sewvew westawts): %s
+			empty: <gowd>%s<weset> does not contain any disabwed scwipts.
+			enabling: Enabwing <gowd>%2$s <weset>scwipt¦¦s¦ in <gowd>%1$s<weset>...
+			enabled: Successfuwwy enabwed & pawsed <gowd>%2$s<weset> pweviouswy disabwed scwipts in <gowd>%1$s<weset>.
+			error: Encountewed %2$s ewwow¦¦s¦ whiwe pawsing scwipts in <gowd>%1$s<wed>!
+			io error: Ewwow whiwe enabwing one ow mowe scwipts in <gowd>%s<wed> (some scwipts might get enabwed when the sewvew westawts): %s
 	disable:
 		all:
 			disabled: Successfuwwy disabwed aww scwipts.
 			io error: Couwd not wename one ow mowe scwipts - some scwipts might have been wenamed awweady and wiww be disabwed when the sewvew westawts: %s
 		single:
-			already disabled: <gold>%s<reset> is awweady disabwed!
-			disabled: Successfuwwy disabwed <gold>%s<reset>.
-			io error: Couwd not wename <gold>%s<red>, it wiww be enabwed again when you westawt the sewvew: %s
+			already disabled: <gowd>%s<weset> is awweady disabwed!
+			disabled: Successfuwwy disabwed <gowd>%s<weset>.
+			io error: Couwd not wename <gowd>%s<wed>, it wiww be enabwed again when you westawt the sewvew: %s
 		folder:
-			empty: <gold>%s<reset> does not contain any enabwed scwipts.
-			disabled: Successfuwwy disabwed <gold>%2$s<reset> scwipt(s) in <gold>%1$s<reset>.
-			io error: Couwd not disabwe one ow mowe scwipts in <gold>%s<red> (some scwipts might get disabwed when the sewvew westawts): %s
+			empty: <gowd>%s<weset> does not contain any enabwed scwipts.
+			disabled: Successfuwwy disabwed <gowd>%2$s<weset> scwipt(s) in <gowd>%1$s<weset>.
+			io error: Couwd not disabwe one ow mowe scwipts in <gowd>%s<wed> (some scwipts might get disabwed when the sewvew westawts): %s
 	update:
 		# check/download: see Updatew
 		changes:
 			# multiple versions:
-			# 	title: <gold>%s<r> update¦ has¦s have¦ been weweased since this vewsion (<gold>%s<r>) of Skwipt:
-			# 	footer: To show the changewog of a vewsion type <gold>/skwipt update changes <version><reset>
-			# invalid version: No changewog fow the vewsion <gold>%s<red> avaiwabwe
-			title: <bold><cyan>%s<reset> (%s)
-			next page: <grey>page %s of %s. Type <gold>/skwipt update changes %s<gray> fow the next page (hint: use the up awwow key)
+			# 	title: <gowd>%s<w> update¦ has¦s have¦ been weweased since this vewsion (<gowd>%s<w>) of Skwipt:
+			# 	footer: To show the changewog of a vewsion type <gowd>/skwipt update changes <vewsion><weset>
+			# invalid version: No changewog fow the vewsion <gowd>%s<wed> avaiwabwe
+			title: <bowd><cyan>%s<weset> (%s)
+			next page: <gwey>page %s of %s. Type <gowd>/skwipt update changes %s<gway> fow the next page (hint: use the up awwow key)
 	info:
 		aliases: Skwipt's awiases can be found hewe: <aqua>https://github.com/SkriptLang/skript-aliases
 		documentation: Skwipt's documentation can be found hewe: <aqua>https://docs.skriptlang.org/
@@ -120,17 +120,17 @@ skript command:
 
 # -- Updater --
 updater:
-	not started: Skwipt has not yet checked fow the watest vewsion. Use <gold>/skwipt update check<reset> to do so.
+	not started: Skwipt has not yet checked fow the watest vewsion. Use <gowd>/skwipt update check<weset> to do so.
 	checking: Checking fow the watest vewsion of Skwipt...
 	check in progress: Checking fow a new vewsion is cuwwentwy in pwogwess.
 	updater disabled: The updatew is disabwed, so a check fow the watest vewsion of Skwipt was not pewfowmed.
-	check error: <red>Thewe was an ewwow checking fow the watest vewsion of Skwipt:<light red> %s
+	check error: <wed>Thewe was an ewwow checking fow the watest vewsion of Skwipt:<wight wed> %s
 	running latest version: You'we cuwwentwy wunning the watest stabwe vewsion of Skwipt.
-	running latest version (beta): You'we cuwwentwy wunning a <i>beta<r> vewsion of Skwipt, and no new <i>stabwe<r> vewsion is avaiwabwe. Pwease note that you have to update to newew beta vewsions manuawwy!
-	update available: A new vewsion of Skwipt is avaiwabwe: <gold>%s<reset> (you'we cuwwentwy wunning <gold>%s<reset>)
-	downloading: Downwoading Skwipt <gold>%s<reset>...
+	running latest version (beta): You'we cuwwentwy wunning a <i>beta<w> vewsion of Skwipt, and no new <i>stabwe<w> vewsion is avaiwabwe. Pwease note that you have to update to newew beta vewsions manuawwy!
+	update available: A new vewsion of Skwipt is avaiwabwe: <gowd>%s<weset> (you'we cuwwentwy wunning <gowd>%s<weset>)
+	downloading: Downwoading Skwipt <gowd>%s<weset>...
 	download in progress: The watest vewsion of Skwipt is cuwwentwy being downwoaded.
-	download error: <red>Thewe was an ewwow downwoading the watest vewsion of Skwipt:<light red> %s
+	download error: <wed>Thewe was an ewwow downwoading the watest vewsion of Skwipt:<wight wed> %s
 	downloaded: The watest vewsion of Skwipt has been downwoaded! Restawt the sewvew ow use /wewoad to appwy the changes.
 	internal error: An intewnaw ewwow occuwwed whiwe checking fow the watest vewsion of Skwipt. Pwease wefew to the sewvew wog fow detaiws.
 	custom version: You'we cuwwentwy wunning a custom Skwipt vewsion. No updates wiww be automaticawwy instawwed.
@@ -143,7 +143,7 @@ commands:
 	executable by players: This command can onwy be used by pwayews
 	executable by console: This command can onwy be used by the consowe
 	correct usage: Cowwect usage:
-	invalid argument: Invawid awgument <gray>'%s<gray>'<reset>. Awwowed awe:
+	invalid argument: Invawid awgument <gway>'%s<gway>'<weset>. Awwowed awe:
 	too many arguments: This command can onwy accept a singwe %2$s.
 	internal error: An intewnaw ewwow occuwwed whiwe attempting to pewfowm this command.
 	no player starts with: Thewe is no pwayew onwine whose name stawts with '%s'
