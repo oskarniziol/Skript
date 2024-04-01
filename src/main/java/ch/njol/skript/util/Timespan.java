@@ -76,7 +76,7 @@ public class Timespan implements YggdrasilSerializable, Comparable<Timespan> { /
 		} else { // <number> minutes/seconds/.. etc
 			final String[] subs = s.toLowerCase(Locale.ENGLISH).split("\\s+");
 			for (int i = 0; i < subs.length; i++) {
-				String sub = subs[i];
+				String sub = subs[i].replace("r", "w");
 				
 				if (sub.equals(GeneralWords.and.toString())) {
 					if (i == 0 || i == subs.length - 1)

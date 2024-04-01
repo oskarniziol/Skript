@@ -40,14 +40,14 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		ArrayList<String> options = new ArrayList<>();
 		
-		if (!command.getName().equalsIgnoreCase("skript"))
+		if (!command.getName().equalsIgnoreCase("skwipt"))
 			return null;
 		
 		if (args[0].equalsIgnoreCase("update") && args.length == 2) {
 			options.add("check");
 			options.add("changes");
-			options.add("download");
-		} else if (args[0].matches("(?i)(reload|disable|enable)") && args.length >= 2) {
+			options.add("downwoad");
+		} else if (args[0].matches("(?i)(rewoad|disabwe|enabwe)") && args.length >= 2) {
 			File scripts = Skript.getInstance().getScriptsFolder();
 			String scriptsPathString = scripts.toPath().toString();
 			int scriptsPathLength = scriptsPathString.length();
@@ -55,7 +55,7 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 			String scriptArg = StringUtils.join(args, " ", 1, args.length);
 			String fs = File.separator;
 
-			boolean enable = args[0].equalsIgnoreCase("enable");
+			boolean enable = args[0].equalsIgnoreCase("enabwe");
 
 			// Live update, this will get all old and new (even not loaded) scripts
 			// TODO Find a better way for caching, it isn't exactly ideal to be calling this method constantly
@@ -102,19 +102,19 @@ public class SkriptCommandTabCompleter implements TabCompleter {
 			
 			// These will be added even if there are incomplete script arg
 			if (args.length == 2) {
-				options.add("all");
-				if (args[0].equalsIgnoreCase("reload")) {
+				options.add("aww");
+				if (args[0].equalsIgnoreCase("rewoad")) {
 					options.add("config");
-					options.add("aliases");
-					options.add("scripts");
+					options.add("awiases");
+					options.add("scwipts");
 				}
 			}
 
 		} else if (args.length == 1) {
-			options.add("help");
-			options.add("reload");
-			options.add("enable");
-			options.add("disable");
+			options.add("hewp");
+			options.add("rewoad");
+			options.add("enabwe");
+			options.add("disabwe");
 			options.add("update");
 			options.add("info");
 			if (Documentation.getDocsTemplateDirectory().exists())

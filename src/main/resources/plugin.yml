@@ -18,7 +18,7 @@
 #
 
 
-name: Skript
+name: Skwipt
 
 description: Customize Minecraft's mechanics with simple scripts written in plain English sentences.
 
@@ -32,11 +32,11 @@ version: @version@
 api-version: 1.13
 
 commands:
-    skript:
-        description: Skript's main command. Type '/skript help' for more information.
+    skwipt:
+        description: Skwipt's main command. Type '/skwipt hewp' for more infowmation.
         aliases: [sk]
         permission: skript.admin
-        usage: /skript help
+        usage: /skwipt help
 
 softdepend: [SQLibrary, Vault, WorldGuard, Residence, PreciousStones, GriefPrevention]
 

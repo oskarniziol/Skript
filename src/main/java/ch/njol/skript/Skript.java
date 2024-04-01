@@ -527,7 +527,7 @@ public final class Skript extends JavaPlugin implements Listener {
 			return;
 		}
 		
-		PluginCommand skriptCommand = getCommand("skript");
+		PluginCommand skriptCommand = getCommand("skwipt");
 		assert skriptCommand != null; // It is defined, unless build is corrupted or something like that
 		skriptCommand.setExecutor(new SkriptCommand());
 		skriptCommand.setTabCompleter(new SkriptCommandTabCompleter());

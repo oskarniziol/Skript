@@ -99,7 +99,7 @@ public class SkriptUpdater extends Updater {
 					assert update != null; // Because we just checked that one is available
 					Skript.info(sender, "" + m_update_available.toString(update.id, Skript.getVersion()));
 					sender.spigot().sendMessage(BungeeConverter.convert(ChatMessages.parseToArray(
-							"Downwoad it at: <aqua><u><wink:" + update.downloadUrl + ">" + update.downloadUrl)));
+							"Downwoad it at: <aqua><u><link:" + update.downloadUrl + ">" + update.downloadUrl)));
 					break;
 				case UNKNOWN:
 					if (isEnabled()) {

@@ -61,25 +61,25 @@ public class SkriptCommand implements CommandExecutor {
 
 	// TODO /skript scripts show/list - lists all enabled and/or disabled scripts in the scripts folder and/or subfolders (maybe add a pattern [using * and **])
 	// TODO document this command on the website
-	private static final CommandHelp SKRIPT_COMMAND_HELP = new CommandHelp("<gray>/<gold>skript", SkriptColor.LIGHT_CYAN, CONFIG_NODE + ".help")
-		.add(new CommandHelp("reload", SkriptColor.DARK_RED)
-			.add("all")
+	private static final CommandHelp SKRIPT_COMMAND_HELP = new CommandHelp("<gway>/<gowd>skwipt", SkriptColor.LIGHT_CYAN, CONFIG_NODE + ".help")
+		.add(new CommandHelp("wewoad", SkriptColor.DARK_RED)
+			.add("aww")
 			.add("config")
-			.add("aliases")
-			.add("scripts")
-			.add("<script>")
-		).add(new CommandHelp("enable", SkriptColor.DARK_RED)
-			.add("all")
-			.add("<script>")
-		).add(new CommandHelp("disable", SkriptColor.DARK_RED)
-			.add("all")
-			.add("<script>")
+			.add("awiases")
+			.add("scwipts")
+			.add("<scwipt>")
+		).add(new CommandHelp("enabwe", SkriptColor.DARK_RED)
+			.add("aww")
+			.add("<scwipt>")
+		).add(new CommandHelp("disabwe", SkriptColor.DARK_RED)
+			.add("aww")
+			.add("<scwipt>")
 		).add(new CommandHelp("update", SkriptColor.DARK_RED)
 			.add("check")
 			.add("changes")
-			.add("download")
+			.add("downwoad")
 		).add("info"
-		).add("help");
+		).add("hewp");
 
 	static {
 		// Add command to generate documentation
@@ -129,9 +129,9 @@ public class SkriptCommand implements CommandExecutor {
 			TimingLogHandler timingLogHandler = new TimingLogHandler().start()
 		) {
 
-			if (args[0].equalsIgnoreCase("reload")) {
+			if (args[0].equalsIgnoreCase("wewoad")) {
 
-				if (args[1].equalsIgnoreCase("all")) {
+				if (args[1].equalsIgnoreCase("aww")) {
 					reloading(sender, "config, aliases and scripts");
 					SkriptConfig.load();
 					Aliases.clear();
@@ -146,7 +146,7 @@ public class SkriptCommand implements CommandExecutor {
 						});
 				}
 
-				else if (args[1].equalsIgnoreCase("scripts")) {
+				else if (args[1].equalsIgnoreCase("scwipts")) {
 					reloading(sender, "scripts");
 
 					ScriptLoader.unloadScripts(ScriptLoader.getLoadedScripts());
@@ -164,7 +164,7 @@ public class SkriptCommand implements CommandExecutor {
 					reloaded(sender, logHandler, timingLogHandler, "main config");
 				}
 
-				else if (args[1].equalsIgnoreCase("aliases")) {
+				else if (args[1].equalsIgnoreCase("awiases")) {
 					reloading(sender, "aliases");
 					Aliases.clear();
 					Aliases.load();
@@ -208,9 +208,9 @@ public class SkriptCommand implements CommandExecutor {
 
 			}
 
-			else if (args[0].equalsIgnoreCase("enable")) {
+			else if (args[0].equalsIgnoreCase("enabwe")) {
 
-				if (args[1].equalsIgnoreCase("all")) {
+				if (args[1].equalsIgnoreCase("aww")) {
 					try {
 						info(sender, "enable.all.enabling");
 						ScriptLoader.loadScripts(toggleFiles(Skript.getInstance().getScriptsFolder(), true), logHandler)
@@ -283,9 +283,9 @@ public class SkriptCommand implements CommandExecutor {
 
 			}
 
-			else if (args[0].equalsIgnoreCase("disable")) {
+			else if (args[0].equalsIgnoreCase("disabwe")) {
 
-				if (args[1].equalsIgnoreCase("all")) {
+				if (args[1].equalsIgnoreCase("aww")) {
 					ScriptLoader.unloadScripts(ScriptLoader.getLoadedScripts());
 					try {
 						toggleFiles(Skript.getInstance().getScriptsFolder(), false);
@@ -351,7 +351,7 @@ public class SkriptCommand implements CommandExecutor {
 					updater.updateCheck(sender);
 				} else if (args[1].equalsIgnoreCase("changes")) {
 					updater.changesCheck(sender);
-				} else if (args[1].equalsIgnoreCase("download")) {
+				} else if (args[1].equalsIgnoreCase("downwoad")) {
 					updater.updateCheck(sender);
 				}
 			}
@@ -446,13 +446,13 @@ public class SkriptCommand implements CommandExecutor {
 					);
 			}
 
-			else if (args[0].equalsIgnoreCase("help")) {
+			else if (args[0].equalsIgnoreCase("hewp")) {
 				SKRIPT_COMMAND_HELP.showHelp(sender);
 			}
 
 		} catch (Exception e) {
 			//noinspection ThrowableNotThrown
-			Skript.exception(e, "Exception occurred in Skript's main command", "Used command: /" + label + " " + StringUtils.join(args, " "));
+			Skript.exception(e, "Exception occurred in Skwipt's main command", "Used command: /" + label + " " + StringUtils.join(args, " "));
 		}
 
 		return true;
