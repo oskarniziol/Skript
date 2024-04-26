@@ -29,6 +29,7 @@ import java.util.Map;
 import ch.njol.skript.Skript;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -218,9 +219,19 @@ public class AliasesProvider {
 			return flags;
 		
 		// Apply random tags using JSON
-		String json = gson.toJson(tags);
-		assert json != null;
-		BukkitUnsafe.modifyItemStack(stack, json);
+		if (Aliases.USING_ITEM_COMPONENTS) {
+			String components = (String) tags.get("components"); // only components are supported for modifying a stack
+			assert components != null;
+			// for modifyItemStack to work, you have to include an item id ... e.g. "minecraft:dirt[<components>]"
+			// just to be safe we use the same one as the provided stack
+			NamespacedKey stackKey = stack.getType().getKey();
+			components = stackKey.getNamespace() + ":" + stackKey.getKey() + components;
+			BukkitUnsafe.modifyItemStack(stack, components);
+		} else {
+			String json = gson.toJson(tags);
+			assert json != null;
+			BukkitUnsafe.modifyItemStack(stack, json);
+		}
 		flags |= ItemFlags.CHANGED_TAGS;
 		
 		return flags;
