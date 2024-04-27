@@ -218,10 +218,17 @@ public class AliasesParser {
 				throw new AssertionError("missing space between id and tags in " + item);
 			}
 			id = item.substring(0, firstBracket - 1);
-			String json = item.substring(firstBracket);
+			String json;
+			int jsonEndIndex = item.indexOf("} ["); // may also have block states/data
+			if (jsonEndIndex == -1) {
+				json = item.substring(firstBracket);
+			} else {
+				json = item.substring(firstBracket, jsonEndIndex + 1);
+				id = id + item.substring(jsonEndIndex + 2); // essentially rips out json part
+			}
 			if (Aliases.USING_ITEM_COMPONENTS) {
-				json = json.substring(1, json.length() - 1);
-				tags = Collections.singletonMap("components", "[" + json + "]");
+				json = "[" + json.substring(1, json.length() - 1) + "]"; // replace brackets (not json :))
+				tags = Collections.singletonMap("components", json);
 			} else {
 				tags = provider.parseMojangson(json);
 			}
