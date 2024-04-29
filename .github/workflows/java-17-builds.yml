@@ -4,8 +4,8 @@ on:
     push:
         branches:
             - master
-            - 'dev/**'
-    pull_request:
+            - feature/folia
+    workflow_dispatch:
 
 jobs:
     build:
