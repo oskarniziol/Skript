@@ -1,11 +1,7 @@
 name: Java 17 CI (MC 1.17+)
 
 on:
-    push:
-        branches:
-            - master
-            - 'dev/**'
-    pull_request:
+    workflow_dispatch:
 
 jobs:
     build:
